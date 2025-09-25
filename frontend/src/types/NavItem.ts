@@ -4,4 +4,5 @@ export interface NavItem {
   title: string;
   to: string;
   icon: LucideIcon;
+  root?: boolean;
 }

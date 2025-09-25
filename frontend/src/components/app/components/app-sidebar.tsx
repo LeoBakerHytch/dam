@@ -28,6 +28,7 @@ export const mainNavItems: NavItem[] = [
     title: 'Dashboard',
     to: '/',
     icon: LayoutGrid,
+    root: true,
   },
   {
     title: 'Image library',
