@@ -28,7 +28,11 @@
     "scripts": {
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi"
+            "@php artisan package:discover --ansi",
+            "@php artisan lighthouse:ide-helper"
+        ],
+        "post-update-cmd": [
+            "@php artisan lighthouse:ide-helper"
         ]
     },
     "extra": {

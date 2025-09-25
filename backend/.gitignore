@@ -3,3 +3,4 @@
 /vendor/
 
 .env
+schema-directives.graphql
