@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoaderCircle } from 'lucide-react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router';
 import { gql, useMutation } from 'urql';
 import { z } from 'zod';
 
@@ -57,6 +58,7 @@ export function RegisterPage() {
     resolver: zodResolver(registerSchema),
   });
 
+  const navigate = useNavigate();
   const [result, executeMutation] = useMutation(registerMutation);
   const { setUser } = useUser();
   const { setAccessToken } = useAuth();
@@ -73,8 +75,12 @@ export function RegisterPage() {
 
       if (result.data?.Auth_User_Register) {
         const { user, accessToken } = result.data.Auth_User_Register;
-        if (user) setUser(user);
-        if (accessToken) setAccessToken(accessToken);
+
+        if (user && accessToken) {
+          setUser(user);
+          setAccessToken(accessToken);
+          navigate('/dashboard');
+        }
       }
 
       // Reset password fields on success
