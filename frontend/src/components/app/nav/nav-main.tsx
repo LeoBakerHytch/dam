@@ -19,10 +19,10 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
           <SidebarMenuItem key={item.title}>
             <SidebarMenuButton
               asChild
-              isActive={location.pathname.startsWith(item.href)}
+              isActive={location.pathname.startsWith(item.to)}
               tooltip={{ children: item.title }}
             >
-              <NavLink to={item.href}>
+              <NavLink to={item.to}>
                 {item.icon && <item.icon />}
                 <span>{item.title}</span>
               </NavLink>

@@ -1,4 +1,12 @@
-import { Atom, AudioLines, FileText, Image, LayoutGrid, LayoutTemplate, Target } from 'lucide-react';
+import {
+  Atom,
+  AudioLines,
+  FileText,
+  Image,
+  LayoutGrid,
+  LayoutTemplate,
+  Target,
+} from 'lucide-react';
 import { NavLink } from 'react-router';
 
 import { AppLogo } from '@/components/app/components/app-logo';
@@ -15,40 +23,40 @@ import {
 } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types/NavItem';
 
-const mainNavItems: NavItem[] = [
+export const mainNavItems: NavItem[] = [
   {
     title: 'Dashboard',
-    href: '/',
+    to: '/',
     icon: LayoutGrid,
   },
   {
     title: 'Image library',
-    href: '/image-library',
+    to: '/image-library',
     icon: Image,
   },
   {
     title: 'Logo library',
-    href: '/logo-library',
+    to: '/logo-library',
     icon: Target,
   },
   {
     title: 'Document library',
-    href: '/document-library',
+    to: '/document-library',
     icon: FileText,
   },
   {
     title: 'Sound library',
-    href: '/sound-library',
+    to: '/sound-library',
     icon: AudioLines,
   },
   {
     title: 'Icon library',
-    href: '/icon-library',
+    to: '/icon-library',
     icon: Atom,
   },
   {
     title: 'Template library',
-    href: '/template-library',
+    to: '/template-library',
     icon: LayoutTemplate,
   },
 ];
