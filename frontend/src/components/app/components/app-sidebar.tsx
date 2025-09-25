@@ -5,6 +5,7 @@ import {
   Image,
   LayoutGrid,
   LayoutTemplate,
+  Palette,
   Target,
 } from 'lucide-react';
 import { NavLink } from 'react-router';
@@ -62,7 +63,13 @@ export const mainNavItems: NavItem[] = [
   },
 ];
 
-const footerNavItems: NavItem[] = [];
+const footerNavItems: NavItem[] = [
+  {
+    title: 'Appearance',
+    path: '/settings/appearance',
+    icon: Palette,
+  },
+];
 
 export function AppSidebar() {
   return (
