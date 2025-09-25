@@ -135,10 +135,5 @@
 
     body {
         @apply bg-background text-foreground;
-        min-height: 100dvh;
-    }
-
-    #root {
-        min-height: 100dvh;
     }
 }

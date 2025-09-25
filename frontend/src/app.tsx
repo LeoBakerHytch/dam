@@ -1,10 +1,12 @@
-import '../css/App.css';
+import { AppLayout } from '@/components/app/layouts/app-layout';
+import { BreadcrumbItem } from '@/types/BreadcrumbItem';
 
+const breadcrumbs: BreadcrumbItem[] = [
+  {
+    title: 'Dashboard',
+    href: '/',
+  },
+];
 export function App() {
-  return (
-    <div className="flex h-screen w-full flex-col items-center justify-center">
-      <h1 className="text-5xl text-purple-700">DAM</h1>
-      <p>Digital Asset Management</p>
-    </div>
-  );
+  return <AppLayout breadcrumbs={breadcrumbs}></AppLayout>;
 }
