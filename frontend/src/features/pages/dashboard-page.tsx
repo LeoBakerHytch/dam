@@ -12,6 +12,8 @@ const breadcrumbs: BreadcrumbItem[] = [
   },
 ];
 
+// TODO: Ideally the dashboards would not be defined redundantly both here and in the sidebar nav
+
 export function DashboardPage() {
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
