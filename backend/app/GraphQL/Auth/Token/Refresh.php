@@ -22,8 +22,7 @@ final class Refresh
 
         return [
             'access_token' => $newToken,
-            'token_type' => 'bearer',
-            'expires_in' => Auth::guard('api')->factory()->getTTL() * 60,
+            'user' => Auth::user(),
         ];
     }
 }

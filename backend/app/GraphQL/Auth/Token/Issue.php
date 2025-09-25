@@ -18,10 +18,14 @@ final class Issue
             throw new Exception('Invalid credentials');
         }
 
+        $refreshToken = Auth::guard('api')
+                ->setToken($token)
+                ->getToken()
+                ->getClaim('jti') . '_refresh';
+
         return [
             'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => Auth::guard('api')->factory()->getTTL() * 60,
+            'refresh_token' => $refreshToken,
             'user' => Auth::user(),
         ];
     }
