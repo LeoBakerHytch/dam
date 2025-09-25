@@ -1,10 +1,10 @@
 <?php
 
-namespace App\GraphQL\Auth\Token;
+namespace App\GraphQL\Resolvers;
 
 use Nuwave\Lighthouse\Validation\Validator;
 
-final class IssueValidator extends Validator
+final class Auth_Token_IssueValidator extends Validator
 {
     public function rules(): array
     {

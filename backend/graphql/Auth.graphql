@@ -1,7 +1,7 @@
 extend type Mutation {
     Auth_Token_Issue(input: Auth_Token_Issue_Input!): Auth_Token_Issue_Response!
-        @field(resolver: "App\\GraphQL\\Auth\\Token\\Issue")
-        @validator(class: "App\\GraphQL\\Auth\\Token\\IssueValidator")
+        @field(resolver: "App\\GraphQL\\Resolvers\\Auth_Token_Issue" )
+        @validator(class: "App\\GraphQL\\Resolvers\\Auth_Token_IssueValidator")
 }
 
 input Auth_Token_Issue_Input {
@@ -18,7 +18,7 @@ type Auth_Token_Issue_Response {
 
 extend type Mutation {
     Auth_Token_Refresh: Auth_Token_Refresh_Response!
-        @field(resolver: "App\\GraphQL\\Auth\\Token\\Refresh")
+        @field(resolver: "App\\GraphQL\\Resolvers\\Auth_Token_Refresh")
 }
 
 type Auth_Token_Refresh_Response {

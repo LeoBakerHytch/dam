@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace App\GraphQL\Validators\Mutation;
+namespace App\GraphQL\Resolvers;
 
 use Nuwave\Lighthouse\Validation\Validator;
 
-final class RegisterUserValidator extends Validator
+final class User_RegisterValidator extends Validator
 {
     public function rules(): array
     {

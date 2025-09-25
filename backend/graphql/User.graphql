@@ -16,15 +16,19 @@ extend type Query {
 }
 
 extend type Mutation {
-    registerUser(input: RegisterUserInput!): User!
-        @field(resolver: "App\\GraphQL\\Mutations\\RegisterUser")
-        @validator
+    User_Register(input: User_Register_Input!): User_Register_Response!
+        @field(resolver: "App\\GraphQL\\Resolvers\\User_Register")
+        @validator(class: "App\\GraphQL\\Resolvers\\User_RegisterValidator")
 }
 
-input RegisterUserInput {
+input User_Register_Input {
     name: String!
     email: String!
     password: String!
+}
+
+type User_Register_Response {
+    user: User!
 }
 
 "Account of a person who uses this application."

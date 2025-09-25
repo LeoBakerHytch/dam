@@ -1,20 +1,24 @@
 <?php
 
-namespace App\GraphQL\Mutations;
+namespace App\GraphQL\Resolvers;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
-final class RegisterUser
+final class User_Register
 {
-    public function __invoke($_, array $args): User
+    public function __invoke($_, array $args): array
     {
         $input = $args['input'];
 
-        return User::create([
+        $user = User::create([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
         ]);
+
+        return [
+            'user' => $user,
+        ];
     }
 }

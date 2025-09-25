@@ -1,22 +1,20 @@
 <?php
 
-namespace App\GraphQL\Auth\Token;
+namespace App\GraphQL\Resolvers;
 
 use Exception;
-use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 
-final class Refresh
+final class Auth_Token_Issue
 {
     /**
      * @throws Exception
      */
     public function __invoke($_, array $args): array
     {
+        $credentials = $args['input'];
 
-        try {
-            $accessToken = auth('api')->refresh();
-        } catch (TokenInvalidException $e) {
-            throw new Exception('Invalid refresh token');
+        if (! $accessToken = auth('api')->attempt($credentials)) {
+            throw new Exception('Invalid credentials');
         }
 
         return [
