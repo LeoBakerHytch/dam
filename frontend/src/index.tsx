@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter, Route, Routes } from 'react-router';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router';
 
 import { ApiProvider } from '@/context/api-provider';
-import { AuthProvider } from '@/context/auth-provider';
+import { AuthProvider, useAuth } from '@/context/auth-provider';
 import { UserProvider } from '@/context/user-provider';
 import { RegisterPage } from '@/features/auth/pages/register-page';
 import { DashboardPage } from '@/features/dashboard/dashboard-page';
@@ -17,25 +17,43 @@ import { TemplateLibraryPage } from '@/features/templates/template-library-page'
 
 import '../css/index.css';
 
+function AppRoutes() {
+  const { isAuthenticated } = useAuth();
+
+  if (!isAuthenticated) {
+    return (
+      <Routes>
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="*" element={<Navigate to="/register" replace />} />
+      </Routes>
+    );
+  }
+
+  return (
+    <Routes>
+      <Route path="/" element={<Navigate to="/dashboard" replace />} />
+      <Route path="/register" element={<Navigate to="/dashboard" replace />} />
+
+      <Route path="/dashboard" element={<DashboardPage />} />
+      <Route path="/image-library" element={<ImageLibraryPage />} />
+      <Route path="/logo-library" element={<LogoLibraryPage />} />
+      <Route path="/document-library" element={<DocumentLibraryPage />} />
+      <Route path="/sound-library" element={<SoundLibraryPage />} />
+      <Route path="/icon-library" element={<IconLibraryPage />} />
+      <Route path="/template-library" element={<TemplateLibraryPage />} />
+
+      <Route path="/settings/appearance" element={<SettingsAppearancePage />} />
+    </Routes>
+  );
+}
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <AuthProvider>
       <UserProvider>
         <ApiProvider>
           <BrowserRouter>
-            <Routes>
-              <Route path="/register" element={<RegisterPage />} />
-
-              <Route path="dashboard" element={<DashboardPage />} />
-              <Route path="image-library" element={<ImageLibraryPage />} />
-              <Route path="logo-library" element={<LogoLibraryPage />} />
-              <Route path="document-library" element={<DocumentLibraryPage />} />
-              <Route path="sound-library" element={<SoundLibraryPage />} />
-              <Route path="icon-library" element={<IconLibraryPage />} />
-              <Route path="template-library" element={<TemplateLibraryPage />} />
-
-              <Route path="settings/appearance" element={<SettingsAppearancePage />} />
-            </Routes>
+            <AppRoutes />
           </BrowserRouter>
         </ApiProvider>
       </UserProvider>
