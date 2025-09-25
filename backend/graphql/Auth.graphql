@@ -15,3 +15,21 @@ type Auth_Token_Issue_Response {
     expires_in: Int!
     user: User!
 }
+
+
+extend type Mutation {
+    Auth_Token_Refresh(input: Auth_Token_Refresh_Input!): Auth_Token_Refresh_Response!
+        @field(resolver: "App\\GraphQL\\Auth\\Token\\Refresh")
+        @validator(class: "App\\GraphQL\\Auth\\Token\\RefreshValidator")
+}
+
+input Auth_Token_Refresh_Input {
+    refresh_token: String!
+}
+
+type Auth_Token_Refresh_Response {
+    access_token: String!
+    token_type: String!
+    expires_in: Int!
+    refresh_token: String
+}
