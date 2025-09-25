@@ -4,7 +4,7 @@ import { BreadcrumbItem } from '@/types/BreadcrumbItem';
 const breadcrumbs: BreadcrumbItem[] = [
   {
     title: 'Dashboard',
-    href: '/',
+    path: '/',
   },
 ];
 export function App() {

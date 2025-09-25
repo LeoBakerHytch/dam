@@ -26,7 +26,7 @@ import { type NavItem } from '@/types/NavItem';
 export const mainNavItems: NavItem[] = [
   {
     title: 'Dashboard',
-    to: '/',
+    to: '/dashboard',
     icon: LayoutGrid,
     root: true,
   },
