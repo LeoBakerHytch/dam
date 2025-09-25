@@ -24,6 +24,11 @@
         "phpunit/phpunit": "^12.3",
         "laravel/telescope": "^5.12"
     },
+    "extra": {
+        "laravel": {
+            "dont-discover": []
+        }
+    },
     "minimum-stability": "stable",
     "prefer-stable": true
 }
