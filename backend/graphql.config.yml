@@ -1,0 +1,5 @@
+schema:
+  - 'graphql/*.graphql'
+  - 'programmatic-types.graphql'
+  - 'schema-directives.graphql'
+documents: '**/*.{ts,tsx,js,jsx,graphql,gql}'
