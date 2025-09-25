@@ -1,0 +1,20 @@
+{
+    "name": "kinematic/dam",
+    "description": "A digital asset management platform",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Kinematic\\Dam\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Leo Baker-Hytch",
+            "email": "ltobh@tuta.com"
+        }
+    ],
+    "require": {
+        "nuwave/lighthouse": "^6.63"
+    }
+}
