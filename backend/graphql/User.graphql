@@ -16,7 +16,9 @@ extend type Query {
 }
 
 extend type Mutation {
-    registerUser(input: RegisterUserInput!): User! @field(resolver: "App\\GraphQL\\Mutations\\RegisterUser")
+    registerUser(input: RegisterUserInput!): User!
+        @field(resolver: "App\\GraphQL\\Mutations\\RegisterUser")
+        @validator
 }
 
 input RegisterUserInput {
