@@ -11,6 +11,7 @@ interface AccessToken {
   jwt: string;
   tokenType: string;
   expiresIn: number;
+  expiresAt: number;
 }
 
 interface AuthContextType {
@@ -39,10 +40,14 @@ export function AuthProvider(props: PropsWithChildren) {
   });
 
   function setAccessToken(token: AccessToken | null) {
-    setAccessTokenState(token);
     if (token) {
-      localStorage.setItem('accessToken', JSON.stringify(token));
+      // Calculate actual expiration timestamp (yes, it’s in the token, but whatever)
+      const expiresAt = Date.now() / 1000 + token.expiresIn;
+      const tokenWithExpiry = { ...token, expiresAt };
+      setAccessTokenState(tokenWithExpiry);
+      localStorage.setItem('accessToken', JSON.stringify(tokenWithExpiry));
     } else {
+      setAccessTokenState(null);
       localStorage.removeItem('accessToken');
     }
   }
@@ -57,8 +62,7 @@ export function AuthProvider(props: PropsWithChildren) {
   useEffect(() => {
     if (accessToken) {
       const now = Date.now() / 1000;
-      const expirationTime = accessToken.expiresIn;
-      if (now >= expirationTime) {
+      if (now >= accessToken.expiresAt) {
         logOut();
       }
     }
