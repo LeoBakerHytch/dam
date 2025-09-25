@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 # Start PHP-FPM in background
 php-fpm -D

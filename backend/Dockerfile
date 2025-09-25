@@ -24,15 +24,15 @@ RUN groupadd -g 1000 www && \
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
+COPY docker /docker
+RUN chmod +x /docker/*.sh
+
 WORKDIR /var/www/html
 
 COPY --chown=www:www . .
 COPY --from=vendor --chown=www:www /app/vendor ./vendor
 
 COPY nginx.conf /etc/nginx/sites-available/default
-
-COPY start.sh /start.sh
-RUN chmod +x /start.sh
 
 RUN chown -R www:www /var/www/html && \
     chmod -R 755 /var/www/html && \
@@ -43,4 +43,5 @@ USER www
 
 EXPOSE 8080
 
-CMD ["/start.sh"]
+ENTRYPOINT ["/docker/init.sh"]
+CMD ["/docker/start.sh"]
