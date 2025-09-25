@@ -15,6 +15,16 @@ extend type Query {
     ): [User!]! @paginate(defaultCount: 10)
 }
 
+extend type Mutation {
+    registerUser(input: RegisterUserInput!): User! @field(resolver: "App\\GraphQL\\Mutations\\RegisterUser")
+}
+
+input RegisterUserInput {
+    name: String!
+    email: String!
+    password: String!
+}
+
 "Account of a person who uses this application."
 type User {
     "Unique primary key."
