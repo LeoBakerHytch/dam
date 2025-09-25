@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Route, Routes } from 'react-router';
 
+import { ApiProvider } from '@/context/api-provider';
 import { RegisterPage } from '@/features/auth/pages/register-page';
 import { DashboardPage } from '@/features/dashboard/dashboard-page';
 import { DocumentLibraryPage } from '@/features/documents/document-library-page';
@@ -11,7 +12,6 @@ import { LogoLibraryPage } from '@/features/logos/logo-library-page';
 import { SettingsAppearancePage } from '@/features/settings/appearance/settings-appearance-page';
 import { SoundLibraryPage } from '@/features/sounds/sound-library-page';
 import { TemplateLibraryPage } from '@/features/templates/template-library-page';
-import { ApiProvider } from '@/lib/api';
 
 import '../css/index.css';
 
