@@ -24,10 +24,27 @@ export function useUser() {
 }
 
 export function UserProvider(props: PropsWithChildren) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUserState] = useState<User | null>(() => {
+    const stored = localStorage.getItem('user');
+    return stored ? JSON.parse(stored) : null;
+  });
+
+  function setUser(user: User | null) {
+    setUserState(user);
+    if (user) {
+      localStorage.setItem('user', JSON.stringify(user));
+    } else {
+      localStorage.removeItem('user');
+    }
+  }
 
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider
+      value={{
+        user,
+        setUser,
+      }}
+    >
       {props.children}
     </UserContext.Provider>
   );

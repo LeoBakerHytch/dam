@@ -1,4 +1,11 @@
-import { PropsWithChildren, createContext, useContext, useState, useEffect } from 'react';
+import {
+  PropsWithChildren,
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 
 interface AccessToken {
   jwt: string;
@@ -9,7 +16,7 @@ interface AccessToken {
 interface AuthContextType {
   accessToken: AccessToken | null;
   setAccessToken: (token: AccessToken | null) => void;
-  logout: () => void;
+  logOut: () => void;
   isAuthenticated: boolean;
 }
 
@@ -31,36 +38,41 @@ export function AuthProvider(props: PropsWithChildren) {
     return stored ? JSON.parse(stored) : null;
   });
 
-  const setAccessToken = (token: AccessToken | null) => {
+  function setAccessToken(token: AccessToken | null) {
     setAccessTokenState(token);
     if (token) {
       localStorage.setItem('accessToken', JSON.stringify(token));
     } else {
       localStorage.removeItem('accessToken');
     }
-  };
+  }
 
-  const logout = () => {
+  const logOut = useCallback(() => {
     setAccessToken(null);
-    // Could also clear user context here if needed
-  };
+    localStorage.removeItem('user');
+  }, []);
 
   const isAuthenticated = !!accessToken;
 
-  // Optional: Check token expiration
   useEffect(() => {
     if (accessToken) {
       const now = Date.now() / 1000;
       const expirationTime = accessToken.expiresIn;
-
       if (now >= expirationTime) {
-        logout();
+        logOut();
       }
     }
-  }, [accessToken]);
+  }, [accessToken, logOut]);
 
   return (
-    <AuthContext.Provider value={{ accessToken, setAccessToken, logout, isAuthenticated }}>
+    <AuthContext.Provider
+      value={{
+        accessToken,
+        setAccessToken,
+        logOut,
+        isAuthenticated,
+      }}
+    >
       {props.children}
     </AuthContext.Provider>
   );
