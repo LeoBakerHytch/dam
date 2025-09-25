@@ -15,22 +15,6 @@ extend type Query {
     ): [User!]! @paginate(defaultCount: 10)
 }
 
-extend type Mutation {
-    User_Register(input: User_Register_Input!): User_Register_Response!
-        @field(resolver: "App\\GraphQL\\Resolvers\\User_Register")
-        @validator(class: "App\\GraphQL\\Resolvers\\User_RegisterValidator")
-}
-
-input User_Register_Input {
-    name: String!
-    email: String!
-    password: String!
-}
-
-type User_Register_Response {
-    user: User!
-}
-
 "Account of a person who uses this application."
 type User {
     "Unique primary key."

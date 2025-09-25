@@ -18,9 +18,11 @@ final class Auth_Token_Issue
         }
 
         return [
-            'access_token' => $accessToken,
-            'token_type' => 'Bearer',
-            'expires_in' => auth('api')->factory()->getTTL() * 60,
+            'accessToken' => [
+                'jwt' => $accessToken,
+                'tokenType' => 'Bearer',
+                'expiresIn' => auth('api')->factory()->getTTL() * 60,
+            ],
             'user' => auth('api')->user(),
         ];
     }

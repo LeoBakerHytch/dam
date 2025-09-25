@@ -12,7 +12,6 @@ final class Auth_Token_Refresh
      */
     public function __invoke($_, array $args): array
     {
-
         try {
             $accessToken = auth('api')->refresh();
         } catch (TokenInvalidException $e) {
@@ -20,9 +19,11 @@ final class Auth_Token_Refresh
         }
 
         return [
-            'access_token' => $accessToken,
-            'token_type' => 'Bearer',
-            'expires_in' => auth('api')->factory()->getTTL() * 60,
+            'accessToken' => [
+                'jwt' => $accessToken,
+                'tokenType' => 'Bearer',
+                'expiresIn' => auth('api')->factory()->getTTL() * 60,
+            ],
             'user' => auth('api')->user(),
         ];
     }

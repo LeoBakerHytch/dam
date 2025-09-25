@@ -4,7 +4,7 @@ namespace App\GraphQL\Resolvers;
 
 use Nuwave\Lighthouse\Validation\Validator;
 
-final class User_RegisterValidator extends Validator
+final class Auth_User_RegisterValidator extends Validator
 {
     public function rules(): array
     {

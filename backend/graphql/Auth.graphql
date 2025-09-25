@@ -1,3 +1,9 @@
+type AccessToken {
+    jwt: String!
+    tokenType: String!
+    expiresIn: Int!
+}
+
 extend type Mutation {
     Auth_Token_Issue(input: Auth_Token_Issue_Input!): Auth_Token_Issue_Response!
         @field(resolver: "App\\GraphQL\\Resolvers\\Auth_Token_Issue" )
@@ -10,9 +16,7 @@ input Auth_Token_Issue_Input {
 }
 
 type Auth_Token_Issue_Response {
-    access_token: String!
-    token_type: String!
-    expires_in: Int!
+    accessToken: AccessToken!
     user: User!
 }
 
@@ -22,8 +26,23 @@ extend type Mutation {
 }
 
 type Auth_Token_Refresh_Response {
-    access_token: String!
-    token_type: String!
-    expires_in: Int!
+    accessToken: AccessToken!
+    user: User!
+}
+
+extend type Mutation {
+    Auth_User_Register(input: Auth_User_Register_Input!): Auth_User_Register_Response!
+    @field(resolver: "App\\GraphQL\\Resolvers\\Auth_User_Register")
+    @validator(class: "App\\GraphQL\\Resolvers\\Auth_User_RegisterValidator")
+}
+
+input Auth_User_Register_Input {
+    name: String!
+    email: String!
+    password: String!
+}
+
+type Auth_User_Register_Response {
+    accessToken: AccessToken!
     user: User!
 }
