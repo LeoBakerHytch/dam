@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoaderCircle } from 'lucide-react';
 import { useForm } from 'react-hook-form';
+import { gql, useMutation } from 'urql';
 import { z } from 'zod';
 
 import { TextLink } from '@/components/text/text-link';
@@ -8,7 +9,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { InputError } from '@/components/ui/input-error';
 import { Label } from '@/components/ui/label';
+import { useAuth } from '@/context/auth-provider';
+import { useUser } from '@/context/user-provider';
 import { AuthLayout } from '@/features/auth/layouts/auth-layout';
+import { USER_FRAGMENT } from '@/lib/graphql-fragments';
 
 const registerSchema = z
   .object({
@@ -25,25 +29,53 @@ const registerSchema = z
     path: ['password_confirmation'],
   });
 
+const registerMutation = gql`
+  mutation Auth_User_Register($input: Auth_User_Register_Input!) {
+    Auth_User_Register(input: $input) {
+      accessToken {
+        jwt
+        tokenType
+        expiresIn
+      }
+      user {
+        ...UserFragment
+      }
+    }
+  }
+  ${USER_FRAGMENT}
+`;
+
 type RegisterForm = z.infer<typeof registerSchema>;
 
 export function RegisterPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
     reset,
   } = useForm<RegisterForm>({
     resolver: zodResolver(registerSchema),
   });
 
+  const [result, executeMutation] = useMutation(registerMutation);
+  const { setUser } = useUser();
+  const { setAccessToken } = useAuth();
+
   const onSubmit = async (data: RegisterForm) => {
     try {
-      // TODO: Replace with your actual registration API call
-      console.log('Registration data:', data);
+      const result = await executeMutation({
+        input: {
+          name: data.name,
+          email: data.email,
+          password: data.password,
+        },
+      });
 
-      // Example API call (replace with your actual implementation):
-      // await registerUser(data);
+      if (result.data?.Auth_User_Register) {
+        const { user, accessToken } = result.data.Auth_User_Register;
+        if (user) setUser(user);
+        if (accessToken) setAccessToken(accessToken);
+      }
 
       // Reset password fields on success
       reset({
@@ -121,10 +153,10 @@ export function RegisterPage() {
             type="submit"
             className="mt-2 w-full"
             tabIndex={5}
-            disabled={isSubmitting}
+            disabled={result.fetching}
             data-test="register-user-button"
           >
-            {isSubmitting && <LoaderCircle className="h-4 w-4 animate-spin" />}
+            {result.fetching && <LoaderCircle className="h-4 w-4 animate-spin" />}
             Create account
           </Button>
         </div>

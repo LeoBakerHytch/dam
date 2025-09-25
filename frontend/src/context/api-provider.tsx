@@ -1,18 +1,27 @@
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, useMemo } from 'react';
 import { Client, Provider, cacheExchange, fetchExchange } from 'urql';
+import { useAuth } from '@/context/auth-provider';
 
-export const apiClient = new Client({
-  url: '/graphql',
-  exchanges: [cacheExchange, fetchExchange],
-  fetchOptions: () => {
-    // const token = getToken();
-    const token = null;
-    return {
-      headers: { authorization: token ? `Bearer ${token}` : '' },
-    };
-  },
-});
+function ApiProviderInner(props: PropsWithChildren) {
+  const { accessToken } = useAuth();
+
+  const apiClient = useMemo(() => {
+    return new Client({
+      url: '/graphql',
+      exchanges: [cacheExchange, fetchExchange],
+      fetchOptions: () => {
+        return {
+          headers: {
+            authorization: accessToken ? `Bearer ${accessToken.jwt}` : ''
+          },
+        };
+      },
+    });
+  }, [accessToken]);
+
+  return <Provider value={apiClient}>{props.children}</Provider>;
+}
 
 export function ApiProvider(props: PropsWithChildren) {
-  return <Provider value={apiClient}>{props.children}</Provider>;
+  return <ApiProviderInner>{props.children}</ApiProviderInner>;
 }
