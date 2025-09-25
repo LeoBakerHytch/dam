@@ -14,18 +14,14 @@ final class Issue
     {
         $credentials = $args['input'];
 
-        if (! $token = Auth::guard('api')->attempt($credentials)) {
+        if (! $accessToken = Auth::guard('api')->attempt($credentials)) {
             throw new Exception('Invalid credentials');
         }
 
-        $refreshToken = Auth::guard('api')
-                ->setToken($token)
-                ->getToken()
-                ->getClaim('jti') . '_refresh';
-
         return [
-            'access_token' => $token,
-            'refresh_token' => $refreshToken,
+            'access_token' => $accessToken,
+            'token_type' => 'Bearer',
+            'expires_in' => Auth::guard('api')->factory()->getTTL() * 60,
             'user' => Auth::user(),
         ];
     }

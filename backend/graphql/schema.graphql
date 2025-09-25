@@ -1,6 +1,6 @@
 type Query
 type Mutation
 
+#import Auth.graphql
 #import User.graphql
-#import auth.graphql
 #import scalars.graphql

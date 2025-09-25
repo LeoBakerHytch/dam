@@ -4,6 +4,7 @@ namespace App\GraphQL\Auth\Token;
 
 use Exception;
 use Illuminate\Support\Facades\Auth;
+use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 
 final class Refresh
 {
@@ -12,16 +13,17 @@ final class Refresh
      */
     public function __invoke($_, array $args): array
     {
-        $refreshToken = $args['input']['refresh_token'];
 
         try {
-            $newToken = Auth::guard('api')->refresh($refreshToken);
-        } catch (Exception $e) {
+            $accessToken = Auth::guard('api')->refresh();
+        } catch (TokenInvalidException $e) {
             throw new Exception('Invalid refresh token');
         }
 
         return [
-            'access_token' => $newToken,
+            'access_token' => $accessToken,
+            'token_type' => 'Bearer',
+            'expires_in' => Auth::guard('api')->factory()->getTTL() * 60,
             'user' => Auth::user(),
         ];
     }
