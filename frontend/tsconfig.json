@@ -17,7 +17,7 @@
         "noEmit": true,
         "jsx": "react-jsx",
         "forceConsistentCasingInFileNames": true,
-        "allowImportingTsExtensions": true,
+        "allowImportingTsExtensions": false,
 
         /* Linting */
         "strict": true,
