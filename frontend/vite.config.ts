@@ -1,8 +1,8 @@
 // @ts-expect-error (TS is configured with "moduleResolution": "bundler", yet still somehow the types are not picked up)
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
-import { defineConfig } from 'vite';
 import { resolve } from 'path';
+import { defineConfig } from 'vite';
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
@@ -24,6 +24,9 @@ export default defineConfig({
         target: 'http://localhost:8000',
         changeOrigin: true,
       },
+    },
+    cors: {
+      origin: 'http://localhost:8000',
     },
   },
 });

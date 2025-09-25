@@ -1,8 +1,8 @@
-import { PropsWithChildren, createContext } from 'react';
-import { Client, cacheExchange, fetchExchange } from 'urql';
+import { PropsWithChildren } from 'react';
+import { Client, Provider, cacheExchange, fetchExchange } from 'urql';
 
 export const apiClient = new Client({
-  url: 'http://localhost:8000/graphql',
+  url: '/graphql',
   exchanges: [cacheExchange, fetchExchange],
   fetchOptions: () => {
     // const token = getToken();
@@ -13,8 +13,6 @@ export const apiClient = new Client({
   },
 });
 
-const ApiContext = createContext(apiClient);
-
 export function ApiProvider(props: PropsWithChildren) {
-  return <ApiContext.Provider value={apiClient}>{props.children}</ApiContext.Provider>;
+  return <Provider value={apiClient}>{props.children}</Provider>;
 }
