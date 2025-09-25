@@ -41,6 +41,23 @@ services:
     networks:
       - appnet
 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app:cached
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - appnet
+    environment:
+      VITE_API_URL: http://localhost:8000/graphql
+
 volumes:
   db_data:
   storage_data:
