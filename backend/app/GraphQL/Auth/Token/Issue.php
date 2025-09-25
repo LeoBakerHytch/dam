@@ -3,7 +3,6 @@
 namespace App\GraphQL\Auth\Token;
 
 use Exception;
-use Illuminate\Support\Facades\Auth;
 
 final class Issue
 {
@@ -14,15 +13,15 @@ final class Issue
     {
         $credentials = $args['input'];
 
-        if (! $accessToken = Auth::guard('api')->attempt($credentials)) {
+        if (! $accessToken = auth('api')->attempt($credentials)) {
             throw new Exception('Invalid credentials');
         }
 
         return [
             'access_token' => $accessToken,
             'token_type' => 'Bearer',
-            'expires_in' => Auth::guard('api')->factory()->getTTL() * 60,
-            'user' => Auth::user(),
+            'expires_in' => auth('api')->factory()->getTTL() * 60,
+            'user' => auth('api')->user(),
         ];
     }
 }
