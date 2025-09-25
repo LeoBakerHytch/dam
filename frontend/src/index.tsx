@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Route, Routes } from 'react-router';
 
+import { RegisterPage } from '@/features/auth/pages/register-page';
 import { DashboardPage } from '@/features/dashboard/dashboard-page';
 import { DocumentLibraryPage } from '@/features/documents/document-library-page';
 import { IconLibraryPage } from '@/features/icons/icon-library-page';
@@ -19,6 +20,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <ApiProvider>
       <BrowserRouter>
         <Routes>
+          <Route path="/register" element={<RegisterPage />} />
+
           <Route path="dashboard" element={<DashboardPage />} />
           <Route path="image-library" element={<ImageLibraryPage />} />
           <Route path="logo-library" element={<LogoLibraryPage />} />
