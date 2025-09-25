@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Route, Routes } from 'react-router';
 
-import { DashboardPage } from '@/features/pages/dashboard-page';
+import { DashboardPage } from '@/features/dashboard/dashboard-page';
 
 import '../css/index.css';
 

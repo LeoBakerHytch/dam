@@ -1,7 +1,7 @@
 import { mainNavItems } from '@/components/app/components/app-sidebar';
 import { AppLayout } from '@/components/app/layouts/app-layout';
-import { DashboardCard } from '@/features/components/dashboard-card';
-import { DashboardPlaceholderCard } from '@/features/components/dashboard-placeholder-card';
+import { DashboardCard } from '@/features/dashboard/components/dashboard-card';
+import { DashboardPlaceholderCard } from '@/features/dashboard/components/dashboard-placeholder-card';
 import { BreadcrumbItem } from '@/types/BreadcrumbItem';
 
 const breadcrumbs: BreadcrumbItem[] = [
