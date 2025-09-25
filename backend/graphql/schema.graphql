@@ -1,0 +1,4 @@
+type Query
+
+#import scalars.graphql
+#import User.graphql
