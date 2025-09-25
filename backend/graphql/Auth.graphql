@@ -1,0 +1,17 @@
+extend type Mutation {
+    Auth_Token_Issue(input: Auth_Token_Issue_Input!): Auth_Token_Issue_Response!
+        @field(resolver: "App\\GraphQL\\Auth\\Token\\Issue")
+        @validator(class: "App\\GraphQL\\Auth\\Token\\IssueValidator")
+}
+
+input Auth_Token_Issue_Input {
+    email: String!
+    password: String!
+}
+
+type Auth_Token_Issue_Response {
+    access_token: String!
+    token_type: String!
+    expires_in: Int!
+    user: User!
+}

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\GraphQL\Mutations;
+namespace App\GraphQL\Auth\Token;
 
 use Exception;
 use Illuminate\Support\Facades\Auth;
 
-final class Login
+final class Issue
 {
     /**
      * @throws Exception

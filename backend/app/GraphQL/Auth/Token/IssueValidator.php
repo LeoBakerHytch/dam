@@ -1,10 +1,10 @@
 <?php
 
-namespace App\GraphQL\Validators\Mutation;
+namespace App\GraphQL\Auth\Token;
 
 use Nuwave\Lighthouse\Validation\Validator;
 
-final class LoginValidator extends Validator
+final class IssueValidator extends Validator
 {
     public function rules(): array
     {
