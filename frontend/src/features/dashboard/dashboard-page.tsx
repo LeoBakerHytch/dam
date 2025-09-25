@@ -12,7 +12,7 @@ export function DashboardPage() {
           {mainNavItems
             .filter((navItem) => !navItem.root)
             .map((navItem) => (
-              <DashboardCard key={navItem.to} {...navItem} />
+              <DashboardCard key={navItem.path} {...navItem} />
             ))}
         </div>
         <DashboardPlaceholderCard />

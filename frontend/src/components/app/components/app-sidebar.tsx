@@ -26,38 +26,38 @@ import { type NavItem } from '@/types/NavItem';
 export const mainNavItems: NavItem[] = [
   {
     title: 'Dashboard',
-    to: '/dashboard',
+    path: '/dashboard',
     icon: LayoutGrid,
     root: true,
   },
   {
     title: 'Image library',
-    to: '/image-library',
+    path: '/image-library',
     icon: Image,
   },
   {
     title: 'Logo library',
-    to: '/logo-library',
+    path: '/logo-library',
     icon: Target,
   },
   {
     title: 'Document library',
-    to: '/document-library',
+    path: '/document-library',
     icon: FileText,
   },
   {
     title: 'Sound library',
-    to: '/sound-library',
+    path: '/sound-library',
     icon: AudioLines,
   },
   {
     title: 'Icon library',
-    to: '/icon-library',
+    path: '/icon-library',
     icon: Atom,
   },
   {
     title: 'Template library',
-    to: '/template-library',
+    path: '/template-library',
     icon: LayoutTemplate,
   },
 ];
