@@ -39,8 +39,8 @@ extend type Mutation {
 }
 
 input Auth_User_Register_Input {
-    name: String!
-    email: String!
+    name: String! @rules(apply: ["max:255"])
+    email: String! @rules(apply: ["email", "max:255", "unique:users,email"])
     password: String!
 }
 

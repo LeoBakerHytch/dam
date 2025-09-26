@@ -10,9 +10,7 @@ final class Auth_User_RegisterValidator extends Validator
     public function rules(): array
     {
         return [
-            'input.name' => ['required', 'string', 'max:255'],
-            'input.email' => ['required', 'email', 'max:255', 'unique:users,email'],
-            'input.password' => ['required', 'string', Rules\Password::defaults()],
+            'input.password' => [Rules\Password::defaults()],
         ];
     }
 }
