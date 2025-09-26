@@ -30,13 +30,13 @@ type User {
     email: String!
 
     "When the email was verified."
-    emailVerifiedAt: DateTime
+    emailVerifiedAt: DateTime @rename(attribute: "email_verified_at")
 
     "When the account was created."
-    createdAt: DateTime!
+    createdAt: DateTime! @rename(attribute: "created_at")
 
     "When the account was last updated."
-    updatedAt: DateTime!
+    updatedAt: DateTime! @rename(attribute: "updated_at")
 }
 
 
