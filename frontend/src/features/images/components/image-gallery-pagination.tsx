@@ -28,8 +28,8 @@ export function ImageGalleryPagination({
         <PaginationContent>
           <PaginationItem>
             <PaginationPrevious
-              onClick={currentPage === 1 ? undefined : () => onPageChange(currentPage - 1)}
-              className={currentPage === 1 ? 'pointer-events-none opacity-50' : ''}
+              disabled={currentPage === 1}
+              onClick={() => onPageChange(currentPage - 1)}
             />
           </PaginationItem>
 
@@ -83,10 +83,8 @@ export function ImageGalleryPagination({
 
           <PaginationItem>
             <PaginationNext
-              onClick={
-                !paginatorInfo.hasMorePages ? undefined : () => onPageChange(currentPage + 1)
-              }
-              className={!paginatorInfo.hasMorePages ? 'pointer-events-none opacity-50' : ''}
+              disabled={!paginatorInfo.hasMorePages}
+              onClick={() => onPageChange(currentPage + 1)}
             />
           </PaginationItem>
         </PaginationContent>
