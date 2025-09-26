@@ -8,7 +8,7 @@ interface ImageAssetTileProps {
 export function ImageAssetTile({ asset, onClick }: ImageAssetTileProps) {
   return (
     <div
-      className="flex w-40 flex-col gap-2 cursor-pointer hover:opacity-75 transition-opacity"
+      className="flex w-40 cursor-pointer flex-col gap-2 transition-opacity hover:opacity-75"
       onClick={onClick}
     >
       <div className="relative">

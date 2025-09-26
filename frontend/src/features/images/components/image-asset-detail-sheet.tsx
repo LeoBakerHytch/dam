@@ -118,7 +118,9 @@ function TextSection({
         <Icon className="h-4 w-4 text-neutral-500" />
         <h4 className="text-sm font-medium">{title}</h4>
       </div>
-      <p className={`text-sm ${isPlaceholder ? 'text-neutral-400 dark:text-neutral-500' : 'text-neutral-600 dark:text-neutral-400'}`}>
+      <p
+        className={`text-sm ${isPlaceholder ? 'text-neutral-400 dark:text-neutral-500' : 'text-neutral-600 dark:text-neutral-400'}`}
+      >
         {displayText}
       </p>
     </div>

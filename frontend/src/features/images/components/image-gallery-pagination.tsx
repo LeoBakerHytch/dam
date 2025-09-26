@@ -24,7 +24,7 @@ export function ImageGalleryPagination({
 
   return (
     <div className="bg-background/80 sticky bottom-0 py-4 backdrop-blur-sm">
-      <div className="flex items-center justify-center lg:justify-end px-4 gap-6">
+      <div className="flex items-center justify-center gap-6 px-4 lg:justify-end">
         {/* Page indicators */}
         <Pagination>
           <PaginationContent>
