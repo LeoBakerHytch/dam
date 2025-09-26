@@ -50,7 +50,7 @@ export function ImageAssetDetailSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className="w-full sm:max-w-md">
         <SheetHeader>
-          <SheetTitle className="text-left">{currentAsset.name}</SheetTitle>
+          <SheetTitle className="text-left break-all pr-8">{currentAsset.name}</SheetTitle>
         </SheetHeader>
 
         <div className="flex flex-col gap-6 p-4">
