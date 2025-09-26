@@ -5,7 +5,7 @@ import { NavItem } from '@/types/NavItem';
 export function DashboardCard(props: NavItem) {
   return (
     <Link
-      className="border-sidebar-border/70 bg-muted dark:border-sidebar-border flex aspect-video flex-col overflow-hidden rounded-xl border transition-all duration-200 hover:border-purple-600 hover:text-purple-700 dark:hover:border-purple-100 dark:hover:text-purple-300"
+      className="border-sidebar-border/70 bg-muted dark:border-sidebar-border flex aspect-video flex-col overflow-hidden rounded-xl border transition-all duration-200 hover:border-slate-600 hover:text-slate-700 dark:hover:border-slate-100 dark:hover:text-slate-300"
       to={props.path ?? '#'}
     >
       {props.icon && (
