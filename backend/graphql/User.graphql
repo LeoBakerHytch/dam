@@ -38,3 +38,20 @@ type User {
     "When the account was last updated."
     updatedAt: DateTime!
 }
+
+
+extend type Mutation {
+    User_UpdateProfile(input: User_UpdateProfile_Input!): User_UpdateProfile_Response!
+    @field(resolver: "App\\GraphQL\\Resolvers\\User_UpdateProfile")
+    @validator(class: "App\\GraphQL\\Resolvers\\User_UpdateProfileValidator")
+    @guard
+}
+
+input User_UpdateProfile_Input {
+    name: String
+    email: String
+}
+
+type User_UpdateProfile_Response {
+    user: User!
+}
