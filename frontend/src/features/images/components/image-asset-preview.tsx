@@ -18,7 +18,7 @@ const uploadImageAssetMutation = gql`
   ${IMAGE_ASSET_FRAGMENT}
 `;
 
-type UploadState = 'pending' | 'uploading' | 'success' | 'error';
+type UploadState = 'PENDING' | 'UPLOADING' | 'SUCCESS' | 'ERROR';
 
 export function ImageAssetPreview({
   file,
@@ -27,12 +27,12 @@ export function ImageAssetPreview({
   file: File;
   onUploadComplete?: (imageAsset: ImageAsset) => void;
 }) {
-  const [uploadState, setUploadState] = useState<UploadState>('pending');
+  const [uploadState, setUploadState] = useState<UploadState>('PENDING');
   const [error, setError] = useState<string | null>(null);
   const [_result, executeMutation] = useMutation(uploadImageAssetMutation);
 
   const uploadFile = useCallback(async () => {
-    setUploadState('uploading');
+    setUploadState('UPLOADING');
     setError(null);
 
     try {
@@ -43,16 +43,16 @@ export function ImageAssetPreview({
       });
 
       if (mutationResult.data?.Media_ImageAsset_Upload?.imageAsset) {
-        setUploadState('success');
+        setUploadState('SUCCESS');
         toast.success('Image uploaded successfully');
         onUploadComplete?.(mutationResult.data.Media_ImageAsset_Upload.imageAsset);
       } else if (mutationResult.error) {
-        setUploadState('error');
+        setUploadState('ERROR');
         setError(mutationResult.error.message || 'Upload failed');
         toast.error('Failed to upload image');
       }
     } catch (err) {
-      setUploadState('error');
+      setUploadState('ERROR');
       setError(err instanceof Error ? err.message : 'Network error occurred');
       toast.error('Network error occurred');
     }
@@ -68,11 +68,11 @@ export function ImageAssetPreview({
 
   const getStatusIcon = () => {
     switch (uploadState) {
-      case 'uploading':
+      case 'UPLOADING':
         return <Loader2 size={16} className="animate-spin text-blue-500" />;
-      case 'success':
+      case 'SUCCESS':
         return <CheckCircle size={16} className="text-green-500" />;
-      case 'error':
+      case 'ERROR':
         return <XCircle size={16} className="text-red-500" />;
       default:
         return null;
@@ -97,15 +97,15 @@ export function ImageAssetPreview({
           {file.name}
         </p>
 
-        {uploadState === 'uploading' && (
+        {uploadState === 'UPLOADING' && (
           <p className="text-xs text-blue-600 dark:text-blue-400">Uploading...</p>
         )}
 
-        {uploadState === 'success' && (
+        {uploadState === 'SUCCESS' && (
           <p className="text-xs text-green-600 dark:text-green-400">Uploaded successfully</p>
         )}
 
-        {uploadState === 'error' && (
+        {uploadState === 'ERROR' && (
           <div className="flex flex-col gap-1">
             <p className="text-xs text-red-600 dark:text-red-400">{error}</p>
             <Button size="sm" variant="outline" onClick={retry} className="h-6 text-xs">
