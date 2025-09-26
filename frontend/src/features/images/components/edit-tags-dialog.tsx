@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { InputError } from '@/components/ui/input-error';
+import { Kbd } from '@/components/ui/shadcn-io/kbd';
 import { Label } from '@/components/ui/label';
 import { IMAGE_ASSET_FRAGMENT } from '@/lib/graphql-fragments';
 import { type ImageAsset } from '@/types/graphql';
@@ -120,9 +121,16 @@ export function EditTagsDialog({ asset, open, onOpenChange, onSuccess }: EditTag
     }
   };
 
+  const handleDialogKeyDown = (e: React.KeyboardEvent) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter' && hasChanges && !result.fetching) {
+      e.preventDefault();
+      handleSubmit(onSubmit)();
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent onKeyDown={handleDialogKeyDown}>
         <DialogHeader>
           <DialogTitle>
             {asset.tags && asset.tags.length > 0 ? 'Edit tags' : 'Add tags'}
@@ -170,19 +178,30 @@ export function EditTagsDialog({ asset, open, onOpenChange, onSuccess }: EditTag
             )}
           </div>
 
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-              disabled={result.fetching}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" disabled={result.fetching || !hasChanges}>
-              {result.fetching && <LoaderCircle className="h-4 w-4 animate-spin" />}
-              Save tags
-            </Button>
+          <DialogFooter className="flex-col sm:flex-row">
+            <div className="flex-1 mb-2 sm:mb-0 flex items-center">
+              {hasChanges && (
+                <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                  <span>Press</span>
+                  <Kbd>{navigator.platform.includes('Mac') ? ['⌘', 'Enter'] : ['Ctrl', 'Enter']}</Kbd>
+                  <span>to save</span>
+                </div>
+              )}
+            </div>
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => onOpenChange(false)}
+                disabled={result.fetching}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" disabled={result.fetching || !hasChanges}>
+                {result.fetching && <LoaderCircle className="h-4 w-4 animate-spin" />}
+                Save tags
+              </Button>
+            </div>
           </DialogFooter>
         </form>
       </DialogContent>

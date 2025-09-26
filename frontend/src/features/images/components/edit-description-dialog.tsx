@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/dialog';
 import { InputError } from '@/components/ui/input-error';
 import { Label } from '@/components/ui/label';
+import { Kbd } from '@/components/ui/shadcn-io/kbd';
 import { Textarea } from '@/components/ui/textarea';
 import { IMAGE_ASSET_FRAGMENT } from '@/lib/graphql-fragments';
 import { type ImageAsset } from '@/types/graphql';
@@ -95,9 +96,16 @@ export function EditDescriptionDialog({
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter' && hasChanges && !result.fetching) {
+      e.preventDefault();
+      handleSubmit(onSubmit)();
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent onKeyDown={handleKeyDown}>
         <DialogHeader>
           <DialogTitle>{asset.description ? 'Edit description' : 'Add description'}</DialogTitle>
           <DialogDescription>
@@ -119,19 +127,30 @@ export function EditDescriptionDialog({
             </div>
           </div>
 
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-              disabled={result.fetching}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" disabled={result.fetching || !hasChanges}>
-              {result.fetching && <LoaderCircle className="h-4 w-4 animate-spin" />}
-              {asset.description ? 'Update' : 'Add'} description
-            </Button>
+          <DialogFooter className="flex-col sm:flex-row">
+            <div className="flex-1 mb-2 sm:mb-0 flex items-center">
+              {hasChanges && (
+                <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                  <span>Press</span>
+                  <Kbd>{navigator.platform.includes('Mac') ? ['⌘', 'Enter'] : ['Ctrl', 'Enter']}</Kbd>
+                  <span>to save</span>
+                </div>
+              )}
+            </div>
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => onOpenChange(false)}
+                disabled={result.fetching}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" disabled={result.fetching || !hasChanges}>
+                {result.fetching && <LoaderCircle className="h-4 w-4 animate-spin" />}
+                {asset.description ? 'Update' : 'Add'} description
+              </Button>
+            </div>
           </DialogFooter>
         </form>
       </DialogContent>
