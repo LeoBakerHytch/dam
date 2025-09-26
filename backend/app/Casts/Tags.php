@@ -4,6 +4,13 @@ namespace App\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 
+/**
+ * May be used for a field declared in the GraphQL schema to be a (non-nullable) array of strings.
+ *
+ * Should be backed by a JSON column in the database, which may be NULL — this will be normalized to an empty array.
+ *
+ * Trims and normalizes the input, removing empty strings and converting to lowercase.
+ */
 final class Tags implements CastsAttributes
 {
     public function get($model, string $key, $value, array $attributes): array
