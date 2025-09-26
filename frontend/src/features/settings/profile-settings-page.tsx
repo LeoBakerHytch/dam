@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/input';
 import { InputError } from '@/components/ui/input-error';
 import { Label } from '@/components/ui/label';
 import { useUser } from '@/context/user-provider';
+import { SetAvatarForm } from '@/features/settings/profile/set-avatar-form';
 import { SettingsLayout } from '@/features/settings/settings-layout';
 import { USER_FRAGMENT } from '@/lib/graphql-fragments';
 
@@ -49,8 +50,7 @@ export function ProfileSettingsPage() {
 
   const watchedName = watch('name');
 
-  const hasChanges =
-    watchedName && watchedName.trim() !== '' && watchedName !== user?.name;
+  const hasChanges = watchedName && watchedName.trim() !== '' && watchedName !== user?.name;
 
   const onSubmit = async (data: ProfileForm) => {
     try {
@@ -73,15 +73,18 @@ export function ProfileSettingsPage() {
     }
   };
 
+  if (!user) {
+    return null;
+  }
+
   return (
     <AppLayout breadcrumbs={[{ title: 'Profile settings', path: '/settings/profile' }]}>
       <title>Profile settings</title>
       <SettingsLayout>
         <div className="space-y-6">
-          <HeadingSmall
-            title="Profile information"
-            description="Update your name"
-          />
+          <HeadingSmall title="Profile information" description="Update your name and avatar" />
+
+          <SetAvatarForm />
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="grid gap-2">
@@ -104,7 +107,7 @@ export function ProfileSettingsPage() {
                 data-test="update-profile-button"
               >
                 {result.fetching && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                Save
+                Save name
               </Button>
 
               <Transition
