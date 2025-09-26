@@ -4,7 +4,9 @@ import {
   FileIcon,
   ImageIcon,
   ScalingIcon,
+  ScanEyeIcon,
   TagIcon,
+  TextAlignStartIcon,
 } from 'lucide-react';
 import { type ComponentType } from 'react';
 
@@ -50,9 +52,17 @@ export function ImageAssetDetailSheet({
             <PropertyRow icon={ImageIcon} label="Type" value={asset.mimeType} />
           </div>
 
-          {asset.description && <TextSection title="Description" content={asset.description} />}
+          {asset.description && (
+            <TextSection
+              title="Description"
+              icon={TextAlignStartIcon}
+              content={asset.description}
+            />
+          )}
 
-          {asset.altText && <TextSection title="Alt text" content={asset.altText} />}
+          {asset.altText && (
+            <TextSection title="Alt text" icon={ScanEyeIcon} content={asset.altText} />
+          )}
 
           {asset.tags && asset.tags.length > 0 && <TagsSection tags={asset.tags} />}
 
@@ -86,10 +96,21 @@ function PropertyRow({
   );
 }
 
-function TextSection({ title, content }: { title: string; content: string }) {
+function TextSection({
+  title,
+  icon: Icon,
+  content,
+}: {
+  title: string;
+  icon: ComponentType<{ className?: string }>;
+  content: string;
+}) {
   return (
     <div className="space-y-2">
-      <h4 className="text-sm font-medium">{title}</h4>
+      <div className="flex items-center gap-2">
+        <Icon className="h-4 w-4 text-neutral-500" />
+        <h4 className="text-sm font-medium">{title}</h4>
+      </div>
       <p className="text-sm text-neutral-600 dark:text-neutral-400">{content}</p>
     </div>
   );
