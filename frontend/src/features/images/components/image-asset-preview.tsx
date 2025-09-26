@@ -1,0 +1,119 @@
+import { CheckCircle, Loader2, XCircle } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
+import { toast } from 'sonner';
+import { gql, useMutation } from 'urql';
+
+import { Button } from '@/components/ui/button';
+import { IMAGE_ASSET_FRAGMENT } from '@/lib/graphql-fragments';
+import { type ImageAsset } from '@/types/graphql';
+
+const uploadImageAssetMutation = gql`
+  mutation Media_ImageAsset_Upload($input: Media_ImageAsset_Upload_Input!) {
+    Media_ImageAsset_Upload(input: $input) {
+      imageAsset {
+        ...ImageAssetFragment
+      }
+    }
+  }
+  ${IMAGE_ASSET_FRAGMENT}
+`;
+
+type UploadState = 'pending' | 'uploading' | 'success' | 'error';
+
+export function ImageAssetPreview({
+  file,
+  onUploadComplete,
+}: {
+  file: File;
+  onUploadComplete?: (imageAsset: ImageAsset) => void;
+}) {
+  const [uploadState, setUploadState] = useState<UploadState>('pending');
+  const [error, setError] = useState<string | null>(null);
+  const [_result, executeMutation] = useMutation(uploadImageAssetMutation);
+
+  const uploadFile = useCallback(async () => {
+    setUploadState('uploading');
+    setError(null);
+
+    try {
+      const mutationResult = await executeMutation({
+        input: {
+          image: file,
+        },
+      });
+
+      if (mutationResult.data?.Media_ImageAsset_Upload?.imageAsset) {
+        setUploadState('success');
+        toast.success('Image uploaded successfully');
+        onUploadComplete?.(mutationResult.data.Media_ImageAsset_Upload.imageAsset);
+      } else if (mutationResult.error) {
+        setUploadState('error');
+        setError(mutationResult.error.message || 'Upload failed');
+        toast.error('Failed to upload image');
+      }
+    } catch (err) {
+      setUploadState('error');
+      setError(err instanceof Error ? err.message : 'Network error occurred');
+      toast.error('Network error occurred');
+    }
+  }, [executeMutation, file, onUploadComplete]);
+
+  useEffect(() => {
+    void uploadFile();
+  }, [uploadFile]);
+
+  const retry = () => {
+    void uploadFile();
+  };
+
+  const getStatusIcon = () => {
+    switch (uploadState) {
+      case 'uploading':
+        return <Loader2 size={16} className="animate-spin text-blue-500" />;
+      case 'success':
+        return <CheckCircle size={16} className="text-green-500" />;
+      case 'error':
+        return <XCircle size={16} className="text-red-500" />;
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="flex w-40 flex-col gap-2">
+      <div className="relative">
+        <img
+          className="h-32 w-full rounded-sm object-cover"
+          src={URL.createObjectURL(file)}
+          alt={file.name}
+        />
+        <div className="absolute right-2 top-2 rounded-full bg-white/90 p-1 dark:bg-black/90">
+          {getStatusIcon()}
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-1">
+        <p className="line-clamp-1 text-ellipsis text-sm text-neutral-800 dark:text-neutral-200">
+          {file.name}
+        </p>
+
+        {uploadState === 'uploading' && (
+          <p className="text-xs text-blue-600 dark:text-blue-400">Uploading...</p>
+        )}
+
+        {uploadState === 'success' && (
+          <p className="text-xs text-green-600 dark:text-green-400">Uploaded successfully</p>
+        )}
+
+        {uploadState === 'error' && (
+          <div className="flex flex-col gap-1">
+            <p className="text-xs text-red-600 dark:text-red-400">{error}</p>
+            <Button size="sm" variant="outline" onClick={retry} className="h-6 text-xs">
+              Retry
+            </Button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
