@@ -1,8 +1,8 @@
 import { AppLayout } from '@/components/app/layouts/app-layout';
 import { HeadingSmall } from '@/components/text/heading-small';
 
-import { SettingsLayout } from '../layouts/settings-layout';
-import { AppearanceToggleTab } from './components/appearance-toggle-tab';
+import { AppearanceToggleTab } from './appearance/components/appearance-toggle-tab';
+import { SettingsLayout } from './settings-layout';
 
 export function AppearanceSettingsPage() {
   return (

@@ -1,5 +1,5 @@
-import { zodResolver } from '@hookform/resolvers/zod';
 import { Transition } from '@headlessui/react';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { LoaderCircle } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input';
 import { InputError } from '@/components/ui/input-error';
 import { Label } from '@/components/ui/label';
 import { useUser } from '@/context/user-provider';
-import { SettingsLayout } from '@/features/settings/layouts/settings-layout';
+import { SettingsLayout } from '@/features/settings/settings-layout';
 import { USER_FRAGMENT } from '@/lib/graphql-fragments';
 
 const passwordSchema = z
@@ -26,7 +26,7 @@ const passwordSchema = z
     passwordConfirmation: z.string().min(1, 'Password confirmation is required'),
   })
   .refine((data) => data.newPassword === data.passwordConfirmation, {
-    message: 'Passwords don\'t match',
+    message: 'Passwords don’t match',
     path: ['passwordConfirmation'],
   });
 
@@ -103,7 +103,7 @@ export function PasswordSettingsPage() {
                 autoComplete="username"
                 value={user?.email || ''}
                 readOnly
-                className="bg-neutral-50 cursor-not-allowed"
+                className="cursor-not-allowed bg-neutral-50"
               />
             </div>
 
@@ -144,11 +144,7 @@ export function PasswordSettingsPage() {
             </div>
 
             <div className="flex items-center gap-4">
-              <Button
-                type="submit"
-                disabled={result.fetching}
-                data-test="update-password-button"
-              >
+              <Button type="submit" disabled={result.fetching} data-test="update-password-button">
                 {result.fetching && <LoaderCircle className="h-4 w-4 animate-spin" />}
                 Save password
               </Button>

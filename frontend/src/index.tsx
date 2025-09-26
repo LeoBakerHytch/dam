@@ -12,8 +12,8 @@ import { DocumentLibraryPage } from '@/features/documents/document-library-page'
 import { IconLibraryPage } from '@/features/icons/icon-library-page';
 import { ImageLibraryPage } from '@/features/images/image-library-page';
 import { LogoLibraryPage } from '@/features/logos/logo-library-page';
-import { AppearanceSettingsPage } from '@/features/settings/appearance/appearance-settings-page';
-import { PasswordSettingsPage } from '@/features/settings/password/password-settings-page';
+import { AppearanceSettingsPage } from '@/features/settings/appearance-settings-page';
+import { PasswordSettingsPage } from '@/features/settings/password-settings-page';
 import { SettingsPage } from '@/features/settings/settings-page';
 import { SoundLibraryPage } from '@/features/sounds/sound-library-page';
 import { TemplateLibraryPage } from '@/features/templates/template-library-page';
