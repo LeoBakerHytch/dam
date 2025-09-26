@@ -1,9 +1,10 @@
 import { PropsWithChildren, createContext, useContext, useState } from 'react';
 
-interface User {
+export interface User {
   id: string;
   name: string;
   email: string;
+  avatar?: string;
 }
 
 interface UserContextType {
