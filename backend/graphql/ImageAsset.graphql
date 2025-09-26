@@ -1,0 +1,24 @@
+type ImageAsset {
+    id: ID!
+    name: String!
+    url: String!
+
+    fileName: String! @rename(attribute: "file_name")
+    filePath: String! @rename(attribute: "file_path")
+    fileSize: Int! @rename(attribute: "file_size")
+    fileSizeHuman: String! @rename(attribute: "file_size_human")
+
+    mimeType: String! @rename(attribute: "mime_type")
+    width: Int!
+    height: Int!
+    tags: [String!]
+
+    description: String
+    altText: String @rename(attribute: "alt_text")
+
+    createdAt: DateTime! @rename(attribute: "created_at")
+    updatedAt: DateTime! @rename(attribute: "updated_at")
+
+    userId: ID! @rename(attribute: "user_id")
+    user: User! @belongsTo
+}
