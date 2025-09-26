@@ -144,12 +144,12 @@ function PropertyRow({
   value: string;
 }) {
   return (
-    <div className="flex items-center justify-between text-sm">
+    <div className="flex items-center justify-between gap-4 text-sm">
       <div className="flex items-center gap-2">
         <Icon className="h-4 w-4 text-neutral-500" />
         <span className="font-medium">{label}</span>
       </div>
-      <span className="text-right text-neutral-600 dark:text-neutral-400">{value}</span>
+      <span className="text-right text-neutral-600 dark:text-neutral-400 break-all">{value}</span>
     </div>
   );
 }
