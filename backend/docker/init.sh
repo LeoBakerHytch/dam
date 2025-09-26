@@ -11,5 +11,10 @@ mkdir -p storage/logs
 
 chown -R www-data:www-data storage bootstrap/cache
 
+# Create storage symlink for serving uploaded files (local development only)
+if [ "$APP_ENV" = "local" ]; then
+    php artisan storage:link
+fi
+
 # Hand off to environment-specific CMD
 exec "$@"
