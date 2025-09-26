@@ -1,5 +1,5 @@
-import { mainNavItems } from '@/components/app/components/app-sidebar';
 import { AppLayout } from '@/components/app/layouts/app-layout';
+import { mainNavItems } from '@/components/app/nav/nav-items';
 import { DashboardCard } from '@/features/dashboard/components/dashboard-card';
 import { DashboardPlaceholderCard } from '@/features/dashboard/components/dashboard-placeholder-card';
 

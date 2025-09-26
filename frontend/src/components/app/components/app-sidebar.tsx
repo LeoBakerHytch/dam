@@ -1,17 +1,8 @@
-import {
-  Atom,
-  AudioLines,
-  FileText,
-  Image,
-  LayoutGrid,
-  LayoutTemplate,
-  Palette,
-  Target,
-} from 'lucide-react';
 import { NavLink } from 'react-router';
 
 import { AppLogo } from '@/components/app/components/app-logo';
 import { NavFooter } from '@/components/app/nav/nav-footer';
+import { footerNavItems, mainNavItems } from '@/components/app/nav/nav-items';
 import { NavMain } from '@/components/app/nav/nav-main';
 import {
   Sidebar,
@@ -22,54 +13,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { type NavItem } from '@/types/NavItem';
-
-export const mainNavItems: NavItem[] = [
-  {
-    title: 'Dashboard',
-    path: '/dashboard',
-    icon: LayoutGrid,
-    root: true,
-  },
-  {
-    title: 'Image library',
-    path: '/image-library',
-    icon: Image,
-  },
-  {
-    title: 'Logo library',
-    path: '/logo-library',
-    icon: Target,
-  },
-  {
-    title: 'Document library',
-    path: '/document-library',
-    icon: FileText,
-  },
-  {
-    title: 'Sound library',
-    path: '/sound-library',
-    icon: AudioLines,
-  },
-  {
-    title: 'Icon library',
-    path: '/icon-library',
-    icon: Atom,
-  },
-  {
-    title: 'Template library',
-    path: '/template-library',
-    icon: LayoutTemplate,
-  },
-];
-
-const footerNavItems: NavItem[] = [
-  {
-    title: 'Appearance',
-    path: '/settings/appearance',
-    icon: Palette,
-  },
-];
 
 export function AppSidebar() {
   return (
