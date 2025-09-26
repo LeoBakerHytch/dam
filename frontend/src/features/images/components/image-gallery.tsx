@@ -88,9 +88,9 @@ export function ImageGallery() {
   }
 
   return (
-    <div className="space-between flex flex-1 flex-col gap-8 p-6">
-      <div className="flex flex-1 items-start">
-        <div className="flex flex-row flex-wrap gap-6">
+    <div className="grid h-full grid-rows-[1fr_auto] gap-6 p-6">
+      <div className="min-h-0 overflow-auto">
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] gap-6">
           {assets.map((asset) => (
             <ImageAssetTile key={asset.id} asset={asset} />
           ))}
@@ -98,8 +98,9 @@ export function ImageGallery() {
       </div>
 
       {paginatorInfo && paginatorInfo.lastPage > 1 && (
-        <Pagination>
-          <PaginationContent>
+        <div className="sticky bottom-0 bg-background/80 backdrop-blur-sm py-4">
+          <Pagination>
+            <PaginationContent>
             <PaginationItem>
               <PaginationPrevious
                 onClick={currentPage === 1 ? undefined : () => handlePageChange(currentPage - 1)}
@@ -164,7 +165,8 @@ export function ImageGallery() {
               />
             </PaginationItem>
           </PaginationContent>
-        </Pagination>
+          </Pagination>
+        </div>
       )}
     </div>
   );
