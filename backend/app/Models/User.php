@@ -13,18 +13,14 @@ class User extends Authenticatable implements JWTSubject
     use Notifiable;
 
     /**
-     * The attributes that are not mass assignable.
+     * The attributes that are mass assignable.
      *
      * @var list<string>
      */
-    protected $guarded = [
-        'id',
+    protected $fillable = [
+        'name',
         'email',
         'password',
-        'email_verified_at',
-        'remember_token',
-        'created_at',
-        'updated_at',
     ];
 
     /**
