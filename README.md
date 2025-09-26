@@ -2,9 +2,7 @@
 
 <img src="./screenshot.png"  alt="Screenshot of Digital Asset Management (DAM) platform" />
 
-A modern digital asset management platform built with Laravel, GraphQL, and React. This application provides a
-comprehensive solution for managing, organizing, and displaying digital assets with a focus on user experience and
-performance.
+A digital asset management platform built with Laravel, GraphQL, and React.
 
 ## Architecture overview
 
