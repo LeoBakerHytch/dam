@@ -22,3 +22,18 @@ type ImageAsset {
     userId: ID! @rename(attribute: "user_id")
     user: User! @belongsTo
 }
+
+
+extend type Mutation {
+    Media_ImageAsset_Upload(input: Media_ImageAsset_Upload_Input!): Media_ImageAsset_Upload_Response!
+    @field(resolver: "App\\GraphQL\\Resolvers\\Media_ImageAsset_Upload")
+    @guard
+}
+
+input Media_ImageAsset_Upload_Input {
+    image: Upload!
+}
+
+type Media_ImageAsset_Upload_Response {
+    imageAsset: ImageAsset!
+}
