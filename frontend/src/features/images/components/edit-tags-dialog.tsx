@@ -161,15 +161,15 @@ export function EditTagsDialog({ asset, open, onOpenChange, onSuccess }: EditTag
                   {tags.map((tag) => (
                     <span
                       key={tag}
-                      className="inline-flex items-center gap-1 rounded-full bg-neutral-100 px-2.5 py-0.5 text-xs font-medium text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200"
+                      className="inline-flex items-center gap-1.5 rounded-full bg-neutral-100 px-3 py-1 text-sm font-medium text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200"
                     >
                       {tag}
                       <button
                         type="button"
                         onClick={() => removeTag(tag)}
-                        className="rounded-full p-0.5 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                        className="rounded-full p-1 hover:bg-neutral-200 dark:hover:bg-neutral-700"
                       >
-                        <XIcon className="h-3 w-3" />
+                        <XIcon className="h-4 w-4" />
                       </button>
                     </span>
                   ))}
