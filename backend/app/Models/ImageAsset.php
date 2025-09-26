@@ -62,4 +62,9 @@ class ImageAsset extends Model
             }
         );
     }
+
+    public function scopeForUser($query)
+    {
+        return $query->where('user_id', auth('api')->id());
+    }
 }

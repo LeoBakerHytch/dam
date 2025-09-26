@@ -23,6 +23,12 @@ type ImageAsset {
 }
 
 
+extend type Query {
+    imageAssets: [ImageAsset!]! @paginate(defaultCount: 25, scopes: ["forUser"])
+    @guard
+}
+
+
 extend type Mutation {
     Media_ImageAsset_Upload(input: Media_ImageAsset_Upload_Input!): Media_ImageAsset_Upload_Response!
     @field(resolver: "App\\GraphQL\\Resolvers\\Media_ImageAsset_Upload")
