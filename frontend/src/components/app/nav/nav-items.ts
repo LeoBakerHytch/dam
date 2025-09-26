@@ -5,7 +5,6 @@ import {
   Image,
   LayoutGrid,
   LayoutTemplate,
-  Palette,
   Target,
 } from 'lucide-react';
 
@@ -50,10 +49,4 @@ export const mainNavItems: NavItem[] = [
   },
 ];
 
-export const footerNavItems: NavItem[] = [
-  {
-    title: 'Appearance',
-    path: '/settings/appearance',
-    icon: Palette,
-  },
-];
+export const footerNavItems: NavItem[] = [];

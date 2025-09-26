@@ -11,7 +11,7 @@ import { NavItem } from '@/types/NavItem';
 const sidebarNavItems: NavItem[] = [
   {
     title: 'Appearance',
-    path: 'settings/appearance',
+    path: '/settings/appearance',
     icon: Palette,
   },
 ];

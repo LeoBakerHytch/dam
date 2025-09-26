@@ -13,6 +13,7 @@ import { IconLibraryPage } from '@/features/icons/icon-library-page';
 import { ImageLibraryPage } from '@/features/images/image-library-page';
 import { LogoLibraryPage } from '@/features/logos/logo-library-page';
 import { SettingsAppearancePage } from '@/features/settings/appearance/settings-appearance-page';
+import { SettingsPage } from '@/features/settings/settings-page';
 import { SoundLibraryPage } from '@/features/sounds/sound-library-page';
 import { TemplateLibraryPage } from '@/features/templates/template-library-page';
 
@@ -45,6 +46,7 @@ function AppRoutes() {
       <Route path="/icon-library" element={<IconLibraryPage />} />
       <Route path="/template-library" element={<TemplateLibraryPage />} />
 
+      <Route path="/settings" element={<SettingsPage />} />
       <Route path="/settings/appearance" element={<SettingsAppearancePage />} />
     </Routes>
   );
