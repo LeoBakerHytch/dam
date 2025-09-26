@@ -16,8 +16,8 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { InputError } from '@/components/ui/input-error';
-import { Kbd } from '@/components/ui/shadcn-io/kbd';
 import { Label } from '@/components/ui/label';
+import { Kbd } from '@/components/ui/shadcn-io/kbd';
 import { IMAGE_ASSET_FRAGMENT } from '@/lib/graphql-fragments';
 import { type ImageAsset } from '@/types/graphql';
 
@@ -128,11 +128,13 @@ export function EditAltTextDialog({
           </div>
 
           <DialogFooter className="flex-col sm:flex-row">
-            <div className="flex-1 mb-2 sm:mb-0 flex items-center">
+            <div className="mb-2 flex flex-1 items-center sm:mb-0">
               {hasChanges && (
-                <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                <div className="text-muted-foreground flex items-center gap-1 text-xs">
                   <span>Press</span>
-                  <Kbd>{navigator.platform.includes('Mac') ? ['⌘', 'Enter'] : ['Ctrl', 'Enter']}</Kbd>
+                  <Kbd>
+                    {navigator.platform.includes('Mac') ? ['⌘', 'Enter'] : ['Ctrl', 'Enter']}
+                  </Kbd>
                   <span>to save</span>
                 </div>
               )}
