@@ -10,7 +10,6 @@ final class User_UpdateProfileValidator extends Validator
     {
         return [
             'input.name' => ['string', 'max:255'],
-            'input.email' => ['email', 'max:255', 'unique:users,email'],
         ];
     }
 }

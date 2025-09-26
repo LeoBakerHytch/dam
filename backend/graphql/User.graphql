@@ -49,7 +49,6 @@ extend type Mutation {
 
 input User_UpdateProfile_Input {
     name: String
-    email: String
 }
 
 type User_UpdateProfile_Response {
