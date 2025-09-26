@@ -1,4 +1,11 @@
-import { CalendarIcon, FileIcon, ImageIcon, TagIcon } from 'lucide-react';
+import {
+  CalendarIcon,
+  DatabaseIcon,
+  FileIcon,
+  ImageIcon,
+  ScalingIcon,
+  TagIcon,
+} from 'lucide-react';
 
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { formatDate } from '@/lib/utils';
@@ -31,28 +38,40 @@ export function ImageAssetDetailSheet({
             />
           </div>
 
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 text-sm">
-              <FileIcon className="h-4 w-4 text-neutral-500" />
-              <span className="font-medium">File:</span>
-              <span className="text-neutral-600 dark:text-neutral-400">{asset.fileName}</span>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between text-sm">
+              <div className="flex items-center gap-2">
+                <FileIcon className="h-4 w-4 text-neutral-500" />
+                <span className="font-medium">File</span>
+              </div>
+              <span className="text-right text-neutral-600 dark:text-neutral-400">
+                {asset.fileName}
+              </span>
             </div>
 
-            <div className="flex items-center gap-2 text-sm">
-              <span className="font-medium">Size:</span>
+            <div className="flex items-center justify-between text-sm">
+              <div className="flex items-center gap-2">
+                <DatabaseIcon className="h-4 w-4 text-neutral-500" />
+                <span className="font-medium">Size</span>
+              </div>
               <span className="text-neutral-600 dark:text-neutral-400">{asset.fileSizeHuman}</span>
             </div>
 
-            <div className="flex items-center gap-2 text-sm">
-              <ImageIcon className="h-4 w-4 text-neutral-500" />
-              <span className="font-medium">Dimensions:</span>
+            <div className="flex items-center justify-between text-sm">
+              <div className="flex items-center gap-2">
+                <ScalingIcon className="h-4 w-4 text-neutral-500" />
+                <span className="font-medium">Dimensions</span>
+              </div>
               <span className="text-neutral-600 dark:text-neutral-400">
                 {asset.width} × {asset.height}px
               </span>
             </div>
 
-            <div className="flex items-center gap-2 text-sm">
-              <span className="font-medium">Type:</span>
+            <div className="flex items-center justify-between text-sm">
+              <div className="flex items-center gap-2">
+                <ImageIcon className="h-4 w-4 text-neutral-500" />
+                <span className="font-medium">Type</span>
+              </div>
               <span className="text-neutral-600 dark:text-neutral-400">{asset.mimeType}</span>
             </div>
           </div>
@@ -91,18 +110,22 @@ export function ImageAssetDetailSheet({
           )}
 
           <div className="space-y-3 border-t pt-4">
-            <div className="flex items-center gap-2 text-sm">
-              <CalendarIcon className="h-4 w-4 text-neutral-500" />
-              <span className="font-medium">Created:</span>
-              <span className="text-neutral-600 dark:text-neutral-400">
+            <div className="flex items-center justify-between text-sm">
+              <div className="flex items-center gap-2">
+                <CalendarIcon className="h-4 w-4 text-neutral-500" />
+                <span className="font-medium">Created</span>
+              </div>
+              <span className="text-right text-neutral-600 dark:text-neutral-400">
                 {formatDate(asset.createdAt)}
               </span>
             </div>
 
-            <div className="flex items-center gap-2 text-sm">
-              <CalendarIcon className="h-4 w-4 text-neutral-500" />
-              <span className="font-medium">Updated:</span>
-              <span className="text-neutral-600 dark:text-neutral-400">
+            <div className="flex items-center justify-between text-sm">
+              <div className="flex items-center gap-2">
+                <CalendarIcon className="h-4 w-4 text-neutral-500" />
+                <span className="font-medium">Updated</span>
+              </div>
+              <span className="text-right text-neutral-600 dark:text-neutral-400">
                 {formatDate(asset.updatedAt)}
               </span>
             </div>
