@@ -10,8 +10,7 @@ final class Auth_User_ChangePasswordValidator extends Validator
     public function rules(): array
     {
         return [
-            'input.currentPassword' => ['required', 'string'],
-            'input.newPassword' => ['required', 'string', Rules\Password::defaults()],
+            'input.newPassword' => [Rules\Password::defaults()],
         ];
     }
 }
