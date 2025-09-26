@@ -13,6 +13,7 @@ import { IconLibraryPage } from '@/features/icons/icon-library-page';
 import { ImageLibraryPage } from '@/features/images/image-library-page';
 import { LogoLibraryPage } from '@/features/logos/logo-library-page';
 import { AppearanceSettingsPage } from '@/features/settings/appearance-settings-page';
+import { initializeTheme } from '@/features/settings/appearance/hooks/use-appearance';
 import { PasswordSettingsPage } from '@/features/settings/password-settings-page';
 import { ProfileSettingsPage } from '@/features/settings/profile-settings-page';
 import { SoundLibraryPage } from '@/features/sounds/sound-library-page';
@@ -68,3 +69,5 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     </AuthProvider>
   </React.StrictMode>,
 );
+
+initializeTheme();
