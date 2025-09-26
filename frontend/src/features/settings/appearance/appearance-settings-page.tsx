@@ -4,7 +4,7 @@ import { HeadingSmall } from '@/components/text/heading-small';
 import { SettingsLayout } from '../layouts/settings-layout';
 import { AppearanceToggleTab } from './components/appearance-toggle-tab';
 
-export function SettingsAppearancePage() {
+export function AppearanceSettingsPage() {
   return (
     <AppLayout breadcrumbs={[{ title: 'Appearance settings', path: '/settings/appearance' }]}>
       <title>Appearance settings</title>
