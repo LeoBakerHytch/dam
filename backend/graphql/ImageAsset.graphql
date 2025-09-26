@@ -24,7 +24,8 @@ type ImageAsset {
 
 
 extend type Query {
-    imageAssets: [ImageAsset!]! @paginate(defaultCount: 25, scopes: ["forUser"])
+    imageAssets: [ImageAsset!]!
+    @paginate(defaultCount: 25, scopes: ["forUser"])
     @guard
 }
 
