@@ -34,6 +34,7 @@ extend type Mutation {
     Media_ImageAsset_Upload(input: Media_ImageAsset_Upload_Input!): Media_ImageAsset_Upload_Response!
     @field(resolver: "App\\GraphQL\\Resolvers\\Media_ImageAsset_Upload")
     @guard
+    @can(ability: "update", find: "id")
 }
 
 input Media_ImageAsset_Upload_Input {
