@@ -52,19 +52,21 @@ export function ImageAssetDetailSheet({
             <PropertyRow icon={ImageIcon} label="Type" value={asset.mimeType} />
           </div>
 
-          {asset.description && (
-            <TextSection
-              title="Description"
-              icon={TextAlignStartIcon}
-              content={asset.description}
-            />
-          )}
+          <TextSection
+            title="Description"
+            icon={TextAlignStartIcon}
+            content={asset.description}
+            placeholder="No description provided"
+          />
 
-          {asset.altText && (
-            <TextSection title="Alt text" icon={ScanEyeIcon} content={asset.altText} />
-          )}
+          <TextSection
+            title="Alt text"
+            icon={ScanEyeIcon}
+            content={asset.altText}
+            placeholder="No alt text provided"
+          />
 
-          {asset.tags && asset.tags.length > 0 && <TagsSection tags={asset.tags} />}
+          <TagsSection tags={asset.tags} placeholder="No tags" />
 
           <div className="space-y-3 border-t pt-4">
             <PropertyRow icon={CalendarIcon} label="Created" value={formatDate(asset.createdAt)} />
@@ -100,39 +102,52 @@ function TextSection({
   title,
   icon: Icon,
   content,
+  placeholder,
 }: {
   title: string;
   icon: ComponentType<{ className?: string }>;
-  content: string;
+  content?: string;
+  placeholder: string;
 }) {
+  const isPlaceholder = !content;
+  const displayText = content || placeholder;
+
   return (
     <div className="space-y-2">
       <div className="flex items-center gap-2">
         <Icon className="h-4 w-4 text-neutral-500" />
         <h4 className="text-sm font-medium">{title}</h4>
       </div>
-      <p className="text-sm text-neutral-600 dark:text-neutral-400">{content}</p>
+      <p className={`text-sm ${isPlaceholder ? 'text-neutral-400 dark:text-neutral-500' : 'text-neutral-600 dark:text-neutral-400'}`}>
+        {displayText}
+      </p>
     </div>
   );
 }
 
-function TagsSection({ tags }: { tags: string[] }) {
+function TagsSection({ tags, placeholder }: { tags?: string[]; placeholder: string }) {
+  const hasTags = tags && tags.length > 0;
+
   return (
     <div className="space-y-2">
       <div className="flex items-center gap-2">
         <TagIcon className="h-4 w-4 text-neutral-500" />
         <h4 className="text-sm font-medium">Tags</h4>
       </div>
-      <div className="flex flex-wrap gap-2">
-        {tags.map((tag) => (
-          <span
-            key={tag}
-            className="inline-flex items-center rounded-full bg-neutral-100 px-2.5 py-0.5 text-xs font-medium text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200"
-          >
-            {tag}
-          </span>
-        ))}
-      </div>
+      {hasTags ? (
+        <div className="flex flex-wrap gap-2">
+          {tags.map((tag) => (
+            <span
+              key={tag}
+              className="inline-flex items-center rounded-full bg-neutral-100 px-2.5 py-0.5 text-xs font-medium text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      ) : (
+        <p className="text-sm text-neutral-400 dark:text-neutral-500">{placeholder}</p>
+      )}
     </div>
   );
 }
