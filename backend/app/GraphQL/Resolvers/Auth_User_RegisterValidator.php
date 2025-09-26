@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Resolvers;
 
+use Illuminate\Validation\Rules;
 use Nuwave\Lighthouse\Validation\Validator;
 
 final class Auth_User_RegisterValidator extends Validator
@@ -11,7 +12,7 @@ final class Auth_User_RegisterValidator extends Validator
         return [
             'input.name' => ['required', 'string', 'max:255'],
             'input.email' => ['required', 'email', 'max:255', 'unique:users,email'],
-            'input.password' => ['required', 'string', 'min:8'],
+            'input.password' => ['required', 'string', Rules\Password::defaults()],
         ];
     }
 }

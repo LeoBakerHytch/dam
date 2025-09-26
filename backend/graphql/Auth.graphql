@@ -4,10 +4,11 @@ type AccessToken {
     expiresIn: Int!
 }
 
+
 extend type Mutation {
     Auth_Token_Issue(input: Auth_Token_Issue_Input!): Auth_Token_Issue_Response!
-        @field(resolver: "App\\GraphQL\\Resolvers\\Auth_Token_Issue" )
-        @validator(class: "App\\GraphQL\\Resolvers\\Auth_Token_IssueValidator")
+    @field(resolver: "App\\GraphQL\\Resolvers\\Auth_Token_Issue" )
+    @validator(class: "App\\GraphQL\\Resolvers\\Auth_Token_IssueValidator")
 }
 
 input Auth_Token_Issue_Input {
@@ -20,6 +21,7 @@ type Auth_Token_Issue_Response {
     user: User!
 }
 
+
 extend type Mutation {
     Auth_Token_Refresh: Auth_Token_Refresh_Response!
         @field(resolver: "App\\GraphQL\\Resolvers\\Auth_Token_Refresh")
@@ -29,6 +31,7 @@ type Auth_Token_Refresh_Response {
     accessToken: AccessToken!
     user: User!
 }
+
 
 extend type Mutation {
     Auth_User_Register(input: Auth_User_Register_Input!): Auth_User_Register_Response!
@@ -44,5 +47,22 @@ input Auth_User_Register_Input {
 
 type Auth_User_Register_Response {
     accessToken: AccessToken!
+    user: User!
+}
+
+
+extend type Mutation {
+    Auth_User_ChangePassword(input: Auth_User_ChangePassword_Input!): Auth_User_ChangePassword_Response!
+    @field(resolver: "App\\GraphQL\\Resolvers\\Auth_User_ChangePassword")
+    @validator(class: "App\\GraphQL\\Resolvers\\Auth_User_ChangePasswordValidator")
+}
+
+input Auth_User_ChangePassword_Input {
+    currentPassword: String!
+    newPassword: String!
+}
+
+type Auth_User_ChangePassword_Response {
+    success: Boolean!
     user: User!
 }
