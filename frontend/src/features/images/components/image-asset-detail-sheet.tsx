@@ -177,7 +177,7 @@ function EditableTextSection({
           <Icon className="h-4 w-4 text-neutral-500" />
           <h4 className="text-sm font-medium">{title}</h4>
         </div>
-        <Button variant="ghost" size="sm" onClick={onEdit} className="h-8 w-8 p-0">
+        <Button variant="outline" size="sm" onClick={onEdit} className="h-8 w-8 p-0">
           {isPlaceholder ? <PlusIcon className="h-4 w-4" /> : <PencilIcon className="h-4 w-4" />}
         </Button>
       </div>
@@ -208,7 +208,7 @@ function EditableTagsSection({
           <TagIcon className="h-4 w-4 text-neutral-500" />
           <h4 className="text-sm font-medium">Tags</h4>
         </div>
-        <Button variant="ghost" size="sm" onClick={onEdit} className="h-8 w-8 p-0">
+        <Button variant="outline" size="sm" onClick={onEdit} className="h-8 w-8 p-0">
           {!hasTags ? <PlusIcon className="h-4 w-4" /> : <PencilIcon className="h-4 w-4" />}
         </Button>
       </div>
