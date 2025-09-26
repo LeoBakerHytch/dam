@@ -1,3 +1,6 @@
+import { ScanEyeIcon, TextAlignStartIcon } from 'lucide-react';
+
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { ImageAsset } from '@/types/graphql';
 
 interface ImageAssetTileProps {
@@ -17,6 +20,7 @@ export function ImageAssetTile({ asset, onClick }: ImageAssetTileProps) {
           src={asset.url}
           alt={asset.altText || asset.name}
         />
+        {/* Tags in top-left */}
         {asset.tags && asset.tags.length > 0 && (
           <div className="absolute left-2 top-2 flex flex-wrap gap-1">
             {asset.tags.slice(0, 2).map((tag) => (
@@ -31,6 +35,34 @@ export function ImageAssetTile({ asset, onClick }: ImageAssetTileProps) {
             )}
           </div>
         )}
+
+        {/* Description and Alt Text icons in bottom-left */}
+        <div className="absolute bottom-2 left-2 flex gap-1">
+          {asset.description && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="rounded bg-black/50 p-1.5">
+                  <TextAlignStartIcon className="h-3 w-3 text-white" />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="max-w-xs">
+                <p className="line-clamp-2">{asset.description}</p>
+              </TooltipContent>
+            </Tooltip>
+          )}
+          {asset.altText && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="rounded bg-black/50 p-1.5">
+                  <ScanEyeIcon className="h-3 w-3 text-white" />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="max-w-xs">
+                <p className="line-clamp-2">{asset.altText}</p>
+              </TooltipContent>
+            </Tooltip>
+          )}
+        </div>
       </div>
 
       <div className="flex flex-col gap-1">
@@ -46,12 +78,6 @@ export function ImageAssetTile({ asset, onClick }: ImageAssetTileProps) {
             </span>
           )}
         </div>
-
-        {asset.description && (
-          <p className="line-clamp-2 text-xs text-neutral-600 dark:text-neutral-300">
-            {asset.description}
-          </p>
-        )}
       </div>
     </div>
   );
