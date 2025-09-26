@@ -24,10 +24,9 @@ final class User_UpdateProfile
             throw new Exception('User not found');
         }
 
-        $updateData = array_filter($input, fn($value) => $value !== null);
-
-        if (!empty($updateData)) {
-            $user->update($updateData);
+        if (isset($input['name'])) {
+            $user->name = $input['name'];
+            $user->save();
         }
 
         return [
