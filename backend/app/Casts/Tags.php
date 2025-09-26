@@ -27,7 +27,12 @@ final class Tags implements CastsAttributes
         }
 
         $normalized = array_map(
-            fn ($t) => mb_strtolower(trim((string) $t)),
+            function ($t) {
+                $trimmed = trim((string) $t);
+                $spacesCollapsed = preg_replace('/\s+/', ' ', $trimmed);
+                $lowerCased = mb_strtolower($spacesCollapsed);
+                return $lowerCased;
+            },
             $value
         );
 
