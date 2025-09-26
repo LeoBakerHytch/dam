@@ -13,6 +13,7 @@ import { IconLibraryPage } from '@/features/icons/icon-library-page';
 import { ImageLibraryPage } from '@/features/images/image-library-page';
 import { LogoLibraryPage } from '@/features/logos/logo-library-page';
 import { AppearanceSettingsPage } from '@/features/settings/appearance/appearance-settings-page';
+import { PasswordSettingsPage } from '@/features/settings/password/password-settings-page';
 import { SettingsPage } from '@/features/settings/settings-page';
 import { SoundLibraryPage } from '@/features/sounds/sound-library-page';
 import { TemplateLibraryPage } from '@/features/templates/template-library-page';
@@ -48,6 +49,7 @@ function AppRoutes() {
 
       <Route path="/settings" element={<SettingsPage />} />
       <Route path="/settings/appearance" element={<AppearanceSettingsPage />} />
+      <Route path="/settings/password" element={<PasswordSettingsPage />} />
     </Routes>
   );
 }

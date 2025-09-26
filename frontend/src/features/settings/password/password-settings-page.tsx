@@ -1,0 +1,171 @@
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Transition } from '@headlessui/react';
+import { LoaderCircle } from 'lucide-react';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { gql, useMutation } from 'urql';
+import { z } from 'zod';
+
+import { AppLayout } from '@/components/app/layouts/app-layout';
+import { HeadingSmall } from '@/components/text/heading-small';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { InputError } from '@/components/ui/input-error';
+import { Label } from '@/components/ui/label';
+import { useUser } from '@/context/user-provider';
+import { SettingsLayout } from '@/features/settings/layouts/settings-layout';
+import { USER_FRAGMENT } from '@/lib/graphql-fragments';
+
+const passwordSchema = z
+  .object({
+    currentPassword: z.string().min(1, 'Current password is required'),
+    newPassword: z
+      .string()
+      .min(1, 'New password is required')
+      .min(8, 'New password must be at least 8 characters'),
+    passwordConfirmation: z.string().min(1, 'Password confirmation is required'),
+  })
+  .refine((data) => data.newPassword === data.passwordConfirmation, {
+    message: 'Passwords don\'t match',
+    path: ['passwordConfirmation'],
+  });
+
+const changePasswordMutation = gql`
+  mutation Auth_User_ChangePassword($input: Auth_User_ChangePassword_Input!) {
+    Auth_User_ChangePassword(input: $input) {
+      success
+      user {
+        ...UserFragment
+      }
+    }
+  }
+  ${USER_FRAGMENT}
+`;
+
+type PasswordForm = z.infer<typeof passwordSchema>;
+
+export function PasswordSettingsPage() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<PasswordForm>({
+    resolver: zodResolver(passwordSchema),
+  });
+
+  const [result, executeMutation] = useMutation(changePasswordMutation);
+  const { user, setUser } = useUser();
+  const [recentlySuccessful, setRecentlySuccessful] = useState(false);
+
+  const onSubmit = async (data: PasswordForm) => {
+    try {
+      const result = await executeMutation({
+        input: {
+          currentPassword: data.currentPassword,
+          newPassword: data.newPassword,
+        },
+      });
+
+      if (result.data?.Auth_User_ChangePassword?.success) {
+        // Update user in context if returned
+        if (result.data.Auth_User_ChangePassword.user) {
+          setUser(result.data.Auth_User_ChangePassword.user);
+        }
+
+        // Reset form and show success message
+        reset();
+        setRecentlySuccessful(true);
+        setTimeout(() => setRecentlySuccessful(false), 3000);
+      }
+    } catch (error) {
+      console.error('Password change failed:', error);
+    }
+  };
+
+  return (
+    <AppLayout breadcrumbs={[{ title: 'Password', path: '/settings/password' }]}>
+      <title>Password settings</title>
+      <SettingsLayout>
+        <div className="space-y-6">
+          <HeadingSmall
+            title="Update password"
+            description="Ensure your account is using a long, random password to stay secure"
+          />
+
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <div className="grid gap-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="username"
+                value={user?.email || ''}
+                readOnly
+                className="bg-neutral-50 cursor-not-allowed"
+              />
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="currentPassword">Current password</Label>
+              <Input
+                id="currentPassword"
+                type="password"
+                autoComplete="current-password"
+                placeholder="Current password"
+                {...register('currentPassword')}
+              />
+              <InputError message={errors.currentPassword?.message} />
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="newPassword">New password</Label>
+              <Input
+                id="newPassword"
+                type="password"
+                autoComplete="new-password"
+                placeholder="New password"
+                {...register('newPassword')}
+              />
+              <InputError message={errors.newPassword?.message} />
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="passwordConfirmation">Confirm password</Label>
+              <Input
+                id="passwordConfirmation"
+                type="password"
+                autoComplete="new-password"
+                placeholder="Confirm password"
+                {...register('passwordConfirmation')}
+              />
+              <InputError message={errors.passwordConfirmation?.message} />
+            </div>
+
+            <div className="flex items-center gap-4">
+              <Button
+                type="submit"
+                disabled={result.fetching}
+                data-test="update-password-button"
+              >
+                {result.fetching && <LoaderCircle className="h-4 w-4 animate-spin" />}
+                Save password
+              </Button>
+
+              <Transition
+                show={recentlySuccessful}
+                enter="transition ease-in-out"
+                enterFrom="opacity-0"
+                leave="transition ease-in-out"
+                leaveTo="opacity-0"
+              >
+                <p className="text-sm text-neutral-600">Saved</p>
+              </Transition>
+            </div>
+          </form>
+        </div>
+      </SettingsLayout>
+    </AppLayout>
+  );
+}
