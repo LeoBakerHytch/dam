@@ -42,6 +42,7 @@ function PaginationLink({ className, isActive, size = 'icon', ...props }: Pagina
       data-slot="pagination-link"
       data-active={isActive}
       className={cn(
+        'select-none',
         buttonVariants({
           variant: isActive ? 'outline' : 'ghost',
           size,
