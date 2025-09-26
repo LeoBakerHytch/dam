@@ -3,16 +3,23 @@ import {
   DatabaseIcon,
   FileIcon,
   ImageIcon,
+  PencilIcon,
+  PlusIcon,
   ScalingIcon,
   ScanEyeIcon,
   TagIcon,
   TextAlignStartIcon,
 } from 'lucide-react';
-import { type ComponentType } from 'react';
+import { type ComponentType, useState } from 'react';
 
+import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { formatDate } from '@/lib/utils';
 import { type ImageAsset } from '@/types/graphql';
+
+import { EditAltTextDialog } from './edit-alt-text-dialog';
+import { EditDescriptionDialog } from './edit-description-dialog';
+import { EditTagsDialog } from './edit-tags-dialog';
 
 export function ImageAssetDetailSheet({
   asset,
@@ -23,56 +30,105 @@ export function ImageAssetDetailSheet({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
-  if (!asset) return null;
+  const [currentAsset, setCurrentAsset] = useState<ImageAsset | null>(asset);
+  const [editDescriptionOpen, setEditDescriptionOpen] = useState(false);
+  const [editAltTextOpen, setEditAltTextOpen] = useState(false);
+  const [editTagsOpen, setEditTagsOpen] = useState(false);
+
+  // Update current asset when prop changes
+  if (asset && (!currentAsset || currentAsset.id !== asset.id)) {
+    setCurrentAsset(asset);
+  }
+
+  if (!currentAsset) return null;
+
+  const handleAssetUpdate = (updatedFields: Partial<ImageAsset>) => {
+    setCurrentAsset((prev) => (prev ? { ...prev, ...updatedFields } : null));
+  };
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className="w-full sm:max-w-md">
         <SheetHeader>
-          <SheetTitle className="text-left">{asset.name}</SheetTitle>
+          <SheetTitle className="text-left">{currentAsset.name}</SheetTitle>
         </SheetHeader>
 
         <div className="flex flex-col gap-6 p-4">
           <div className="relative">
             <img
-              src={asset.url}
-              alt={asset.altText || asset.name}
+              src={currentAsset.url}
+              alt={currentAsset.altText || currentAsset.name}
               className="max-h-64 w-full rounded-lg object-contain"
             />
           </div>
 
           <div className="space-y-3">
-            <PropertyRow icon={FileIcon} label="File" value={asset.fileName} />
-            <PropertyRow icon={DatabaseIcon} label="Size" value={asset.fileSizeHuman} />
+            <PropertyRow icon={FileIcon} label="File" value={currentAsset.fileName} />
+            <PropertyRow icon={DatabaseIcon} label="Size" value={currentAsset.fileSizeHuman} />
             <PropertyRow
               icon={ScalingIcon}
               label="Dimensions"
-              value={`${asset.width} × ${asset.height}px`}
+              value={`${currentAsset.width} × ${currentAsset.height}px`}
             />
-            <PropertyRow icon={ImageIcon} label="Type" value={asset.mimeType} />
+            <PropertyRow icon={ImageIcon} label="Type" value={currentAsset.mimeType} />
           </div>
 
-          <TextSection
+          <EditableTextSection
             title="Description"
             icon={TextAlignStartIcon}
-            content={asset.description}
+            content={currentAsset.description}
             placeholder="No description provided"
+            onEdit={() => setEditDescriptionOpen(true)}
           />
 
-          <TextSection
+          <EditableTextSection
             title="Alt text"
             icon={ScanEyeIcon}
-            content={asset.altText}
+            content={currentAsset.altText}
             placeholder="No alt text provided"
+            onEdit={() => setEditAltTextOpen(true)}
           />
 
-          <TagsSection tags={asset.tags} placeholder="No tags" />
+          <EditableTagsSection
+            tags={currentAsset.tags}
+            placeholder="No tags"
+            onEdit={() => setEditTagsOpen(true)}
+          />
 
           <div className="space-y-3 border-t pt-4">
-            <PropertyRow icon={CalendarIcon} label="Created" value={formatDate(asset.createdAt)} />
-            <PropertyRow icon={CalendarIcon} label="Updated" value={formatDate(asset.updatedAt)} />
+            <PropertyRow
+              icon={CalendarIcon}
+              label="Created"
+              value={formatDate(currentAsset.createdAt)}
+            />
+            <PropertyRow
+              icon={CalendarIcon}
+              label="Updated"
+              value={formatDate(currentAsset.updatedAt)}
+            />
           </div>
         </div>
+
+        <EditDescriptionDialog
+          asset={currentAsset}
+          open={editDescriptionOpen}
+          onOpenChange={setEditDescriptionOpen}
+          onSuccess={handleAssetUpdate}
+        />
+
+        <EditAltTextDialog
+          asset={currentAsset}
+          open={editAltTextOpen}
+          onOpenChange={setEditAltTextOpen}
+          onSuccess={handleAssetUpdate}
+        />
+
+        <EditTagsDialog
+          asset={currentAsset}
+          open={editTagsOpen}
+          onOpenChange={setEditTagsOpen}
+          onSuccess={handleAssetUpdate}
+        />
       </SheetContent>
     </Sheet>
   );
@@ -98,25 +154,32 @@ function PropertyRow({
   );
 }
 
-function TextSection({
+function EditableTextSection({
   title,
   icon: Icon,
   content,
   placeholder,
+  onEdit,
 }: {
   title: string;
   icon: ComponentType<{ className?: string }>;
   content?: string;
   placeholder: string;
+  onEdit: () => void;
 }) {
   const isPlaceholder = !content;
   const displayText = content || placeholder;
 
   return (
     <div className="space-y-2">
-      <div className="flex items-center gap-2">
-        <Icon className="h-4 w-4 text-neutral-500" />
-        <h4 className="text-sm font-medium">{title}</h4>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Icon className="h-4 w-4 text-neutral-500" />
+          <h4 className="text-sm font-medium">{title}</h4>
+        </div>
+        <Button variant="ghost" size="sm" onClick={onEdit} className="h-8 w-8 p-0">
+          {isPlaceholder ? <PlusIcon className="h-4 w-4" /> : <PencilIcon className="h-4 w-4" />}
+        </Button>
       </div>
       <p
         className={`text-sm ${isPlaceholder ? 'text-neutral-400 dark:text-neutral-500' : 'text-neutral-600 dark:text-neutral-400'}`}
@@ -127,14 +190,27 @@ function TextSection({
   );
 }
 
-function TagsSection({ tags, placeholder }: { tags?: string[]; placeholder: string }) {
+function EditableTagsSection({
+  tags,
+  placeholder,
+  onEdit,
+}: {
+  tags?: string[];
+  placeholder: string;
+  onEdit: () => void;
+}) {
   const hasTags = tags && tags.length > 0;
 
   return (
     <div className="space-y-2">
-      <div className="flex items-center gap-2">
-        <TagIcon className="h-4 w-4 text-neutral-500" />
-        <h4 className="text-sm font-medium">Tags</h4>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <TagIcon className="h-4 w-4 text-neutral-500" />
+          <h4 className="text-sm font-medium">Tags</h4>
+        </div>
+        <Button variant="ghost" size="sm" onClick={onEdit} className="h-8 w-8 p-0">
+          {!hasTags ? <PlusIcon className="h-4 w-4" /> : <PencilIcon className="h-4 w-4" />}
+        </Button>
       </div>
       {hasTags ? (
         <div className="flex flex-wrap gap-2">
