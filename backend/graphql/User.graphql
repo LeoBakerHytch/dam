@@ -62,7 +62,6 @@ type User_UpdateProfile_Response {
 extend type Mutation {
     User_SetAvatar(input: User_SetAvatar_Input!): User_SetAvatar_Response!
     @field(resolver: "App\\GraphQL\\Resolvers\\User_SetAvatar")
-    @validator(class: "App\\GraphQL\\Resolvers\\User_SetAvatarValidator")
     @guard
 }
 
