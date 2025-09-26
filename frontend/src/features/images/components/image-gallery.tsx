@@ -4,6 +4,7 @@ import { gql, useQuery } from 'urql';
 
 import { ImageAssetDetailSheet } from '@/features/images/components/image-asset-detail-sheet';
 import { ImageAssetTile } from '@/features/images/components/image-asset-tile';
+import { ImageAssetTileSkeleton } from '@/features/images/components/image-asset-tile-skeleton';
 import { ImageGalleryPagination } from '@/features/images/components/image-gallery-pagination';
 import { IMAGE_ASSET_FRAGMENT } from '@/lib/graphql-fragments';
 import { type ImageAsset } from '@/types/graphql';
@@ -63,8 +64,14 @@ export function ImageGallery() {
 
   if (fetching) {
     return (
-      <div className="flex flex-1 items-center justify-center p-6">
-        <div className="text-neutral-600 dark:text-neutral-400">Loading images...</div>
+      <div className="grid h-full grid-rows-[1fr_auto] gap-6 p-5">
+        <div className="min-h-0 overflow-auto">
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] gap-6">
+            {Array.from({ length: 12 }).map((_, index) => (
+              <ImageAssetTileSkeleton key={index} />
+            ))}
+          </div>
+        </div>
       </div>
     );
   }
