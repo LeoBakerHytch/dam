@@ -44,3 +44,31 @@ input Media_ImageAsset_Upload_Input {
 type Media_ImageAsset_Upload_Response {
     imageAsset: ImageAsset!
 }
+
+
+extend type Mutation {
+    Media_ImageAsset_SetDetails(input: Media_ImageAsset_SetDetails_Input!): Media_ImageAsset_SetDetails_Response!
+    @field(resolver: "App\\GraphQL\\Resolvers\\Media_ImageAsset_SetDetails")
+    @guard
+    @can(ability: "update", find: "input.id", model: "App\\Models\\ImageAsset")
+}
+
+input Media_ImageAsset_SetDetails_Input {
+    id: ID!
+
+    description: String
+    @rules(
+        apply: ["max:1000"],
+        messages: [ { rule: "max" message: "Descriptions may be 1000 characters at most." } ]
+    )
+
+    altText: String
+    @rules(
+        apply: ["max:300"],
+        messages: [ { rule: "max" message: "Alt text may be 300 characters at most." } ]
+    )
+}
+
+type Media_ImageAsset_SetDetails_Response {
+    imageAsset: ImageAsset!
+}
