@@ -1,16 +1,8 @@
 import { useSearchParams } from 'react-router';
 import { gql, useQuery } from 'urql';
 
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from '@/components/ui/pagination';
 import { ImageAssetTile } from '@/features/images/components/image-asset-tile';
+import { ImageGalleryPagination } from '@/features/images/components/image-gallery-pagination';
 import { IMAGE_ASSET_FRAGMENT } from '@/lib/graphql-fragments';
 import { type ImageAsset } from '@/types/graphql';
 
@@ -97,78 +89,12 @@ export function ImageGallery() {
         </div>
       </div>
 
-      {paginatorInfo && paginatorInfo.lastPage > 1 && (
-        <div className="bg-background/80 sticky bottom-0 py-4 backdrop-blur-sm">
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  onClick={currentPage === 1 ? undefined : () => handlePageChange(currentPage - 1)}
-                  className={currentPage === 1 ? 'pointer-events-none opacity-50' : ''}
-                />
-              </PaginationItem>
-
-              {/* Always show first page if not in range */}
-              {currentPage > 3 && (
-                <>
-                  <PaginationItem>
-                    <PaginationLink onClick={() => handlePageChange(1)}>1</PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationEllipsis />
-                  </PaginationItem>
-                </>
-              )}
-
-              {/* Show current page and adjacent pages */}
-              {(() => {
-                const startPage = Math.max(1, currentPage - 1);
-                const endPage = Math.min(paginatorInfo.lastPage, currentPage + 1);
-                const pages = [];
-
-                for (let page = startPage; page <= endPage; page++) {
-                  pages.push(
-                    <PaginationItem key={page}>
-                      <PaginationLink
-                        onClick={() => handlePageChange(page)}
-                        isActive={currentPage === page}
-                      >
-                        {page}
-                      </PaginationLink>
-                    </PaginationItem>,
-                  );
-                }
-
-                return pages;
-              })()}
-
-              {/* Always show last page if not in range */}
-              {currentPage < paginatorInfo.lastPage - 2 && (
-                <>
-                  <PaginationItem>
-                    <PaginationEllipsis />
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink onClick={() => handlePageChange(paginatorInfo.lastPage)}>
-                      {paginatorInfo.lastPage}
-                    </PaginationLink>
-                  </PaginationItem>
-                </>
-              )}
-
-              <PaginationItem>
-                <PaginationNext
-                  onClick={
-                    !paginatorInfo.hasMorePages
-                      ? undefined
-                      : () => handlePageChange(currentPage + 1)
-                  }
-                  className={!paginatorInfo.hasMorePages ? 'pointer-events-none opacity-50' : ''}
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        </div>
+      {paginatorInfo && (
+        <ImageGalleryPagination
+          paginatorInfo={paginatorInfo}
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
+        />
       )}
     </div>
   );

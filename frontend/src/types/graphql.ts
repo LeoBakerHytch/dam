@@ -20,3 +20,10 @@ export interface ImageAsset {
   createdAt: string;
   updatedAt: string;
 }
+export interface PaginatorInfo {
+  currentPage: number;
+  lastPage: number;
+  hasMorePages: boolean;
+  perPage: number;
+  total: number;
+}
