@@ -97,7 +97,7 @@ The project uses Docker Compose for local development:
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/LeoBakerHytch/dam.git
    cd dam
    ```
 
