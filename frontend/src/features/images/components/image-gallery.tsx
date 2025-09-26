@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { useSearchParams } from 'react-router';
 import { gql, useQuery } from 'urql';
 
+import { ImageAssetDetailSheet } from '@/features/images/components/image-asset-detail-sheet';
 import { ImageAssetTile } from '@/features/images/components/image-asset-tile';
 import { ImageGalleryPagination } from '@/features/images/components/image-gallery-pagination';
 import { IMAGE_ASSET_FRAGMENT } from '@/lib/graphql-fragments';
@@ -42,6 +44,8 @@ const imageAssetsQuery = gql`
 export function ImageGallery() {
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = parseInt(searchParams.get('page') || '1', 10);
+  const [selectedAsset, setSelectedAsset] = useState<ImageAsset | null>(null);
+  const [isDetailSheetOpen, setIsDetailSheetOpen] = useState(false);
 
   const [{ data, fetching, error }] = useQuery<ImageAssetsQuery>({
     query: imageAssetsQuery,
@@ -50,6 +54,11 @@ export function ImageGallery() {
 
   const handlePageChange = (page: number) => {
     setSearchParams(page === 1 ? {} : { page: page.toString() });
+  };
+
+  const handleAssetClick = (asset: ImageAsset) => {
+    setSelectedAsset(asset);
+    setIsDetailSheetOpen(true);
   };
 
   if (fetching) {
@@ -80,22 +89,34 @@ export function ImageGallery() {
   }
 
   return (
-    <div className="grid h-full grid-rows-[1fr_auto] gap-6 p-5">
-      <div className="min-h-0 overflow-auto">
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] gap-6">
-          {assets.map((asset) => (
-            <ImageAssetTile key={asset.id} asset={asset} />
-          ))}
+    <>
+      <div className="grid h-full grid-rows-[1fr_auto] gap-6 p-5">
+        <div className="min-h-0 overflow-auto">
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] gap-6">
+            {assets.map((asset) => (
+              <ImageAssetTile
+                key={asset.id}
+                asset={asset}
+                onClick={() => handleAssetClick(asset)}
+              />
+            ))}
+          </div>
         </div>
+
+        {paginatorInfo && (
+          <ImageGalleryPagination
+            paginatorInfo={paginatorInfo}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
+        )}
       </div>
 
-      {paginatorInfo && (
-        <ImageGalleryPagination
-          paginatorInfo={paginatorInfo}
-          currentPage={currentPage}
-          onPageChange={handlePageChange}
-        />
-      )}
-    </div>
+      <ImageAssetDetailSheet
+        asset={selectedAsset}
+        open={isDetailSheetOpen}
+        onOpenChange={setIsDetailSheetOpen}
+      />
+    </>
   );
 }

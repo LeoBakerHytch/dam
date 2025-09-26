@@ -1,8 +1,16 @@
 import { ImageAsset } from '@/types/graphql';
 
-export function ImageAssetTile({ asset }: { asset: ImageAsset }) {
+interface ImageAssetTileProps {
+  asset: ImageAsset;
+  onClick?: () => void;
+}
+
+export function ImageAssetTile({ asset, onClick }: ImageAssetTileProps) {
   return (
-    <div className="flex w-40 flex-col gap-2">
+    <div
+      className="flex w-40 flex-col gap-2 cursor-pointer hover:opacity-75 transition-opacity"
+      onClick={onClick}
+    >
       <div className="relative">
         <img
           className="h-32 w-full rounded-sm object-cover"
