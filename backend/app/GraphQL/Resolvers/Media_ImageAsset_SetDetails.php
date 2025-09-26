@@ -24,7 +24,7 @@ final class Media_ImageAsset_SetDetails
             $imageAsset->alt_text = $input['altText'];
         }
 
-        if (isset($input['tags'])) {
+        if (array_key_exists('tags', $input)) {
             $imageAsset->tags = $input['tags'];
         }
 
