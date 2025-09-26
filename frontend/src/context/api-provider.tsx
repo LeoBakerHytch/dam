@@ -1,5 +1,6 @@
 import { PropsWithChildren, useMemo } from 'react';
 import { Client, Provider, cacheExchange, fetchExchange } from 'urql';
+
 import { useAuth } from '@/context/auth-provider';
 
 function ApiProviderInner(props: PropsWithChildren) {
@@ -12,7 +13,7 @@ function ApiProviderInner(props: PropsWithChildren) {
       fetchOptions: () => {
         return {
           headers: {
-            authorization: accessToken ? `Bearer ${accessToken.jwt}` : ''
+            authorization: accessToken ? `Bearer ${accessToken.jwt}` : '',
           },
         };
       },
