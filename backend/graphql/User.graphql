@@ -1,4 +1,7 @@
 extend type Query {
+    "The currently logged-in user."
+    me: User @auth
+
     "Find a single user by an identifying attribute."
     user(
         "Search by primary key."
