@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\Tags;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -24,7 +25,7 @@ class ImageAsset extends Model
     ];
 
     protected $casts = [
-        'tags' => 'array',
+        'tags' => Tags::class,
         'file_size' => 'integer',
         'width' => 'integer',
         'height' => 'integer',
@@ -60,20 +61,6 @@ class ImageAsset extends Model
 
                 return round($bytes, 2, PHP_ROUND_HALF_DOWN) . ' ' . $units[$i];
             }
-        );
-    }
-
-    public function tags(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => $value ?? [],
-
-            set: fn ($value) => is_array($value)
-                ? array_map(
-                    fn (string $tag) => mb_strtolower(trim($tag)),
-                    $value
-                )
-                : $value
         );
     }
 
