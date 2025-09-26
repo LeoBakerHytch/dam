@@ -1,2 +1,7 @@
 "A datetime string in ISO 8601 format, e.g. `2018-05-23T13:43:32Z`."
-scalar DateTime @scalar(class: "App\\GraphQL\\Scalars\\DateTime")
+scalar DateTime
+@scalar(class: "App\\GraphQL\\Scalars\\DateTime")
+
+"Can be used as an argument to upload files using https://github.com/jaydenseric/graphql-multipart-request-spec"
+scalar Upload
+@scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Upload")

@@ -29,6 +29,9 @@ type User {
     "Unique email address."
     email: String!
 
+    "User’s avatar URL."
+    avatarUrl: String
+
     "When the email was verified."
     emailVerifiedAt: DateTime @rename(attribute: "email_verified_at")
 
@@ -52,5 +55,21 @@ input User_UpdateProfile_Input {
 }
 
 type User_UpdateProfile_Response {
+    user: User!
+}
+
+
+extend type Mutation {
+    User_SetAvatar(input: User_SetAvatar_Input!): User_SetAvatar_Response!
+    @field(resolver: "App\\GraphQL\\Resolvers\\User_SetAvatar")
+    @validator(class: "App\\GraphQL\\Resolvers\\User_SetAvatarValidator")
+    @guard
+}
+
+input User_SetAvatar_Input {
+    avatar: Upload!
+}
+
+type User_SetAvatar_Response {
     user: User!
 }
