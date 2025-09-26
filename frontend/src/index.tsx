@@ -5,6 +5,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router';
 import { ApiProvider } from '@/context/api-provider';
 import { AuthProvider, useAuth } from '@/context/auth-provider';
 import { UserProvider } from '@/context/user-provider';
+import { LoginPage } from '@/features/auth/pages/login-page';
 import { RegisterPage } from '@/features/auth/pages/register-page';
 import { DashboardPage } from '@/features/dashboard/dashboard-page';
 import { DocumentLibraryPage } from '@/features/documents/document-library-page';
@@ -23,8 +24,9 @@ function AppRoutes() {
   if (!isAuthenticated) {
     return (
       <Routes>
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="*" element={<Navigate to="/register" replace />} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     );
   }
@@ -32,6 +34,7 @@ function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/dashboard" replace />} />
+      <Route path="/login" element={<Navigate to="/dashboard" replace />} />
       <Route path="/register" element={<Navigate to="/dashboard" replace />} />
 
       <Route path="/dashboard" element={<DashboardPage />} />
