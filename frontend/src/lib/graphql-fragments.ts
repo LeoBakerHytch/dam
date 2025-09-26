@@ -14,14 +14,19 @@ export const IMAGE_ASSET_FRAGMENT = gql`
     id
     name
     url
+
     fileName
     fileSize
     fileSizeHuman
+
     mimeType
     width
     height
+
     description
     altText
+    tags
+
     createdAt
     updatedAt
   }
