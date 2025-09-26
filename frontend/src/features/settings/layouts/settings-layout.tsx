@@ -1,20 +1,11 @@
-import { Palette } from 'lucide-react';
 import { type PropsWithChildren } from 'react';
 import { Link } from 'react-router';
 
 import { Heading } from '@/components/text/heading';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { settingsNavItems } from '@/features/settings/settings-nav-items';
 import { cn } from '@/lib/utils';
-import { NavItem } from '@/types/NavItem';
-
-const sidebarNavItems: NavItem[] = [
-  {
-    title: 'Appearance',
-    path: '/settings/appearance',
-    icon: Palette,
-  },
-];
 
 export function SettingsLayout(props: PropsWithChildren) {
   const currentPath = window.location.pathname;
@@ -26,7 +17,7 @@ export function SettingsLayout(props: PropsWithChildren) {
       <div className="flex flex-col lg:flex-row lg:space-x-12">
         <aside className="w-full max-w-xl lg:w-48">
           <nav className="flex flex-col space-x-0 space-y-1">
-            {sidebarNavItems.map((item) => (
+            {settingsNavItems.map((item) => (
               <Button
                 key={item.path}
                 size="sm"
