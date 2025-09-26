@@ -16,11 +16,11 @@ final class Media_ImageAsset_SetDetails
 
         $imageAsset = ImageAsset::findOrFail($input['id']);
 
-        if (isset($input['description'])) {
+        if (array_key_exists('description', $input)) {
             $imageAsset->description = $input['description'];
         }
 
-        if (isset($input['altText'])) {
+        if (array_key_exists('altText', $input)) {
             $imageAsset->alt_text = $input['altText'];
         }
 
