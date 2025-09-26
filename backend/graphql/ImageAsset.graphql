@@ -66,6 +66,12 @@ input Media_ImageAsset_SetDetails_Input {
         apply: ["max:300"],
         messages: [ { rule: "max" message: "Alt text may be 300 characters at most." } ]
     )
+
+    tags: [String!]
+    @rules(
+        apply: ["max:40"],
+        messages: [ { rule: "max", message: "Tags may each be 40 characters at most." } ]
+    )
 }
 
 type Media_ImageAsset_SetDetails_Response {
