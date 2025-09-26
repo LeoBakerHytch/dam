@@ -6,10 +6,11 @@ import {
   ScalingIcon,
   TagIcon,
 } from 'lucide-react';
+import { type ComponentType } from 'react';
 
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { formatDate } from '@/lib/utils';
-import { ImageAsset } from '@/types/graphql';
+import { type ImageAsset } from '@/types/graphql';
 
 export function ImageAssetDetailSheet({
   asset,
@@ -39,99 +40,78 @@ export function ImageAssetDetailSheet({
           </div>
 
           <div className="space-y-3">
-            <div className="flex items-center justify-between text-sm">
-              <div className="flex items-center gap-2">
-                <FileIcon className="h-4 w-4 text-neutral-500" />
-                <span className="font-medium">File</span>
-              </div>
-              <span className="text-right text-neutral-600 dark:text-neutral-400">
-                {asset.fileName}
-              </span>
-            </div>
-
-            <div className="flex items-center justify-between text-sm">
-              <div className="flex items-center gap-2">
-                <DatabaseIcon className="h-4 w-4 text-neutral-500" />
-                <span className="font-medium">Size</span>
-              </div>
-              <span className="text-neutral-600 dark:text-neutral-400">{asset.fileSizeHuman}</span>
-            </div>
-
-            <div className="flex items-center justify-between text-sm">
-              <div className="flex items-center gap-2">
-                <ScalingIcon className="h-4 w-4 text-neutral-500" />
-                <span className="font-medium">Dimensions</span>
-              </div>
-              <span className="text-neutral-600 dark:text-neutral-400">
-                {asset.width} × {asset.height}px
-              </span>
-            </div>
-
-            <div className="flex items-center justify-between text-sm">
-              <div className="flex items-center gap-2">
-                <ImageIcon className="h-4 w-4 text-neutral-500" />
-                <span className="font-medium">Type</span>
-              </div>
-              <span className="text-neutral-600 dark:text-neutral-400">{asset.mimeType}</span>
-            </div>
+            <PropertyRow icon={FileIcon} label="File" value={asset.fileName} />
+            <PropertyRow icon={DatabaseIcon} label="Size" value={asset.fileSizeHuman} />
+            <PropertyRow
+              icon={ScalingIcon}
+              label="Dimensions"
+              value={`${asset.width} × ${asset.height}px`}
+            />
+            <PropertyRow icon={ImageIcon} label="Type" value={asset.mimeType} />
           </div>
 
-          {asset.description && (
-            <div className="space-y-2">
-              <h4 className="text-sm font-medium">Description</h4>
-              <p className="text-sm text-neutral-600 dark:text-neutral-400">{asset.description}</p>
-            </div>
-          )}
+          {asset.description && <TextSection title="Description" content={asset.description} />}
 
-          {asset.altText && (
-            <div className="space-y-2">
-              <h4 className="text-sm font-medium">Alt Text</h4>
-              <p className="text-sm text-neutral-600 dark:text-neutral-400">{asset.altText}</p>
-            </div>
-          )}
+          {asset.altText && <TextSection title="Alt text" content={asset.altText} />}
 
-          {asset.tags && asset.tags.length > 0 && (
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <TagIcon className="h-4 w-4 text-neutral-500" />
-                <h4 className="text-sm font-medium">Tags</h4>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {asset.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="inline-flex items-center rounded-full bg-neutral-100 px-2.5 py-0.5 text-xs font-medium text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
+          {asset.tags && asset.tags.length > 0 && <TagsSection tags={asset.tags} />}
 
           <div className="space-y-3 border-t pt-4">
-            <div className="flex items-center justify-between text-sm">
-              <div className="flex items-center gap-2">
-                <CalendarIcon className="h-4 w-4 text-neutral-500" />
-                <span className="font-medium">Created</span>
-              </div>
-              <span className="text-right text-neutral-600 dark:text-neutral-400">
-                {formatDate(asset.createdAt)}
-              </span>
-            </div>
-
-            <div className="flex items-center justify-between text-sm">
-              <div className="flex items-center gap-2">
-                <CalendarIcon className="h-4 w-4 text-neutral-500" />
-                <span className="font-medium">Updated</span>
-              </div>
-              <span className="text-right text-neutral-600 dark:text-neutral-400">
-                {formatDate(asset.updatedAt)}
-              </span>
-            </div>
+            <PropertyRow icon={CalendarIcon} label="Created" value={formatDate(asset.createdAt)} />
+            <PropertyRow icon={CalendarIcon} label="Updated" value={formatDate(asset.updatedAt)} />
           </div>
         </div>
       </SheetContent>
     </Sheet>
+  );
+}
+
+function PropertyRow({
+  icon: Icon,
+  label,
+  value,
+}: {
+  icon: ComponentType<{ className?: string }>;
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="flex items-center justify-between text-sm">
+      <div className="flex items-center gap-2">
+        <Icon className="h-4 w-4 text-neutral-500" />
+        <span className="font-medium">{label}</span>
+      </div>
+      <span className="text-right text-neutral-600 dark:text-neutral-400">{value}</span>
+    </div>
+  );
+}
+
+function TextSection({ title, content }: { title: string; content: string }) {
+  return (
+    <div className="space-y-2">
+      <h4 className="text-sm font-medium">{title}</h4>
+      <p className="text-sm text-neutral-600 dark:text-neutral-400">{content}</p>
+    </div>
+  );
+}
+
+function TagsSection({ tags }: { tags: string[] }) {
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center gap-2">
+        <TagIcon className="h-4 w-4 text-neutral-500" />
+        <h4 className="text-sm font-medium">Tags</h4>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {tags.map((tag) => (
+          <span
+            key={tag}
+            className="inline-flex items-center rounded-full bg-neutral-100 px-2.5 py-0.5 text-xs font-medium text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200"
+          >
+            {tag}
+          </span>
+        ))}
+      </div>
+    </div>
   );
 }
