@@ -63,6 +63,20 @@ class ImageAsset extends Model
         );
     }
 
+    public function tags(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value ?? [],
+
+            set: fn ($value) => is_array($value)
+                ? array_map(
+                    fn (string $tag) => mb_strtolower(trim($tag)),
+                    $value
+                )
+                : $value
+        );
+    }
+
     public function scopeForUser($query)
     {
         return $query->where('user_id', auth('api')->id());

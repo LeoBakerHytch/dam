@@ -12,10 +12,10 @@ export interface ImageAsset {
   mimeType: string;
   width: number;
   height: number;
-  tags?: string[];
 
   description?: string;
   altText?: string;
+  tags?: string[];
 
   createdAt: string;
   updatedAt: string;

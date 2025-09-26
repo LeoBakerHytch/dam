@@ -10,10 +10,10 @@ type ImageAsset {
     mimeType: String! @rename(attribute: "mime_type")
     width: Int!
     height: Int!
-    tags: [String!]
 
     description: String
     altText: String @rename(attribute: "alt_text")
+    tags: [String!]!
 
     createdAt: DateTime! @rename(attribute: "created_at")
     updatedAt: DateTime! @rename(attribute: "updated_at")
