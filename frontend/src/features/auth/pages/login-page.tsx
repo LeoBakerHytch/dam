@@ -51,12 +51,6 @@ export function LoginPage() {
         setAccessToken(AccessToken(authResult.accessToken));
         navigate('/dashboard');
       }
-
-      // Reset password field on success
-      reset({
-        ...data,
-        password: '',
-      });
     } catch (error) {
       console.error('Login failed:', error);
     }

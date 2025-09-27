@@ -62,13 +62,6 @@ export function RegisterPage() {
         setAccessToken(AccessToken(registerResult.accessToken));
         navigate('/dashboard');
       }
-
-      // Reset password fields on success
-      reset({
-        ...data,
-        password: '',
-        password_confirmation: '',
-      });
     } catch (error) {
       console.error('Registration failed:', error);
     }
