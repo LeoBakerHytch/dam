@@ -12,12 +12,12 @@ import { DocumentLibraryPage } from '@/features/documents/document-library-page'
 import { IconLibraryPage } from '@/features/icons/icon-library-page';
 import { ImageLibraryPage } from '@/features/images/image-library-page';
 import { LogoLibraryPage } from '@/features/logos/logo-library-page';
-import { AppearanceSettingsPage } from '@/features/settings/appearance-settings-page';
-import { initializeTheme } from '@/features/settings/appearance/hooks/use-appearance';
-import { PasswordSettingsPage } from '@/features/settings/password-settings-page';
-import { ProfileSettingsPage } from '@/features/settings/profile-settings-page';
+import { SettingsAppearancePage } from '@/features/settings/pages/settings-appearance-page';
+import { SettingsPasswordPage } from '@/features/settings/pages/settings-password-page';
+import { SettingsProfilePage } from '@/features/settings/pages/settings-profile-page';
 import { SoundLibraryPage } from '@/features/sounds/sound-library-page';
 import { TemplateLibraryPage } from '@/features/templates/template-library-page';
+import { initializeTheme } from '@/hooks/use-appearance';
 
 import '../css/index.css';
 
@@ -49,9 +49,9 @@ function AppRoutes() {
       <Route path="/template-library" element={<TemplateLibraryPage />} />
 
       <Route path="/settings" element={<Navigate to="/settings/profile" replace />} />
-      <Route path="/settings/appearance" element={<AppearanceSettingsPage />} />
-      <Route path="/settings/password" element={<PasswordSettingsPage />} />
-      <Route path="/settings/profile" element={<ProfileSettingsPage />} />
+      <Route path="/settings/appearance" element={<SettingsAppearancePage />} />
+      <Route path="/settings/password" element={<SettingsPasswordPage />} />
+      <Route path="/settings/profile" element={<SettingsProfilePage />} />
     </Routes>
   );
 }

@@ -44,7 +44,7 @@ const changePasswordMutation = gql`
 
 type PasswordForm = z.infer<typeof passwordSchema>;
 
-export function PasswordSettingsPage() {
+export function SettingsPasswordPage() {
   const {
     register,
     handleSubmit,
@@ -87,80 +87,78 @@ export function PasswordSettingsPage() {
     <AppLayout breadcrumbs={[{ title: 'Password', path: '/settings/password' }]}>
       <title>Password settings</title>
       <SettingsLayout>
-        <div className="space-y-6">
-          <HeadingSmall
-            title="Update password"
-            description="Ensure your account is using a long, random password to stay secure"
-          />
+        <HeadingSmall
+          title="Update password"
+          description="Ensure your account is using a long, random password to stay secure"
+        />
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="username"
-                value={user?.email || ''}
-                readOnly
-                className="cursor-not-allowed bg-neutral-50"
-              />
-            </div>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <div className="grid gap-2">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              autoComplete="username"
+              value={user?.email || ''}
+              readOnly
+              className="cursor-not-allowed bg-neutral-50"
+            />
+          </div>
 
-            <div className="grid gap-2">
-              <Label htmlFor="currentPassword">Current password</Label>
-              <Input
-                id="currentPassword"
-                type="password"
-                autoComplete="current-password"
-                placeholder="Current password"
-                {...register('currentPassword')}
-              />
-              <InputError message={errors.currentPassword?.message} />
-            </div>
+          <div className="grid gap-2">
+            <Label htmlFor="currentPassword">Current password</Label>
+            <Input
+              id="currentPassword"
+              type="password"
+              autoComplete="current-password"
+              placeholder="Current password"
+              {...register('currentPassword')}
+            />
+            <InputError message={errors.currentPassword?.message} />
+          </div>
 
-            <div className="grid gap-2">
-              <Label htmlFor="newPassword">New password</Label>
-              <Input
-                id="newPassword"
-                type="password"
-                autoComplete="new-password"
-                placeholder="New password"
-                {...register('newPassword')}
-              />
-              <InputError message={errors.newPassword?.message} />
-            </div>
+          <div className="grid gap-2">
+            <Label htmlFor="newPassword">New password</Label>
+            <Input
+              id="newPassword"
+              type="password"
+              autoComplete="new-password"
+              placeholder="New password"
+              {...register('newPassword')}
+            />
+            <InputError message={errors.newPassword?.message} />
+          </div>
 
-            <div className="grid gap-2">
-              <Label htmlFor="passwordConfirmation">Confirm password</Label>
-              <Input
-                id="passwordConfirmation"
-                type="password"
-                autoComplete="new-password"
-                placeholder="Confirm password"
-                {...register('passwordConfirmation')}
-              />
-              <InputError message={errors.passwordConfirmation?.message} />
-            </div>
+          <div className="grid gap-2">
+            <Label htmlFor="passwordConfirmation">Confirm password</Label>
+            <Input
+              id="passwordConfirmation"
+              type="password"
+              autoComplete="new-password"
+              placeholder="Confirm password"
+              {...register('passwordConfirmation')}
+            />
+            <InputError message={errors.passwordConfirmation?.message} />
+          </div>
 
-            <div className="flex items-center gap-4">
-              <Button type="submit" disabled={result.fetching} data-test="update-password-button">
-                {result.fetching && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                Save password
-              </Button>
+          <div className="flex items-center gap-4">
+            <Button type="submit" disabled={result.fetching} data-test="update-password-button">
+              {result.fetching && <LoaderCircle className="h-4 w-4 animate-spin" />}
+              Save password
+            </Button>
 
-              <Transition
-                show={recentlySuccessful}
-                enter="transition ease-in-out"
-                enterFrom="opacity-0"
-                leave="transition ease-in-out"
-                leaveTo="opacity-0"
-              >
-                <p className="text-sm text-neutral-600">Saved</p>
-              </Transition>
-            </div>
-          </form>
-        </div>
+            <Transition
+              show={recentlySuccessful}
+              enter="transition ease-in-out"
+              enterFrom="opacity-0"
+              leave="transition ease-in-out"
+              leaveTo="opacity-0"
+            >
+              <p className="text-sm text-neutral-600">Saved</p>
+            </Transition>
+          </div>
+        </form>
       </SettingsLayout>
     </AppLayout>
   );

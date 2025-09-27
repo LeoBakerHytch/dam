@@ -4,8 +4,9 @@ import { Link } from 'react-router';
 import { Heading } from '@/components/text/heading';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { settingsNavItems } from '@/features/settings/settings-nav-items';
 import { cn } from '@/lib/utils';
+
+import { settingsNavItems } from './settings-nav-items';
 
 export function SettingsLayout(props: PropsWithChildren) {
   const currentPath = window.location.pathname;
@@ -39,7 +40,7 @@ export function SettingsLayout(props: PropsWithChildren) {
         <Separator className="my-6 lg:hidden" />
 
         <div className="flex-1 md:max-w-2xl">
-          <section className="max-w-xl space-y-12">{props.children}</section>
+          <section className="max-w-xl space-y-6">{props.children}</section>
         </div>
       </div>
     </div>

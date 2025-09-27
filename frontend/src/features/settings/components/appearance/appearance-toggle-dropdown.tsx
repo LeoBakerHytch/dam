@@ -8,8 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-
-import { useAppearance } from '../hooks/use-appearance';
+import { useAppearance } from '@/hooks/use-appearance';
 
 export function AppearanceToggleDropdown({
   className = '',

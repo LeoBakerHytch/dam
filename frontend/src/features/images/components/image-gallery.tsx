@@ -2,12 +2,13 @@ import { useState } from 'react';
 import { useSearchParams } from 'react-router';
 import { gql, useQuery } from 'urql';
 
-import { ImageAssetDetailSheet } from '@/features/images/components/image-asset-detail-sheet';
-import { ImageAssetTile } from '@/features/images/components/image-asset-tile';
-import { ImageAssetTileSkeleton } from '@/features/images/components/image-asset-tile-skeleton';
-import { ImageGalleryPagination } from '@/features/images/components/image-gallery-pagination';
 import { IMAGE_ASSET_FRAGMENT } from '@/lib/graphql-fragments';
 import { type ImageAsset } from '@/types/graphql';
+
+import { ImageAssetDetailSheet } from './image-asset-detail-sheet';
+import { ImageAssetTile } from './image-asset-tile';
+import { ImageAssetTileSkeleton } from './image-asset-tile-skeleton';
+import { ImageGalleryPagination } from './image-gallery-pagination';
 
 interface PaginatorInfo {
   currentPage: number;
