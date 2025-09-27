@@ -25,7 +25,7 @@ type User {
 
 extend type Query {
     "The currently logged-in user."
-    me: User @auth
+    currentUser: User @auth
 }
 
 
