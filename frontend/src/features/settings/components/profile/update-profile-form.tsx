@@ -3,7 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { LoaderCircle } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { gql, useMutation } from 'urql';
+import { useMutation } from 'urql';
 import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
@@ -11,22 +11,11 @@ import { Input } from '@/components/ui/input';
 import { InputError } from '@/components/ui/input-error';
 import { Label } from '@/components/ui/label';
 import { useUser } from '@/context/user-provider';
-import { USER_FRAGMENT } from '@/lib/graphql-fragments';
+import { UpdateProfileMutation, User } from '@/graphql/user';
 
 const profileSchema = z.object({
   name: z.string().optional(),
 });
-
-const updateProfileMutation = gql`
-  mutation User_UpdateProfile($input: User_UpdateProfile_Input!) {
-    User_UpdateProfile(input: $input) {
-      user {
-        ...UserFragment
-      }
-    }
-  }
-  ${USER_FRAGMENT}
-`;
 
 type ProfileForm = z.infer<typeof profileSchema>;
 
@@ -40,7 +29,7 @@ export function UpdateProfileForm() {
     resolver: zodResolver(profileSchema),
   });
 
-  const [result, executeMutation] = useMutation(updateProfileMutation);
+  const [result, executeMutation] = useMutation(UpdateProfileMutation);
   const { user, setUser } = useUser();
   const [recentlySuccessful, setRecentlySuccessful] = useState(false);
 
@@ -48,7 +37,7 @@ export function UpdateProfileForm() {
 
   const hasChanges = watchedName && watchedName.trim() !== '' && watchedName !== user?.name;
 
-  const onSubmit = async (data: ProfileForm) => {
+  async function onSubmit(data: ProfileForm) {
     try {
       const result = await executeMutation({
         input: {
@@ -56,18 +45,17 @@ export function UpdateProfileForm() {
         },
       });
 
-      if (result.data?.User_UpdateProfile?.user) {
-        // Update user in context
-        setUser(result.data.User_UpdateProfile.user);
+      const updateProfileResult = result.data?.User_UpdateProfile;
 
-        // Show success message
+      if (updateProfileResult) {
+        setUser(User(updateProfileResult.user));
         setRecentlySuccessful(true);
         setTimeout(() => setRecentlySuccessful(false), 3000);
       }
     } catch (error) {
       console.error('Profile update failed:', error);
     }
-  };
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">

@@ -2,26 +2,15 @@ import { Transition } from '@headlessui/react';
 import { LoaderCircle } from 'lucide-react';
 import { type ChangeEvent, useRef, useState } from 'react';
 import { toast } from 'sonner';
-import { gql, useMutation } from 'urql';
+import { useMutation } from 'urql';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useUser } from '@/context/user-provider';
-import { USER_FRAGMENT } from '@/lib/graphql-fragments';
+import { SetAvatarMutation, User } from '@/graphql/user';
 import { getInitials } from '@/lib/utils';
-
-const setAvatarMutation = gql`
-  mutation User_SetAvatar($input: User_SetAvatar_Input!) {
-    User_SetAvatar(input: $input) {
-      user {
-        ...UserFragment
-      }
-    }
-  }
-  ${USER_FRAGMENT}
-`;
 
 export function SetAvatarForm() {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -29,7 +18,7 @@ export function SetAvatarForm() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [recentlySuccessful, setRecentlySuccessful] = useState(false);
 
-  const [result, executeMutation] = useMutation(setAvatarMutation);
+  const [result, executeMutation] = useMutation(SetAvatarMutation);
   const { user, setUser } = useUser();
 
   const handleAvatarChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -69,18 +58,17 @@ export function SetAvatarForm() {
         },
       });
 
-      if (result.data?.User_SetAvatar?.user) {
-        // Update user in context
-        setUser(result.data.User_SetAvatar.user);
+      const setAvatarResult = result.data?.User_SetAvatar;
 
-        // Reset form state
+      if (setAvatarResult) {
+        setUser(User(setAvatarResult.user));
+
         setSelectedFile(null);
         setAvatarPreviewUrl(null);
         if (fileInputRef.current) {
           fileInputRef.current.value = '';
         }
 
-        // Show success message
         setRecentlySuccessful(true);
         setTimeout(() => setRecentlySuccessful(false), 3000);
 
@@ -109,7 +97,7 @@ export function SetAvatarForm() {
       <Label>Avatar</Label>
       <div className="flex items-center gap-4">
         <Avatar className="h-16 w-16">
-          <AvatarImage src={avatarPreviewUrl || user.avatarUrl} alt={user.name} />
+          <AvatarImage src={avatarPreviewUrl || (user.avatarUrl ?? undefined)} alt={user.name} />
           <AvatarFallback className="bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
             {getInitials(user.name)}
           </AvatarFallback>
@@ -123,7 +111,7 @@ export function SetAvatarForm() {
               onClick={() => fileInputRef.current?.click()}
               disabled={result.fetching}
             >
-              {selectedFile ? 'Choose Different' : 'Change Avatar'}
+              {selectedFile ? 'Choose different' : 'Change avatar'}
             </Button>
             {selectedFile && (
               <>
