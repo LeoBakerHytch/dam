@@ -2,13 +2,15 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
+    "dev": "npm run generate:gql && vite",
+    "generate:gql": "gql-tada generate-output",
+    "build": "npm run generate:gql && tsc && vite build",
     "preview": "vite preview",
     "format": "prettier --write src/",
     "format:check": "prettier --check src/",
     "lint": "eslint . --fix",
-    "types": "tsc --noEmit"
+    "types": "tsc --noEmit",
+    "postinstall": "npm run generate:gql"
   },
   "dependencies": {
     "@apollo/client": "^4.0.6",

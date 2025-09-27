@@ -24,7 +24,18 @@
         "noImplicitAny": true,
         "noUnusedLocals": true,
         "noUnusedParameters": true,
-        "noFallthroughCasesInSwitch": true
+        "noFallthroughCasesInSwitch": true,
+
+        /* gql.tada */
+        "plugins": [
+            {
+                "name": "gql.tada/ts-plugin",
+                "schema": "http://localhost:8000/graphql",
+                "tadaOutputLocation": "./src/graphql-env.d.ts",
+                /* So long as we use a single, canonical fragment for each type, this inspection produces spurious errors */
+                "shouldCheckForColocatedFragments": false
+            }
+        ]
     },
     "include": ["src/**/*.tsx", "src/**/*.ts", "src/**/*.d.ts"],
 }
