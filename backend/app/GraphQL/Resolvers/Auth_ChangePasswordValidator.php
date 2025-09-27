@@ -5,12 +5,12 @@ namespace App\GraphQL\Resolvers;
 use Illuminate\Validation\Rules;
 use Nuwave\Lighthouse\Validation\Validator;
 
-final class Auth_User_RegisterValidator extends Validator
+final class Auth_ChangePasswordValidator extends Validator
 {
     public function rules(): array
     {
         return [
-            'input.password' => [Rules\Password::defaults()],
+            'input.newPassword' => [Rules\Password::defaults()],
         ];
     }
 }

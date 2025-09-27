@@ -8,7 +8,7 @@ use Exception;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
-final class Media_ImageAsset_Upload
+final class ImageAsset_Upload
 {
     /**
      * @throws Exception

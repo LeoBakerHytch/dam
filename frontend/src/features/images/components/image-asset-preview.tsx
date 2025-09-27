@@ -8,8 +8,8 @@ import { IMAGE_ASSET_FRAGMENT } from '@/lib/graphql-fragments';
 import { type ImageAsset } from '@/types/graphql';
 
 const uploadImageAssetMutation = gql`
-  mutation Media_ImageAsset_Upload($input: Media_ImageAsset_Upload_Input!) {
-    Media_ImageAsset_Upload(input: $input) {
+  mutation ImageAsset_Upload($input: ImageAsset_Upload_Input!) {
+    ImageAsset_Upload(input: $input) {
       imageAsset {
         ...ImageAssetFragment
       }
@@ -42,10 +42,10 @@ export function ImageAssetPreview({
         },
       });
 
-      if (mutationResult.data?.Media_ImageAsset_Upload?.imageAsset) {
+      if (mutationResult.data?.ImageAsset_Upload?.imageAsset) {
         setUploadState('SUCCESS');
         toast.success('Image uploaded successfully');
-        onUploadComplete?.(mutationResult.data.Media_ImageAsset_Upload.imageAsset);
+        onUploadComplete?.(mutationResult.data.ImageAsset_Upload.imageAsset);
       } else if (mutationResult.error) {
         setUploadState('ERROR');
         setError(mutationResult.error.message || 'Upload failed');

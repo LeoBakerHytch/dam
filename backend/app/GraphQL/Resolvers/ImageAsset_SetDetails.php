@@ -5,7 +5,7 @@ namespace App\GraphQL\Resolvers;
 use App\Models\ImageAsset;
 use Exception;
 
-final class Media_ImageAsset_SetDetails
+final class ImageAsset_SetDetails
 {
     /**
      * @throws Exception

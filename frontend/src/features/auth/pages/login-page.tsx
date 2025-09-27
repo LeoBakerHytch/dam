@@ -21,8 +21,8 @@ const loginSchema = z.object({
 });
 
 const loginMutation = gql`
-  mutation Auth_Token_Issue($input: Auth_Token_Issue_Input!) {
-    Auth_Token_Issue(input: $input) {
+  mutation Auth_IssueToken($input: Auth_IssueToken_Input!) {
+    Auth_IssueToken(input: $input) {
       accessToken {
         jwt
         tokenType
@@ -67,8 +67,8 @@ export function LoginPage() {
 
       console.log('Mutation result:', result);
 
-      if (result.data?.Auth_Token_Issue) {
-        const { user, accessToken } = result.data.Auth_Token_Issue;
+      if (result.data?.Auth_IssueToken) {
+        const { user, accessToken } = result.data.Auth_IssueToken;
         console.log('Login successful:', { user, accessToken });
 
         if (user && accessToken) {
@@ -77,7 +77,7 @@ export function LoginPage() {
           navigate('/dashboard');
         }
       } else {
-        console.log('No data in result or Auth_Token_Issue failed');
+        console.log('No data in result or Auth_IssueToken failed');
       }
 
       // Reset password field on success

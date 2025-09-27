@@ -2,18 +2,26 @@
 
 namespace App\GraphQL\Resolvers;
 
+use App\Models\User;
 use Exception;
+use Illuminate\Support\Facades\Hash;
 
-final class Auth_Token_Issue
+final class Auth_Register
 {
     /**
      * @throws Exception
      */
     public function __invoke($_, array $args): array
     {
-        $credentials = $args['input'];
+        $input = $args['input'];
 
-        if (! $accessToken = auth('api')->attempt($credentials)) {
+        $user = User::create([
+            'name' => $input['name'],
+            'email' => $input['email'],
+            'password' => Hash::make($input['password']),
+        ]);
+
+        if (! $accessToken = auth('api')->attempt($input)) {
             throw new Exception('Invalid credentials');
         }
 
@@ -23,7 +31,7 @@ final class Auth_Token_Issue
                 'tokenType' => 'Bearer',
                 'expiresIn' => auth('api')->factory()->getTTL() * 60,
             ],
-            'user' => auth('api')->user(),
+            'user' => $user,
         ];
     }
 }

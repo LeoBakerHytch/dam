@@ -31,8 +31,8 @@ const registerSchema = z
   });
 
 const registerMutation = gql`
-  mutation Auth_User_Register($input: Auth_User_Register_Input!) {
-    Auth_User_Register(input: $input) {
+  mutation Auth_Register($input: Auth_Register_Input!) {
+    Auth_Register(input: $input) {
       accessToken {
         jwt
         tokenType
@@ -73,8 +73,8 @@ export function RegisterPage() {
         },
       });
 
-      if (result.data?.Auth_User_Register) {
-        const { user, accessToken } = result.data.Auth_User_Register;
+      if (result.data?.Auth_Register) {
+        const { user, accessToken } = result.data.Auth_Register;
 
         if (user && accessToken) {
           setUser(user);

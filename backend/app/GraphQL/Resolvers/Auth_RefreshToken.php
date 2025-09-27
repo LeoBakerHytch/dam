@@ -5,7 +5,7 @@ namespace App\GraphQL\Resolvers;
 use Exception;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 
-final class Auth_Token_Refresh
+final class Auth_RefreshToken
 {
     /**
      * @throws Exception

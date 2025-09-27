@@ -26,8 +26,8 @@ const altTextSchema = z.object({
 });
 
 const setDetailsMutation = gql`
-  mutation Media_ImageAsset_SetDetails($input: Media_ImageAsset_SetDetails_Input!) {
-    Media_ImageAsset_SetDetails(input: $input) {
+  mutation ImageAsset_SetDetails($input: ImageAsset_SetDetails_Input!) {
+    ImageAsset_SetDetails(input: $input) {
       imageAsset {
         ...ImageAssetFragment
       }
@@ -87,8 +87,8 @@ export function EditAltTextDialog({
         },
       });
 
-      if (result.data?.Media_ImageAsset_SetDetails?.imageAsset) {
-        onSuccess(result.data.Media_ImageAsset_SetDetails.imageAsset);
+      if (result.data?.ImageAsset_SetDetails?.imageAsset) {
+        onSuccess(result.data.ImageAsset_SetDetails.imageAsset);
         onOpenChange(false);
       }
     } catch (error) {

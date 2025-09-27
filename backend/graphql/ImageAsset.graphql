@@ -31,28 +31,28 @@ extend type Query {
 
 
 extend type Mutation {
-    Media_ImageAsset_Upload(input: Media_ImageAsset_Upload_Input!): Media_ImageAsset_Upload_Response!
-    @field(resolver: "App\\GraphQL\\Resolvers\\Media_ImageAsset_Upload")
+    ImageAsset_Upload(input: ImageAsset_Upload_Input!): ImageAsset_Upload_Response!
+    @field(resolver: "App\\GraphQL\\Resolvers\\ImageAsset_Upload")
     @guard
 }
 
-input Media_ImageAsset_Upload_Input {
+input ImageAsset_Upload_Input {
     image: Upload!
 }
 
-type Media_ImageAsset_Upload_Response {
+type ImageAsset_Upload_Response {
     imageAsset: ImageAsset!
 }
 
 
 extend type Mutation {
-    Media_ImageAsset_SetDetails(input: Media_ImageAsset_SetDetails_Input!): Media_ImageAsset_SetDetails_Response!
-    @field(resolver: "App\\GraphQL\\Resolvers\\Media_ImageAsset_SetDetails")
+    ImageAsset_SetDetails(input: ImageAsset_SetDetails_Input!): ImageAsset_SetDetails_Response!
+    @field(resolver: "App\\GraphQL\\Resolvers\\ImageAsset_SetDetails")
     @guard
     @can(ability: "update", find: "input.id", model: "App\\Models\\ImageAsset")
 }
 
-input Media_ImageAsset_SetDetails_Input {
+input ImageAsset_SetDetails_Input {
     id: ID!
 
     description: String
@@ -74,6 +74,6 @@ input Media_ImageAsset_SetDetails_Input {
     )
 }
 
-type Media_ImageAsset_SetDetails_Response {
+type ImageAsset_SetDetails_Response {
     imageAsset: ImageAsset!
 }

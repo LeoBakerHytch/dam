@@ -7,7 +7,7 @@ use Exception;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Hash;
 
-final class Auth_User_ChangePassword
+final class Auth_ChangePassword
 {
     /**
      * @throws Exception

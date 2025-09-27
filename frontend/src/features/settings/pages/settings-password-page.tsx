@@ -31,8 +31,8 @@ const passwordSchema = z
   });
 
 const changePasswordMutation = gql`
-  mutation Auth_User_ChangePassword($input: Auth_User_ChangePassword_Input!) {
-    Auth_User_ChangePassword(input: $input) {
+  mutation Auth_ChangePassword($input: Auth_ChangePassword_Input!) {
+    Auth_ChangePassword(input: $input) {
       success
       user {
         ...UserFragment
@@ -67,10 +67,10 @@ export function SettingsPasswordPage() {
         },
       });
 
-      if (result.data?.Auth_User_ChangePassword?.success) {
+      if (result.data?.Auth_ChangePassword?.success) {
         // Update user in context if returned
-        if (result.data.Auth_User_ChangePassword.user) {
-          setUser(result.data.Auth_User_ChangePassword.user);
+        if (result.data.Auth_ChangePassword.user) {
+          setUser(result.data.Auth_ChangePassword.user);
         }
 
         // Reset form and show success message
