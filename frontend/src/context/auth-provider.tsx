@@ -1,5 +1,5 @@
 import {
-  PropsWithChildren,
+  type PropsWithChildren,
   createContext,
   useCallback,
   useContext,
@@ -7,15 +7,14 @@ import {
   useState,
 } from 'react';
 
-interface AccessToken {
-  jwt: string;
-  tokenType: string;
-  expiresIn: number;
+import { type AccessToken } from '@/graphql/auth';
+
+type StoredAccessToken = AccessToken & {
   expiresAt: number;
-}
+};
 
 interface AuthContextType {
-  accessToken: AccessToken | null;
+  accessToken: StoredAccessToken | null;
   setAccessToken: (token: AccessToken | null) => void;
   logOut: () => void;
   isAuthenticated: boolean;
@@ -34,7 +33,7 @@ export function useAuth() {
 }
 
 export function AuthProvider(props: PropsWithChildren) {
-  const [accessToken, setAccessTokenState] = useState<AccessToken | null>(() => {
+  const [accessToken, setAccessTokenState] = useState<StoredAccessToken | null>(() => {
     const stored = localStorage.getItem('accessToken');
     return stored ? JSON.parse(stored) : null;
   });

@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { LoaderCircle } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
-import { gql, useMutation } from 'urql';
+import { useMutation } from 'urql';
 import { z } from 'zod';
 
 import { TextLink } from '@/components/text/text-link';
@@ -13,28 +13,13 @@ import { Label } from '@/components/ui/label';
 import { useAuth } from '@/context/auth-provider';
 import { useUser } from '@/context/user-provider';
 import { AuthLayout } from '@/features/auth/layouts/auth-layout';
-import { USER_FRAGMENT } from '@/lib/graphql-fragments';
+import { AccessToken, LoginMutation } from '@/graphql/auth';
+import { User } from '@/graphql/user';
 
 const loginSchema = z.object({
   email: z.email('Please enter a valid email address'),
   password: z.string().min(1, 'Password is required'),
 });
-
-const loginMutation = gql`
-  mutation Auth_IssueToken($input: Auth_IssueToken_Input!) {
-    Auth_IssueToken(input: $input) {
-      accessToken {
-        jwt
-        tokenType
-        expiresIn
-      }
-      user {
-        ...UserFragment
-      }
-    }
-  }
-  ${USER_FRAGMENT}
-`;
 
 type LoginForm = z.infer<typeof loginSchema>;
 
@@ -43,21 +28,15 @@ export function LoginPage() {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
-  } = useForm<LoginForm>({
-    resolver: zodResolver(loginSchema),
-  });
+  } = useForm<LoginForm>({ resolver: zodResolver(loginSchema) });
 
   const navigate = useNavigate();
-  const [result, executeMutation] = useMutation(loginMutation);
+  const [result, executeMutation] = useMutation(LoginMutation);
   const { setUser } = useUser();
   const { setAccessToken } = useAuth();
 
-  const onSubmit = async (data: LoginForm) => {
-    console.log('Form submitted with data:', data);
-
+  async function onSubmit(data: LoginForm) {
     try {
-      console.log('Executing mutation...');
       const result = await executeMutation({
         input: {
           email: data.email,
@@ -65,19 +44,12 @@ export function LoginPage() {
         },
       });
 
-      console.log('Mutation result:', result);
+      const authResult = result.data?.Auth_IssueToken;
 
-      if (result.data?.Auth_IssueToken) {
-        const { user, accessToken } = result.data.Auth_IssueToken;
-        console.log('Login successful:', { user, accessToken });
-
-        if (user && accessToken) {
-          setUser(user);
-          setAccessToken(accessToken);
-          navigate('/dashboard');
-        }
-      } else {
-        console.log('No data in result or Auth_IssueToken failed');
+      if (authResult) {
+        setUser(User(authResult.user));
+        setAccessToken(AccessToken(authResult.accessToken));
+        navigate('/dashboard');
       }
 
       // Reset password field on success
@@ -88,7 +60,7 @@ export function LoginPage() {
     } catch (error) {
       console.error('Login failed:', error);
     }
-  };
+  }
 
   return (
     <AuthLayout

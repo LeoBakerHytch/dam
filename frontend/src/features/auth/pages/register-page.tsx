@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { LoaderCircle } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
-import { gql, useMutation } from 'urql';
+import { useMutation } from 'urql';
 import { z } from 'zod';
 
 import { TextLink } from '@/components/text/text-link';
@@ -13,7 +13,8 @@ import { Label } from '@/components/ui/label';
 import { useAuth } from '@/context/auth-provider';
 import { useUser } from '@/context/user-provider';
 import { AuthLayout } from '@/features/auth/layouts/auth-layout';
-import { USER_FRAGMENT } from '@/lib/graphql-fragments';
+import { AccessToken, RegisterMutation } from '@/graphql/auth';
+import { User } from '@/graphql/user';
 
 const registerSchema = z
   .object({
@@ -30,22 +31,6 @@ const registerSchema = z
     path: ['password_confirmation'],
   });
 
-const registerMutation = gql`
-  mutation Auth_Register($input: Auth_Register_Input!) {
-    Auth_Register(input: $input) {
-      accessToken {
-        jwt
-        tokenType
-        expiresIn
-      }
-      user {
-        ...UserFragment
-      }
-    }
-  }
-  ${USER_FRAGMENT}
-`;
-
 type RegisterForm = z.infer<typeof registerSchema>;
 
 export function RegisterPage() {
@@ -53,13 +38,10 @@ export function RegisterPage() {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
-  } = useForm<RegisterForm>({
-    resolver: zodResolver(registerSchema),
-  });
+  } = useForm<RegisterForm>({ resolver: zodResolver(registerSchema) });
 
   const navigate = useNavigate();
-  const [result, executeMutation] = useMutation(registerMutation);
+  const [result, executeMutation] = useMutation(RegisterMutation);
   const { setUser } = useUser();
   const { setAccessToken } = useAuth();
 
@@ -73,14 +55,12 @@ export function RegisterPage() {
         },
       });
 
-      if (result.data?.Auth_Register) {
-        const { user, accessToken } = result.data.Auth_Register;
+      const registerResult = result.data?.Auth_Register;
 
-        if (user && accessToken) {
-          setUser(user);
-          setAccessToken(accessToken);
-          navigate('/dashboard');
-        }
+      if (registerResult) {
+        setUser(User(registerResult.user));
+        setAccessToken(AccessToken(registerResult.accessToken));
+        navigate('/dashboard');
       }
 
       // Reset password fields on success

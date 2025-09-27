@@ -1,11 +1,6 @@
-import { PropsWithChildren, createContext, useContext, useState } from 'react';
+import { type PropsWithChildren, createContext, useContext, useState } from 'react';
 
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  avatarUrl?: string;
-}
+import { type User } from '@/graphql/user';
 
 interface UserContextType {
   user: User | null;
