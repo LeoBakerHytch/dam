@@ -32,12 +32,11 @@ extend type Query {
 extend type Mutation {
     User_UpdateProfile(input: User_UpdateProfile_Input!): User_UpdateProfile_Response!
     @field(resolver: "App\\GraphQL\\Resolvers\\User_UpdateProfile")
-    @validator(class: "App\\GraphQL\\Resolvers\\User_UpdateProfileValidator")
     @guard
 }
 
 input User_UpdateProfile_Input {
-    name: String
+    name: String @rules(apply: ["max:255"])
 }
 
 type User_UpdateProfile_Response {
