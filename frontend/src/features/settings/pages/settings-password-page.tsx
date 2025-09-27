@@ -3,7 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { LoaderCircle } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { gql, useMutation } from 'urql';
+import { useMutation } from 'urql';
 import { z } from 'zod';
 
 import { AppLayout } from '@/components/app/layouts/app-layout';
@@ -14,7 +14,8 @@ import { InputError } from '@/components/ui/input-error';
 import { Label } from '@/components/ui/label';
 import { useUser } from '@/context/user-provider';
 import { SettingsLayout } from '@/features/settings/settings-layout';
-import { USER_FRAGMENT } from '@/lib/graphql-fragments';
+import { ChangePasswordMutation } from '@/graphql/auth';
+import { User } from '@/graphql/user';
 
 const passwordSchema = z
   .object({
@@ -30,18 +31,6 @@ const passwordSchema = z
     path: ['passwordConfirmation'],
   });
 
-const changePasswordMutation = gql`
-  mutation Auth_ChangePassword($input: Auth_ChangePassword_Input!) {
-    Auth_ChangePassword(input: $input) {
-      success
-      user {
-        ...UserFragment
-      }
-    }
-  }
-  ${USER_FRAGMENT}
-`;
-
 type PasswordForm = z.infer<typeof passwordSchema>;
 
 export function SettingsPasswordPage() {
@@ -54,7 +43,7 @@ export function SettingsPasswordPage() {
     resolver: zodResolver(passwordSchema),
   });
 
-  const [result, executeMutation] = useMutation(changePasswordMutation);
+  const [result, executeMutation] = useMutation(ChangePasswordMutation);
   const { user, setUser } = useUser();
   const [recentlySuccessful, setRecentlySuccessful] = useState(false);
 
@@ -67,13 +56,10 @@ export function SettingsPasswordPage() {
         },
       });
 
-      if (result.data?.Auth_ChangePassword?.success) {
-        // Update user in context if returned
-        if (result.data.Auth_ChangePassword.user) {
-          setUser(result.data.Auth_ChangePassword.user);
-        }
+      const changePasswordResult = result.data?.Auth_ChangePassword;
 
-        // Reset form and show success message
+      if (changePasswordResult) {
+        setUser(User(changePasswordResult.user));
         reset();
         setRecentlySuccessful(true);
         setTimeout(() => setRecentlySuccessful(false), 3000);

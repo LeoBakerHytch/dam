@@ -37,7 +37,6 @@ final class Auth_ChangePassword
         event(new PasswordReset($user));
 
         return [
-            'success' => true,
             'user' => $user->fresh(),
         ];
     }

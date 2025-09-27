@@ -1,7 +1,6 @@
 import { FragmentOf, ResultOf, readFragment } from 'gql.tada';
 
-import { graphql } from '@/graphql';
-
+import { graphql } from './graphql';
 import { UserFragment } from './user';
 
 export const AccessTokenFragment = graphql(`
@@ -17,22 +16,6 @@ export type AccessToken = ResultOf<typeof AccessTokenFragment>;
 export function AccessToken(data: FragmentOf<typeof AccessTokenFragment>) {
   return readFragment(AccessTokenFragment, data);
 }
-
-export const RegisterMutation = graphql(
-  `
-    mutation Auth_Register($input: Auth_Register_Input!) {
-      Auth_Register(input: $input) {
-        accessToken {
-          ...AccessToken
-        }
-        user {
-          ...User
-        }
-      }
-    }
-  `,
-  [AccessTokenFragment, UserFragment],
-);
 
 export const LoginMutation = graphql(
   `
@@ -62,4 +45,33 @@ export const RefreshTokenMutation = graphql(
     }
   `,
   [AccessTokenFragment],
+);
+
+export const RegisterMutation = graphql(
+  `
+    mutation Auth_Register($input: Auth_Register_Input!) {
+      Auth_Register(input: $input) {
+        accessToken {
+          ...AccessToken
+        }
+        user {
+          ...User
+        }
+      }
+    }
+  `,
+  [AccessTokenFragment, UserFragment],
+);
+
+export const ChangePasswordMutation = graphql(
+  `
+    mutation Auth_ChangePassword($input: Auth_ChangePassword_Input!) {
+      Auth_ChangePassword(input: $input) {
+        user {
+          ...User
+        }
+      }
+    }
+  `,
+  [UserFragment],
 );

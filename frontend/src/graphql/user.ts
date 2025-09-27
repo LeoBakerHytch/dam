@@ -1,6 +1,6 @@
 import { FragmentOf, ResultOf, readFragment } from 'gql.tada';
 
-import { graphql } from '@/graphql';
+import { graphql } from './graphql';
 
 export const UserFragment = graphql(`
   fragment User on User {

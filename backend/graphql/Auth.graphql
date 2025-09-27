@@ -63,6 +63,5 @@ input Auth_ChangePassword_Input {
 }
 
 type Auth_ChangePassword_Response {
-    success: Boolean!
     user: User!
 }
