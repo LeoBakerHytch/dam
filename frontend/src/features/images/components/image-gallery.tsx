@@ -214,7 +214,7 @@ export function ImageGallery() {
         <ImageGalleryDropOverlay isVisible={isDragActive} />
 
         <div className="min-h-0 overflow-auto">
-          <div className="grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] gap-6">
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] gap-6 transition-opacity duration-300">
             <ImageUploadTile onFilesSelected={handleFilesSelected} />
 
             {uploadItems.map((uploadItem) => (

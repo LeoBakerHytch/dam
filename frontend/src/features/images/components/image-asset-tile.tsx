@@ -13,13 +13,13 @@ export function ImageAssetTile({ asset, onClick }: { asset: ImageAsset; onClick?
       className="flex w-40 cursor-pointer flex-col gap-2 transition-opacity hover:opacity-75"
       onClick={onClick}
     >
-      <div className="relative">
+      <div className="relative h-32 w-full">
         {!imageLoaded && (
           <div className="flex h-32 w-full items-center justify-center rounded-sm bg-neutral-100 dark:bg-neutral-800" />
         )}
         <img
           className={cn(
-            'h-32 w-full rounded-sm object-cover',
+            'h-32 w-full rounded-sm object-cover transition-opacity duration-300',
             imageLoaded ? 'opacity-100' : 'opacity-0'
           )}
           src={asset.thumbnailUrl}
