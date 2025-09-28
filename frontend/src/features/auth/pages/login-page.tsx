@@ -16,7 +16,6 @@ import {
   LoginMutation,
   type LoginMutationResult,
   type LoginMutationVariables,
-  readAccessTokenFragment,
 } from '@/graphql/auth';
 import { useAuth } from '@/providers/api-provider';
 
@@ -56,7 +55,7 @@ export function LoginPage() {
         const authResult = result.data?.Auth_IssueToken;
 
         if (authResult) {
-          setAccessToken(readAccessTokenFragment(authResult.accessToken));
+          setAccessToken(authResult.accessToken);
           navigate('/dashboard');
         }
       } catch (error) {

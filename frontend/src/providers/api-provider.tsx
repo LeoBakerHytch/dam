@@ -15,11 +15,11 @@ import {
   useState,
 } from 'react';
 
-import { type AccessToken, RefreshTokenMutation, readAccessTokenFragment } from '@/graphql/auth';
+import { RefreshTokenMutation, type RefreshTokenMutationResult } from '@/graphql/auth';
 import { getTokenExpiry, isTokenValid } from '@/lib/token';
 
 interface AuthContextType {
-  setAccessToken: (token: AccessToken) => void;
+  setAccessToken: (token: string) => void;
   logOut: () => void;
   isAuthenticated: boolean;
 }
@@ -100,9 +100,9 @@ export function ApiProvider(props: PropsWithChildren) {
   }, [accessToken, logOut]);
 
   const setAccessToken = useCallback(
-    (token: AccessToken) => {
-      setAccessTokenState(token.jwt);
-      localStorage.setItem('accessToken', token.jwt);
+    (accessToken: string) => {
+      setAccessTokenState(accessToken);
+      localStorage.setItem('accessToken', accessToken);
     },
     [setAccessTokenState],
   );
@@ -115,15 +115,14 @@ export function ApiProvider(props: PropsWithChildren) {
     setIsRefreshing(true);
 
     try {
-      const result = await client.mutate({
+      const result = await client.mutate<RefreshTokenMutationResult>({
         mutation: RefreshTokenMutation,
       });
 
       const refreshResult = result.data?.Auth_RefreshToken;
 
       if (refreshResult) {
-        const newToken = readAccessTokenFragment(refreshResult.accessToken);
-        setAccessToken(newToken);
+        setAccessToken(refreshResult.accessToken);
         return true;
       } else {
         return false;

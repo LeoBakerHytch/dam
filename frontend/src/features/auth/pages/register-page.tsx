@@ -16,7 +16,6 @@ import {
   RegisterMutation,
   type RegisterMutationResult,
   type RegisterMutationVariables,
-  readAccessTokenFragment,
 } from '@/graphql/auth';
 import { useAuth } from '@/providers/api-provider';
 
@@ -67,7 +66,7 @@ export function RegisterPage() {
         const registerResult = result.data?.Auth_Register;
 
         if (registerResult) {
-          setAccessToken(readAccessTokenFragment(registerResult.accessToken));
+          setAccessToken(registerResult.accessToken);
           navigate('/dashboard');
         }
       } catch (error) {
