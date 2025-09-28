@@ -9,7 +9,9 @@ mkdir -p storage/framework/sessions
 mkdir -p storage/framework/views
 mkdir -p storage/logs
 
-chown -R www-data:www-data storage bootstrap/cache
+if [ "$APP_ENV" != "production" ]; then
+    chown -R www-data:www-data storage bootstrap/cache
+fi
 
 # Create storage symlink for serving uploaded files (local development only)
 if [ "$APP_ENV" = "local" ] && [ ! -L "public/storage" ]; then
