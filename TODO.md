@@ -12,6 +12,8 @@
 
 - [x] Implement automatic refreshing of access tokens.
 
+- [x] Generate thumbnails for uploaded images, so the gallery view stays fast.
+
 - [ ] Testing!
 
 - [ ] Hybrid upload strategy, for large files. Presently, we rely on the GraphQL `Upload` scalar; for assets though,
@@ -26,3 +28,4 @@
 - [ ] Centralize the definition of frontend routes, so that we don’t even have the possibility that links break.
 
 - [ ] Make the number of images per page dynamic, and calculated from the available space.
+    - Don’t forget to update the skeletons
