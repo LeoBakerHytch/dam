@@ -1,0 +1,40 @@
+app = "dam"
+primary_region = "fra"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  APP_ENV = "production"
+  LOG_CHANNEL = "stderr"
+  LOG_LEVEL = "info"
+  LOG_STDERR_FORMATTER = "Monolog\\Formatter\\JsonFormatter"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+
+  [http_service.concurrency]
+    type = "requests"
+    hard_limit = 1000
+    soft_limit = 500
+
+[[vm]]
+  memory = "1gb"
+  cpu_kind = "shared"
+  cpus = 1
+
+[mounts]
+  source = "dam_storage"
+  destination = "/var/www/html/storage/app/public"
+
+[[statics]]
+  guest_path = "/var/www/html/storage/app/public"
+  url_prefix = "/storage"
+
+[console]
+  command = "/usr/local/bin/php artisan tinker"
