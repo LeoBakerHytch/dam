@@ -1,8 +1,33 @@
 import { UploadIcon } from 'lucide-react';
+import { type ChangeEvent, useRef } from 'react';
 
-export function ImageUploadTile({ onClick }: { onClick?: () => void }) {
+export function ImageUploadTile({ onFilesSelected }: { onFilesSelected: (files: File[]) => void }) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files && files.length > 0) {
+      onFilesSelected(Array.from(files));
+      // Reset input so same files can be selected again if needed
+      event.target.value = '';
+    }
+  };
+
   return (
-    <div className="flex w-40 cursor-pointer flex-col gap-2" onClick={onClick}>
+    <div className="flex w-40 cursor-pointer flex-col gap-2" onClick={handleClick}>
+      <input
+        ref={fileInputRef}
+        type="file"
+        multiple
+        accept="image/*"
+        className="hidden"
+        onChange={handleFileChange}
+      />
+
       <div className="relative">
         <div className="flex h-32 w-full items-center justify-center rounded-sm border-2 border-dashed border-neutral-300 bg-neutral-50 transition-opacity hover:opacity-75 dark:border-neutral-600 dark:bg-neutral-800">
           <div className="flex flex-col items-center gap-2 text-neutral-500 dark:text-neutral-400">
