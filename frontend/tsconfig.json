@@ -35,7 +35,7 @@
         "plugins": [
             {
                 "name": "gql.tada/ts-plugin",
-                "schema": "http://localhost:8000/graphql",
+                "schema": "./schema.graphql",
                 "tadaOutputLocation": "./src/graphql-env.d.ts",
 
                 /* For simplicity’s sake at present, we’re using only a single canonical fragment for each type.
