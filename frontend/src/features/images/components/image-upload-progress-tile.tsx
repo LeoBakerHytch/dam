@@ -1,4 +1,4 @@
-import { CheckCircle, Loader2, XCircle } from 'lucide-react';
+import { CheckCircle, FileIcon, Loader2, XCircle } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { type AssetUploadItem } from '@/features/images/types/AssetUploadItem';
@@ -49,14 +49,25 @@ export function ImageUploadProgressTile({
 
   const canRetry = status === 'ERROR' && errorCode !== 'FILE_TOO_LARGE';
 
+  // Check if the file is a valid image type
+  const isValidImageType = file.type.startsWith('image/');
+
   return (
     <div className="flex w-40 flex-col gap-2">
       <div className="relative">
-        <img
-          className="h-32 w-full rounded-sm object-cover"
-          src={URL.createObjectURL(file)}
-          alt={file.name}
-        />
+        {isValidImageType ? (
+          <img
+            className="h-32 w-full rounded-sm object-cover"
+            src={URL.createObjectURL(file)}
+            alt={file.name}
+          />
+        ) : (
+          <div className="flex h-32 w-full items-center justify-center rounded-sm bg-neutral-100 dark:bg-neutral-800">
+            <div className="flex flex-col items-center gap-2 text-neutral-500 dark:text-neutral-400">
+              <FileIcon className="h-8 w-8" />
+            </div>
+          </div>
+        )}
         {status === 'ERROR' && (
           <div className="absolute inset-0 flex items-center justify-center rounded-sm bg-black/50">
             {canRetry && (
