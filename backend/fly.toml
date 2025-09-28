@@ -23,6 +23,14 @@ primary_region = "fra"
     hard_limit = 1000
     soft_limit = 500
 
+  [[http_service.checks]]
+    grace_period = "30s"
+    interval = "15s"
+    method = "get"
+    path = "/"
+    protocol = "http"
+    timeout = "2s"
+
 [[vm]]
   memory = "1gb"
   cpu_kind = "shared"
@@ -30,7 +38,7 @@ primary_region = "fra"
 
 [mounts]
   source = "dam_storage"
-  destination = "/var/www/html/storage/app/public"
+  destination = "/var/www/html/storage/"
 
 [[statics]]
   guest_path = "/var/www/html/storage/app/public"
@@ -38,3 +46,4 @@ primary_region = "fra"
 
 [console]
   command = "/usr/local/bin/php artisan tinker"
+
