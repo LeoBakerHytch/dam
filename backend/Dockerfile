@@ -8,8 +8,9 @@ RUN composer install --no-interaction --no-dev --prefer-dist --optimize-autoload
 FROM php:8.3-fpm
 
 RUN apt-get update && \
-    apt-get install -y git unzip libpq-dev libzip-dev nginx && \
-    docker-php-ext-install pdo pdo_pgsql pgsql zip opcache && \
+    apt-get install -y git unzip libpq-dev libzip-dev nginx libfreetype6-dev libjpeg62-turbo-dev libpng-dev libwebp-dev && \
+    docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp && \
+    docker-php-ext-install pdo pdo_pgsql pgsql zip gd opcache && \
     rm -rf /var/lib/apt/lists/*
 
 RUN echo "opcache.enable=1" >> /usr/local/etc/php/conf.d/opcache.ini && \

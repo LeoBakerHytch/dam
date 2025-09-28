@@ -1,8 +1,9 @@
 FROM php:8.3-fpm
 
 RUN apt-get update && \
-    apt-get install -y git unzip libpq-dev libzip-dev && \
-    docker-php-ext-install pdo pdo_pgsql pgsql zip && \
+    apt-get install -y git unzip libpq-dev libzip-dev libfreetype6-dev libjpeg62-turbo-dev libpng-dev libwebp-dev && \
+    docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp && \
+    docker-php-ext-install pdo pdo_pgsql pgsql zip gd && \
     pecl install xdebug && \
     docker-php-ext-enable xdebug && \
     rm -rf /var/lib/apt/lists/*
