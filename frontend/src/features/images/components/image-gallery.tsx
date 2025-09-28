@@ -26,6 +26,7 @@ import { ImageGalleryDropOverlay } from './image-gallery-drop-overlay';
 import { ImageGalleryPagination } from './image-gallery-pagination';
 import { ImageUploadProgressTile } from './image-upload-progress-tile';
 import { ImageUploadTile } from './image-upload-tile';
+import { ImageUploadZone } from './image-upload-zone';
 
 export function ImageGallery() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -201,8 +202,8 @@ export function ImageGallery() {
 
   if (assets.length === 0 && uploadItems.length === 0) {
     return (
-      <div className="flex flex-1 items-center justify-center p-6">
-        <div className="text-neutral-600 dark:text-neutral-400">No images found</div>
+      <div className="flex h-full flex-1 p-6">
+        <ImageUploadZone onFilesSelected={handleFilesSelected} />
       </div>
     );
   }
