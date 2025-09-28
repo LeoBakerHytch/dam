@@ -72,16 +72,7 @@ export function LoginPage() {
       description="Enter your email and password below to log in"
     >
       <title>Log in</title>
-      <form
-        onSubmit={(e) => {
-          console.log('Form onSubmit triggered');
-          console.log('Form errors:', errors);
-          handleSubmit(onSubmit, (errors) => {
-            console.log('Validation errors:', errors);
-          })(e);
-        }}
-        className="flex flex-col gap-6"
-      >
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
         <div className="grid gap-6">
           <div className="grid gap-2">
             <Label htmlFor="email">Email address</Label>
