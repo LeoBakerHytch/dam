@@ -1,9 +1,9 @@
+import { useMutation } from '@apollo/client/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoaderCircle } from 'lucide-react';
 import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
-import { useMutation } from '@apollo/client/react';
 import { z } from 'zod';
 
 import { TextLink } from '@/components/text/text-link';
@@ -18,7 +18,7 @@ import {
   type RegisterMutationVariables,
   readAccessTokenFragment,
 } from '@/graphql/auth';
-import { useAuth } from '@/providers/auth-provider';
+import { useAuth } from '@/providers/api-provider';
 
 const registerSchema = z
   .object({
@@ -51,28 +51,31 @@ export function RegisterPage() {
   const navigate = useNavigate();
   const { setAccessToken } = useAuth();
 
-  const onSubmit = useCallback(async (data: RegisterForm) => {
-    try {
-      const result = await mutate({
-        variables: {
-          input: {
-            name: data.name,
-            email: data.email,
-            password: data.password,
+  const onSubmit = useCallback(
+    async (data: RegisterForm) => {
+      try {
+        const result = await mutate({
+          variables: {
+            input: {
+              name: data.name,
+              email: data.email,
+              password: data.password,
+            },
           },
-        },
-      });
+        });
 
-      const registerResult = result.data?.Auth_Register;
+        const registerResult = result.data?.Auth_Register;
 
-      if (registerResult) {
-        setAccessToken(readAccessTokenFragment(registerResult.accessToken));
-        navigate('/dashboard');
+        if (registerResult) {
+          setAccessToken(readAccessTokenFragment(registerResult.accessToken));
+          navigate('/dashboard');
+        }
+      } catch (error) {
+        console.error('Registration failed:', error);
       }
-    } catch (error) {
-      console.error('Registration failed:', error);
-    }
-  }, [mutate, setAccessToken, navigate]);
+    },
+    [mutate, setAccessToken, navigate],
+  );
 
   return (
     <AuthLayout

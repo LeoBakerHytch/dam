@@ -6,7 +6,7 @@ import {
   type User,
   readUserFragment,
 } from '@/graphql/user';
-import { useAuth } from '@/providers/auth-provider';
+import { useAuth } from '@/providers/api-provider';
 
 export function useCurrentUser(): { user: User | null; loading: boolean } {
   const { isAuthenticated } = useAuth();

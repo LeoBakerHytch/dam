@@ -18,7 +18,7 @@ import {
   type LoginMutationVariables,
   readAccessTokenFragment,
 } from '@/graphql/auth';
-import { useAuth } from '@/providers/auth-provider';
+import { useAuth } from '@/providers/api-provider';
 
 const loginSchema = z.object({
   email: z.email('Please enter a valid email address'),
@@ -41,27 +41,30 @@ export function LoginPage() {
   const navigate = useNavigate();
   const { setAccessToken } = useAuth();
 
-  const onSubmit = useCallback(async (data: LoginForm) => {
-    try {
-      const result = await mutate({
-        variables: {
-          input: {
-            email: data.email,
-            password: data.password,
+  const onSubmit = useCallback(
+    async (data: LoginForm) => {
+      try {
+        const result = await mutate({
+          variables: {
+            input: {
+              email: data.email,
+              password: data.password,
+            },
           },
-        },
-      });
+        });
 
-      const authResult = result.data?.Auth_IssueToken;
+        const authResult = result.data?.Auth_IssueToken;
 
-      if (authResult) {
-        setAccessToken(readAccessTokenFragment(authResult.accessToken));
-        navigate('/dashboard');
+        if (authResult) {
+          setAccessToken(readAccessTokenFragment(authResult.accessToken));
+          navigate('/dashboard');
+        }
+      } catch (error) {
+        console.error('Login failed:', error);
       }
-    } catch (error) {
-      console.error('Login failed:', error);
-    }
-  }, [mutate, setAccessToken, navigate]);
+    },
+    [mutate, navigate, setAccessToken],
+  );
 
   return (
     <AuthLayout

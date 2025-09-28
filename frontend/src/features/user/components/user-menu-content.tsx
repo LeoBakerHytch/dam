@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { UserInfo } from '@/features/user/components/user-info';
 import { type User } from '@/graphql/user';
-import { useAuth } from '@/providers/auth-provider';
+import { useAuth } from '@/providers/api-provider';
 
 export function UserMenuContent({ user }: { user: User }) {
   const { logOut } = useAuth();
