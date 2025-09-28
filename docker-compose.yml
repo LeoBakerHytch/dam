@@ -17,12 +17,7 @@ services:
       APP_ENV: local
       APP_DEBUG: "true"
       APP_URL: http://localhost:8000
-      DB_CONNECTION: pgsql
-      DB_HOST: db
-      DB_PORT: 5432
-      DB_DATABASE: app
-      DB_USERNAME: app
-      DB_PASSWORD: secret
+      DATABASE_URL: postgres://app:secret@db:5432/app
       FILESYSTEM_DISK: local
       SESSION_DRIVER: array
 
