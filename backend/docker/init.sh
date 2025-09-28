@@ -13,5 +13,11 @@ if [ "$APP_ENV" = "local" ]; then
   fi
 fi
 
+# Ensure storage volume is writable by www-data
+if [ "$APP_ENV" = "production" ] && [ -d "storage/app/public" ]; then
+  chown www-data:www-data storage/app/public
+  chmod 775 storage/app/public
+fi
+
 # Hand off to environment-specific CMD
 exec "$@"
