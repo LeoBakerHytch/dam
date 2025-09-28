@@ -24,3 +24,5 @@
 - [ ] Ensure that we only ever deliver client-safe error messages to the user in production.
 
 - [ ] Centralize the definition of frontend routes, so that we don’t even have the possibility that links break.
+
+- [ ] Make the number of images per page dynamic, and calculated from the available space.
