@@ -13,7 +13,7 @@ export const AccessTokenFragment = graphql(`
 
 export type AccessToken = ResultOf<typeof AccessTokenFragment>;
 
-export function AccessToken(data: FragmentOf<typeof AccessTokenFragment>) {
+export function readAccessTokenFragment(data: FragmentOf<typeof AccessTokenFragment>) {
   return readFragment(AccessTokenFragment, data);
 }
 

@@ -3,12 +3,13 @@ import { useState } from 'react';
 import { useSearchParams } from 'react-router';
 
 import {
-  ImageAsset,
+  type ImageAsset,
   ImageGalleryQuery,
-  ImageGalleryQueryResult,
-  ImageGalleryQueryVariables,
+  type ImageGalleryQueryResult,
+  type ImageGalleryQueryVariables,
+  readImageAssetFragment,
 } from '@/graphql/images';
-import { PaginatorInfo } from '@/graphql/pagination';
+import { readPaginatorInfoFragment } from '@/graphql/pagination';
 
 import { ImageAssetDetailSheet } from './image-asset-detail-sheet';
 import { ImageAssetTile } from './image-asset-tile';
@@ -77,7 +78,7 @@ export function ImageGallery() {
       <div className="grid h-full grid-rows-[1fr_auto] gap-6 p-5">
         <div className="min-h-0 overflow-auto">
           <div className="grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] gap-6">
-            {assets.map(ImageAsset).map((asset) => (
+            {assets.map(readImageAssetFragment).map((asset) => (
               <ImageAssetTile
                 key={asset.id}
                 asset={asset}
@@ -89,7 +90,7 @@ export function ImageGallery() {
 
         {paginatorInfo && (
           <ImageGalleryPagination
-            paginatorInfo={PaginatorInfo(paginatorInfo)}
+            paginatorInfo={readPaginatorInfoFragment(paginatorInfo)}
             currentPage={currentPage}
             onPageChange={handlePageChange}
           />

@@ -14,7 +14,7 @@ import { InputError } from '@/components/ui/input-error';
 import { Label } from '@/components/ui/label';
 import { SettingsLayout } from '@/features/settings/settings-layout';
 import { ChangePasswordMutation } from '@/graphql/auth';
-import { User } from '@/graphql/user';
+import { readUserFragment } from '@/graphql/user';
 import { useUser } from '@/providers/user-provider';
 
 const passwordSchema = z
@@ -59,7 +59,7 @@ export function SettingsPasswordPage() {
       const changePasswordResult = result.data?.Auth_ChangePassword;
 
       if (changePasswordResult) {
-        setUser(User(changePasswordResult.user));
+        setUser(readUserFragment(changePasswordResult.user));
         reset();
         setRecentlySuccessful(true);
         setTimeout(() => setRecentlySuccessful(false), 3000);

@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { InputError } from '@/components/ui/input-error';
 import { Label } from '@/components/ui/label';
-import { UpdateProfileMutation, User } from '@/graphql/user';
+import { UpdateProfileMutation, readUserFragment } from '@/graphql/user';
 import { useUser } from '@/providers/user-provider';
 
 const profileSchema = z.object({
@@ -48,7 +48,7 @@ export function UpdateProfileForm() {
       const updateProfileResult = result.data?.User_UpdateProfile;
 
       if (updateProfileResult) {
-        setUser(User(updateProfileResult.user));
+        setUser(readUserFragment(updateProfileResult.user));
         setRecentlySuccessful(true);
         setTimeout(() => setRecentlySuccessful(false), 3000);
       }

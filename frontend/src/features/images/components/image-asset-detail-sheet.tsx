@@ -14,7 +14,7 @@ import { type ComponentType, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { ImageAsset } from '@/graphql/images';
+import { type ImageAsset } from '@/graphql/images';
 import { formatDate } from '@/lib/dates';
 
 import { EditAltTextDialog } from './edit-alt-text-dialog';
@@ -42,9 +42,9 @@ export function ImageAssetDetailSheet({
 
   if (!currentAsset) return null;
 
-  const handleAssetUpdate = (updatedFields: Partial<ImageAsset>) => {
-    setCurrentAsset((prev) => (prev ? { ...prev, ...updatedFields } : null));
-  };
+  function handleAssetUpdate(updatedAsset: ImageAsset) {
+    setCurrentAsset(updatedAsset);
+  }
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>

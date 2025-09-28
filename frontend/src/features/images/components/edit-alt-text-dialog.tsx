@@ -18,7 +18,11 @@ import { Input } from '@/components/ui/input';
 import { InputError } from '@/components/ui/input-error';
 import { Label } from '@/components/ui/label';
 import { Kbd } from '@/components/ui/shadcn-io/kbd';
-import { ImageAsset, SetImageAssetDetailsMutation } from '@/graphql/images';
+import {
+  type ImageAsset,
+  SetImageAssetDetailsMutation,
+  readImageAssetFragment,
+} from '@/graphql/images';
 
 const altTextSchema = z.object({
   altText: z.string().max(300, 'Alt text may be 300 characters at most.').optional(),
@@ -76,7 +80,7 @@ export function EditAltTextDialog({
       const setDetailsResult = result.data?.ImageAsset_SetDetails;
 
       if (setDetailsResult) {
-        onSuccess(ImageAsset(setDetailsResult.imageAsset));
+        onSuccess(readImageAssetFragment(setDetailsResult.imageAsset));
         onOpenChange(false);
       }
     } catch (error) {

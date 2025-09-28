@@ -11,8 +11,8 @@ import { Input } from '@/components/ui/input';
 import { InputError } from '@/components/ui/input-error';
 import { Label } from '@/components/ui/label';
 import { AuthLayout } from '@/features/auth/layouts/auth-layout';
-import { AccessToken, RegisterMutation } from '@/graphql/auth';
-import { User } from '@/graphql/user';
+import { RegisterMutation, readAccessTokenFragment } from '@/graphql/auth';
+import { readUserFragment } from '@/graphql/user';
 import { useAuth } from '@/providers/auth-provider';
 import { useUser } from '@/providers/user-provider';
 
@@ -58,8 +58,8 @@ export function RegisterPage() {
       const registerResult = result.data?.Auth_Register;
 
       if (registerResult) {
-        setUser(User(registerResult.user));
-        setAccessToken(AccessToken(registerResult.accessToken));
+        setUser(readUserFragment(registerResult.user));
+        setAccessToken(readAccessTokenFragment(registerResult.accessToken));
         navigate('/dashboard');
       }
     } catch (error) {

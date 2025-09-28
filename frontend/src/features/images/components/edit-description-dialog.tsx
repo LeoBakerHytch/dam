@@ -18,7 +18,11 @@ import { InputError } from '@/components/ui/input-error';
 import { Label } from '@/components/ui/label';
 import { Kbd } from '@/components/ui/shadcn-io/kbd';
 import { Textarea } from '@/components/ui/textarea';
-import { ImageAsset, SetImageAssetDetailsMutation } from '@/graphql/images';
+import {
+  type ImageAsset,
+  SetImageAssetDetailsMutation,
+  readImageAssetFragment,
+} from '@/graphql/images';
 
 const descriptionSchema = z.object({
   description: z.string().max(1000, 'Description may be 1000 characters at most.').optional(),
@@ -76,7 +80,7 @@ export function EditDescriptionDialog({
       const setDetailsResult = result.data?.ImageAsset_SetDetails;
 
       if (setDetailsResult) {
-        onSuccess(ImageAsset(setDetailsResult.imageAsset));
+        onSuccess(readImageAssetFragment(setDetailsResult.imageAsset));
         onOpenChange(false);
       }
     } catch (error) {

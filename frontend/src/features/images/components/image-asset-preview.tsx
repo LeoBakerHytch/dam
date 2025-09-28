@@ -4,7 +4,11 @@ import { toast } from 'sonner';
 import { useMutation } from 'urql';
 
 import { Button } from '@/components/ui/button';
-import { ImageAsset, UploadImageAssetMutation } from '@/graphql/images';
+import {
+  type ImageAsset,
+  UploadImageAssetMutation,
+  readImageAssetFragment,
+} from '@/graphql/images';
 
 type UploadState = 'PENDING' | 'UPLOADING' | 'SUCCESS' | 'ERROR';
 
@@ -35,7 +39,7 @@ export function ImageAssetPreview({
       if (uploadResult) {
         setUploadState('SUCCESS');
         toast.success('Image uploaded successfully');
-        onUploadComplete?.(ImageAsset(uploadResult.imageAsset));
+        onUploadComplete?.(readImageAssetFragment(uploadResult.imageAsset));
       } else if (mutationResult.error) {
         setUploadState('ERROR');
         setError(mutationResult.error.message || 'Upload failed');

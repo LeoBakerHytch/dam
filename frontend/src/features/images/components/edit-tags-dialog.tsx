@@ -18,7 +18,11 @@ import { Input } from '@/components/ui/input';
 import { InputError } from '@/components/ui/input-error';
 import { Label } from '@/components/ui/label';
 import { Kbd } from '@/components/ui/shadcn-io/kbd';
-import { ImageAsset, SetImageAssetDetailsMutation } from '@/graphql/images';
+import {
+  type ImageAsset,
+  SetImageAssetDetailsMutation,
+  readImageAssetFragment,
+} from '@/graphql/images';
 import { normalizeTag } from '@/lib/strings';
 
 const tagsSchema = z.object({
@@ -94,7 +98,7 @@ export function EditTagsDialog({
       const setDetailsResult = result.data?.ImageAsset_SetDetails;
 
       if (setDetailsResult) {
-        onSuccess(ImageAsset(setDetailsResult.imageAsset));
+        onSuccess(readImageAssetFragment(setDetailsResult.imageAsset));
         onOpenChange(false);
       }
     } catch (error) {

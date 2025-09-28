@@ -1,7 +1,7 @@
 import { ScanEyeIcon, TextAlignStartIcon } from 'lucide-react';
 
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { ImageAsset } from '@/graphql/images';
+import { type ImageAsset } from '@/graphql/images';
 
 export function ImageAssetTile({ asset, onClick }: { asset: ImageAsset; onClick?: () => void }) {
   return (

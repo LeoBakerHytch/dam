@@ -11,8 +11,8 @@ import { Input } from '@/components/ui/input';
 import { InputError } from '@/components/ui/input-error';
 import { Label } from '@/components/ui/label';
 import { AuthLayout } from '@/features/auth/layouts/auth-layout';
-import { AccessToken, LoginMutation } from '@/graphql/auth';
-import { User } from '@/graphql/user';
+import { LoginMutation, readAccessTokenFragment } from '@/graphql/auth';
+import { readUserFragment } from '@/graphql/user';
 import { useAuth } from '@/providers/auth-provider';
 import { useUser } from '@/providers/user-provider';
 
@@ -47,8 +47,8 @@ export function LoginPage() {
       const authResult = result.data?.Auth_IssueToken;
 
       if (authResult) {
-        setUser(User(authResult.user));
-        setAccessToken(AccessToken(authResult.accessToken));
+        setUser(readUserFragment(authResult.user));
+        setAccessToken(readAccessTokenFragment(authResult.accessToken));
         navigate('/dashboard');
       }
     } catch (error) {

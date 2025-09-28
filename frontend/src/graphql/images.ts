@@ -28,7 +28,7 @@ export const ImageAssetFragment = graphql(`
 
 export type ImageAsset = ResultOf<typeof ImageAssetFragment>;
 
-export function ImageAsset(data: FragmentOf<typeof ImageAssetFragment>) {
+export function readImageAssetFragment(data: FragmentOf<typeof ImageAssetFragment>) {
   return readFragment(ImageAssetFragment, data);
 }
 

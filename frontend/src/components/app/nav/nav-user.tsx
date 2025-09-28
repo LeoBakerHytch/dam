@@ -13,8 +13,8 @@ import {
 } from '@/components/ui/sidebar';
 import { UserInfo } from '@/features/user/components/user-info';
 import { UserMenuContent } from '@/features/user/components/user-menu-content';
+import { type User } from '@/graphql/user';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { User } from '@/providers/user-provider';
 
 export function NavUser({ user }: { user: User }) {
   const { state } = useSidebar();

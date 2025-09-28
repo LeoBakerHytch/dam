@@ -14,6 +14,6 @@ export const PaginatorInfoFragment = graphql(`
 
 export type PaginatorInfo = ResultOf<typeof PaginatorInfoFragment>;
 
-export function PaginatorInfo(data: FragmentOf<typeof PaginatorInfoFragment>) {
+export function readPaginatorInfoFragment(data: FragmentOf<typeof PaginatorInfoFragment>) {
   return readFragment(PaginatorInfoFragment, data);
 }

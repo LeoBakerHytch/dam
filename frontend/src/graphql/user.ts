@@ -13,7 +13,7 @@ export const UserFragment = graphql(`
 
 export type User = ResultOf<typeof UserFragment>;
 
-export function User(data: FragmentOf<typeof UserFragment>) {
+export function readUserFragment(data: FragmentOf<typeof UserFragment>) {
   return readFragment(UserFragment, data);
 }
 

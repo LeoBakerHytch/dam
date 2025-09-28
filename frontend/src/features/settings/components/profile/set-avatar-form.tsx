@@ -8,7 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { SetAvatarMutation, User } from '@/graphql/user';
+import { SetAvatarMutation, readUserFragment } from '@/graphql/user';
 import { getInitials } from '@/lib/strings';
 import { useUser } from '@/providers/user-provider';
 
@@ -21,7 +21,7 @@ export function SetAvatarForm() {
   const [result, executeMutation] = useMutation(SetAvatarMutation);
   const { user, setUser } = useUser();
 
-  const handleAvatarChange = (e: ChangeEvent<HTMLInputElement>) => {
+  function handleAvatarChange(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -43,9 +43,9 @@ export function SetAvatarForm() {
     const url = URL.createObjectURL(file);
     setAvatarPreviewUrl(url);
     setSelectedFile(file);
-  };
+  }
 
-  const handleUpload = async () => {
+  async function handleUpload() {
     if (!selectedFile) {
       toast.error('Please select an image first');
       return;
@@ -61,7 +61,7 @@ export function SetAvatarForm() {
       const setAvatarResult = result.data?.User_SetAvatar;
 
       if (setAvatarResult) {
-        setUser(User(setAvatarResult.user));
+        setUser(readUserFragment(setAvatarResult.user));
 
         setSelectedFile(null);
         setAvatarPreviewUrl(null);
@@ -78,15 +78,15 @@ export function SetAvatarForm() {
       console.error('Avatar upload failed:', error);
       toast.error('Failed to update avatar');
     }
-  };
+  }
 
-  const handleCancel = () => {
+  function handleCancel() {
     setSelectedFile(null);
     setAvatarPreviewUrl(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
-  };
+  }
 
   if (!user) {
     return null;

@@ -7,7 +7,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
-import { PaginatorInfo } from '@/graphql/pagination';
+import { type PaginatorInfo } from '@/graphql/pagination';
 
 export function ImageGalleryPagination({
   paginatorInfo,
