@@ -14,6 +14,7 @@ class ImageAsset extends Model
         'name',
         'file_name',
         'file_path',
+        'thumbnail_path',
         'file_size',
         'mime_type',
         'width',
@@ -33,6 +34,7 @@ class ImageAsset extends Model
 
     protected $appends = [
         'url',
+        'thumbnail_url',
         'file_size_human',
     ];
 
@@ -45,6 +47,15 @@ class ImageAsset extends Model
     {
         return Attribute::make(
             get: fn () => Storage::disk('public')->url($this->file_path)
+        );
+    }
+
+    public function thumbnailUrl(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->thumbnail_path
+                ? Storage::disk('public')->url($this->thumbnail_path)
+                : null
         );
     }
 

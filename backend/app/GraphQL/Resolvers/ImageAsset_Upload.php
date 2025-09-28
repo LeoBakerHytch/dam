@@ -74,13 +74,23 @@ final class ImageAsset_Upload
             throw new Exception('Failed to store file');
         }
 
+        // Generate thumbnail
+        $thumbnailPath = $this->generateThumbnail($image, $fileName);
+
+        if (!$thumbnailPath) {
+            // Clean up original file if thumbnail generation fails
+            Storage::disk('public')->delete($filePath);
+            throw new Exception('Failed to generate thumbnail');
+        }
+
         // Get image dimensions
         $fullPath = Storage::disk('public')->path($filePath);
         $imageInfo = getimagesize($fullPath);
 
         if (!$imageInfo) {
-            // Clean up the stored file if we can’t get dimensions
+            // Clean up the stored files if we can't get dimensions
             Storage::disk('public')->delete($filePath);
+            Storage::disk('public')->delete($thumbnailPath);
             $lastError = error_get_last();
             $errorMessage = $lastError ? $lastError['message'] : 'Unknown error';
             throw new Exception("Unable to process image file: {$errorMessage}");
@@ -92,6 +102,7 @@ final class ImageAsset_Upload
             'name' => $originalName,
             'file_name' => $fileName,
             'file_path' => $filePath,
+            'thumbnail_path' => $thumbnailPath,
             'file_size' => $image->getSize(),
             'mime_type' => $mimeType,
             'width' => $width,
@@ -102,5 +113,94 @@ final class ImageAsset_Upload
         return [
             'imageAsset' => $imageAsset,
         ];
+    }
+
+    /**
+     * Generate a thumbnail for the uploaded image
+     */
+    private function generateThumbnail(UploadedFile $image, string $fileName): ?string
+    {
+        try {
+            $thumbnailSize = 450;
+
+            // Create thumbnail filename
+            $pathInfo = pathinfo($fileName);
+            $thumbnailFileName = $pathInfo['filename'] . '_thumb.' . $pathInfo['extension'];
+
+            // Get original image resource
+            $originalPath = $image->getPathname();
+            $mimeType = $image->getMimeType();
+
+            $sourceImage = match($mimeType) {
+                'image/jpeg' => imagecreatefromjpeg($originalPath),
+                'image/png' => imagecreatefrompng($originalPath),
+                'image/gif' => imagecreatefromgif($originalPath),
+                'image/webp' => imagecreatefromwebp($originalPath),
+                default => false
+            };
+
+            if (!$sourceImage) {
+                return null;
+            }
+
+            // Get original dimensions
+            $originalWidth = imagesx($sourceImage);
+            $originalHeight = imagesy($sourceImage);
+
+            // Calculate thumbnail dimensions maintaining aspect ratio
+            if ($originalWidth > $originalHeight) {
+                $thumbnailWidth = $thumbnailSize;
+                $thumbnailHeight = intval(($originalHeight / $originalWidth) * $thumbnailSize);
+            } else {
+                $thumbnailHeight = $thumbnailSize;
+                $thumbnailWidth = intval(($originalWidth / $originalHeight) * $thumbnailSize);
+            }
+
+            // Create thumbnail image
+            $thumbnailImage = imagecreatetruecolor($thumbnailWidth, $thumbnailHeight);
+
+            // Handle transparency for PNG and GIF
+            if ($mimeType === 'image/png' || $mimeType === 'image/gif') {
+                imagealphablending($thumbnailImage, false);
+                imagesavealpha($thumbnailImage, true);
+                $transparent = imagecolorallocatealpha($thumbnailImage, 255, 255, 255, 127);
+                imagefill($thumbnailImage, 0, 0, $transparent);
+            }
+
+            // Resize image
+            imagecopyresampled(
+                $thumbnailImage, $sourceImage,
+                0, 0, 0, 0,
+                $thumbnailWidth, $thumbnailHeight,
+                $originalWidth, $originalHeight
+            );
+
+            // Create thumbnails directory if it doesn't exist
+            $thumbnailsDir = Storage::disk('public')->path('thumbnails');
+            if (!is_dir($thumbnailsDir)) {
+                mkdir($thumbnailsDir, 0755, true);
+            }
+
+            // Save thumbnail
+            $thumbnailPath = 'thumbnails/' . $thumbnailFileName;
+            $thumbnailFullPath = Storage::disk('public')->path($thumbnailPath);
+
+            $success = match($mimeType) {
+                'image/jpeg' => imagejpeg($thumbnailImage, $thumbnailFullPath, 85),
+                'image/png' => imagepng($thumbnailImage, $thumbnailFullPath, 6),
+                'image/gif' => imagegif($thumbnailImage, $thumbnailFullPath),
+                'image/webp' => imagewebp($thumbnailImage, $thumbnailFullPath, 85),
+                default => false
+            };
+
+            // Clean up memory
+            imagedestroy($sourceImage);
+            imagedestroy($thumbnailImage);
+
+            return $success ? $thumbnailPath : null;
+
+        } catch (Exception $e) {
+            return null;
+        }
     }
 }
