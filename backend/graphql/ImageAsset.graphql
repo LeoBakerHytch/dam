@@ -2,7 +2,7 @@ type ImageAsset {
     id: ID!
     name: String!
     url: String!
-    thumbnailUrl: String @rename(attribute: "thumbnail_url")
+    thumbnailUrl: String! @rename(attribute: "thumbnail_url")
 
     fileName: String! @rename(attribute: "file_name")
     fileSize: Int! @rename(attribute: "file_size")

@@ -53,9 +53,7 @@ class ImageAsset extends Model
     public function thumbnailUrl(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->thumbnail_path
-                ? Storage::disk('public')->url($this->thumbnail_path)
-                : null
+            get: fn () => Storage::disk('public')->url($this->thumbnail_path)
         );
     }
 
