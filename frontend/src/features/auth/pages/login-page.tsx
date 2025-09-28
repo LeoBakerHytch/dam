@@ -1,6 +1,7 @@
 import { useMutation } from '@apollo/client/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoaderCircle } from 'lucide-react';
+import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import { z } from 'zod';
@@ -40,7 +41,7 @@ export function LoginPage() {
   const navigate = useNavigate();
   const { setAccessToken } = useAuth();
 
-  async function onSubmit(data: LoginForm) {
+  const onSubmit = useCallback(async (data: LoginForm) => {
     try {
       const result = await mutate({
         variables: {
@@ -60,7 +61,7 @@ export function LoginPage() {
     } catch (error) {
       console.error('Login failed:', error);
     }
-  }
+  }, [mutate, setAccessToken, navigate]);
 
   return (
     <AuthLayout

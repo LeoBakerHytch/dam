@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoaderCircle, XIcon } from 'lucide-react';
-import { type KeyboardEvent, useEffect, useState } from 'react';
+import { type KeyboardEvent, useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@apollo/client/react';
 import { z } from 'zod';
@@ -73,19 +73,19 @@ export function EditTagsDialog({
   const watchedNewTag = watch('newTag');
   const hasChanges = JSON.stringify(tags) !== JSON.stringify(asset.tags || []);
 
-  const addTag = (tagText: string) => {
+  const addTag = useCallback((tagText: string) => {
     const normalized = normalizeTag(tagText);
     if (normalized && !tags.includes(normalized)) {
       setTags([...tags, normalized]);
       setValue('newTag', '');
     }
-  };
+  }, [tags, setValue]);
 
-  const removeTag = (tagToRemove: string) => {
+  const removeTag = useCallback((tagToRemove: string) => {
     setTags(tags.filter((tag) => tag !== tagToRemove));
-  };
+  }, [tags]);
 
-  const onSubmit = async (data: TagsForm) => {
+  const onSubmit = useCallback(async (data: TagsForm) => {
     // Add the current input as a tag if it's not empty
     if (data.newTag) {
       addTag(data.newTag);
@@ -111,16 +111,16 @@ export function EditTagsDialog({
     } catch (error) {
       console.error('Tags update failed:', error);
     }
-  };
+  }, [addTag, mutate, asset.id, tags, onSuccess, onOpenChange]);
 
-  const handleKeyDown = (e: KeyboardEvent) => {
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === 'Enter') {
       e.preventDefault();
       if (watchedNewTag) {
         addTag(watchedNewTag);
       }
     }
-  };
+  }, [watchedNewTag, addTag]);
 
   const handleDialogKeyDown = (e: KeyboardEvent) => {
     if ((e.metaKey || e.ctrlKey) && e.key === 'Enter' && hasChanges && !loading) {

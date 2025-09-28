@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoaderCircle } from 'lucide-react';
+import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import { useMutation } from '@apollo/client/react';
@@ -50,7 +51,7 @@ export function RegisterPage() {
   const navigate = useNavigate();
   const { setAccessToken } = useAuth();
 
-  const onSubmit = async (data: RegisterForm) => {
+  const onSubmit = useCallback(async (data: RegisterForm) => {
     try {
       const result = await mutate({
         variables: {
@@ -71,7 +72,7 @@ export function RegisterPage() {
     } catch (error) {
       console.error('Registration failed:', error);
     }
-  };
+  }, [mutate, setAccessToken, navigate]);
 
   return (
     <AuthLayout

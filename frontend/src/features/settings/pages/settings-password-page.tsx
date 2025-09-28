@@ -1,7 +1,7 @@
 import { Transition } from '@headlessui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoaderCircle } from 'lucide-react';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@apollo/client/react';
 import { z } from 'zod';
@@ -53,7 +53,7 @@ export function SettingsPasswordPage() {
   const { user } = useCurrentUser();
   const [recentlySuccessful, setRecentlySuccessful] = useState(false);
 
-  const onSubmit = async (data: PasswordForm) => {
+  const onSubmit = useCallback(async (data: PasswordForm) => {
     try {
       const result = await mutate({
         variables: {
@@ -74,7 +74,7 @@ export function SettingsPasswordPage() {
     } catch (error) {
       console.error('Password change failed:', error);
     }
-  };
+  }, [mutate, reset]);
 
   return (
     <AppLayout breadcrumbs={[{ title: 'Password', path: '/settings/password' }]}>

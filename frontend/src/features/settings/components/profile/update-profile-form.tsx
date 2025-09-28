@@ -2,7 +2,7 @@ import { useMutation } from '@apollo/client/react';
 import { Transition } from '@headlessui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoaderCircle } from 'lucide-react';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -45,7 +45,7 @@ export function UpdateProfileForm() {
 
   const hasChanges = watchedName && watchedName.trim() !== '' && watchedName !== user?.name;
 
-  async function onSubmit(data: ProfileForm) {
+  const onSubmit = useCallback(async (data: ProfileForm) => {
     try {
       const result = await mutate({
         variables: {
@@ -64,7 +64,7 @@ export function UpdateProfileForm() {
     } catch (error) {
       console.error('Profile update failed:', error);
     }
-  }
+  }, [mutate]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">

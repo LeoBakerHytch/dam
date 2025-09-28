@@ -1,6 +1,6 @@
 import { Transition } from '@headlessui/react';
 import { LoaderCircle } from 'lucide-react';
-import { type ChangeEvent, useRef, useState } from 'react';
+import { type ChangeEvent, useCallback, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { useMutation } from '@apollo/client/react';
 
@@ -27,7 +27,7 @@ export function SetAvatarForm() {
   );
   const { user } = useCurrentUser();
 
-  function handleAvatarChange(e: ChangeEvent<HTMLInputElement>) {
+  const handleAvatarChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -49,9 +49,9 @@ export function SetAvatarForm() {
     const url = URL.createObjectURL(file);
     setAvatarPreviewUrl(url);
     setSelectedFile(file);
-  }
+  }, []);
 
-  async function handleUpload() {
+  const handleUpload = useCallback(async () => {
     if (!selectedFile) {
       toast.error('Please select an image first');
       return;
@@ -84,15 +84,15 @@ export function SetAvatarForm() {
       console.error('Avatar upload failed:', error);
       toast.error('Failed to update avatar');
     }
-  }
+  }, [selectedFile, mutate]);
 
-  function handleCancel() {
+  const handleCancel = useCallback(() => {
     setSelectedFile(null);
     setAvatarPreviewUrl(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
-  }
+  }, []);
 
   if (!user) {
     return null;

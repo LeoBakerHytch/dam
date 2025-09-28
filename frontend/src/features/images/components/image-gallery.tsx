@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client/react';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useSearchParams } from 'react-router';
 
 import {
@@ -31,14 +31,14 @@ export function ImageGallery() {
     },
   );
 
-  const handlePageChange = (page: number) => {
+  const handlePageChange = useCallback((page: number) => {
     setSearchParams(page === 1 ? {} : { page: page.toString() });
-  };
+  }, [setSearchParams]);
 
-  const handleAssetClick = (asset: ImageAsset) => {
+  const handleAssetClick = useCallback((asset: ImageAsset) => {
     setSelectedAsset(asset);
     setIsDetailSheetOpen(true);
-  };
+  }, []);
 
   if (loading) {
     return (
