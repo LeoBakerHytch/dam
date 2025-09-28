@@ -15,6 +15,7 @@ import { ImageAssetDetailSheet } from './image-asset-detail-sheet';
 import { ImageAssetTile } from './image-asset-tile';
 import { ImageAssetTileSkeleton } from './image-asset-tile-skeleton';
 import { ImageGalleryPagination } from './image-gallery-pagination';
+import { ImageUploadTile } from './image-upload-tile';
 
 export function ImageGallery() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -31,13 +32,21 @@ export function ImageGallery() {
     },
   );
 
-  const handlePageChange = useCallback((page: number) => {
-    setSearchParams(page === 1 ? {} : { page: page.toString() });
-  }, [setSearchParams]);
+  const handlePageChange = useCallback(
+    (page: number) => {
+      setSearchParams(page === 1 ? {} : { page: page.toString() });
+    },
+    [setSearchParams],
+  );
 
   const handleAssetClick = useCallback((asset: ImageAsset) => {
     setSelectedAsset(asset);
     setIsDetailSheetOpen(true);
+  }, []);
+
+  const handleUploadClick = useCallback(() => {
+    // TODO: Implement upload functionality
+    console.log('Upload clicked');
   }, []);
 
   if (loading) {
@@ -78,6 +87,8 @@ export function ImageGallery() {
       <div className="grid h-full grid-rows-[1fr_auto] gap-6 p-5">
         <div className="min-h-0 overflow-auto">
           <div className="grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] gap-6">
+            <ImageUploadTile onClick={handleUploadClick} />
+
             {assets.map(readImageAssetFragment).map((asset) => (
               <ImageAssetTile
                 key={asset.id}
