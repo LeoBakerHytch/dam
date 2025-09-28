@@ -71,7 +71,7 @@ export function ImageGallery() {
       status: 'PENDING' as const,
     }));
 
-    setUploadItems((prev) => [...prev, ...newUploadItems]);
+    setUploadItems((prev) => [...newUploadItems, ...prev]);
   }, []);
 
   // Sequential upload processing
