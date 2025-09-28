@@ -41,19 +41,6 @@ export function ImageUploadProgressTile({
     }
   };
 
-  const getStatusColor = () => {
-    switch (status) {
-      case 'PENDING':
-        return 'text-neutral-500 dark:text-neutral-400';
-      case 'UPLOADING':
-        return 'text-blue-600 dark:text-blue-400';
-      case 'SUCCESS':
-        return 'text-green-600 dark:text-green-400';
-      case 'ERROR':
-        return 'text-red-600 dark:text-red-400';
-    }
-  };
-
   return (
     <div className="flex w-40 flex-col gap-2">
       <div className="relative">
@@ -72,7 +59,7 @@ export function ImageUploadProgressTile({
           {file.name}
         </p>
 
-        <p className={`text-xs ${getStatusColor()}`}>{getStatusText()}</p>
+        <p className="text-xs">{getStatusText()}</p>
 
         {status === 'ERROR' && (
           <Button size="sm" variant="outline" onClick={onRetry} className="h-6 text-xs">
