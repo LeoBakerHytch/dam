@@ -7,9 +7,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
-import { useAuth } from '@/context/auth-provider';
-import { User } from '@/context/user-provider';
 import { UserInfo } from '@/features/user/components/user-info';
+import { useAuth } from '@/providers/auth-provider';
+import { User } from '@/providers/user-provider';
 
 export function UserMenuContent({ user }: { user: User }) {
   const { logOut } = useAuth();

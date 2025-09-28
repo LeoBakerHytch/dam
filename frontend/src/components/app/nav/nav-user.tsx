@@ -11,10 +11,10 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar';
-import { User } from '@/context/user-provider';
 import { UserInfo } from '@/features/user/components/user-info';
 import { UserMenuContent } from '@/features/user/components/user-menu-content';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { User } from '@/providers/user-provider';
 
 export function NavUser({ user }: { user: User }) {
   const { state } = useSidebar();

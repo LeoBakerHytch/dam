@@ -10,11 +10,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { InputError } from '@/components/ui/input-error';
 import { Label } from '@/components/ui/label';
-import { useAuth } from '@/context/auth-provider';
-import { useUser } from '@/context/user-provider';
 import { AuthLayout } from '@/features/auth/layouts/auth-layout';
 import { AccessToken, LoginMutation } from '@/graphql/auth';
 import { User } from '@/graphql/user';
+import { useAuth } from '@/providers/auth-provider';
+import { useUser } from '@/providers/user-provider';
 
 const loginSchema = z.object({
   email: z.email('Please enter a valid email address'),

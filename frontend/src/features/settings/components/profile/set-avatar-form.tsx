@@ -8,9 +8,9 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useUser } from '@/context/user-provider';
 import { SetAvatarMutation, User } from '@/graphql/user';
 import { getInitials } from '@/lib/strings';
+import { useUser } from '@/providers/user-provider';
 
 export function SetAvatarForm() {
   const fileInputRef = useRef<HTMLInputElement>(null);

@@ -14,7 +14,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { useUser } from '@/context/user-provider';
+import { useUser } from '@/providers/user-provider';
 
 export function AppSidebar() {
   const { user } = useUser();

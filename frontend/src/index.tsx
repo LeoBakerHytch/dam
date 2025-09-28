@@ -2,9 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router';
 
-import { ApiProvider } from '@/context/api-provider';
-import { AuthProvider, useAuth } from '@/context/auth-provider';
-import { UserProvider } from '@/context/user-provider';
 import { LoginPage } from '@/features/auth/pages/login-page';
 import { RegisterPage } from '@/features/auth/pages/register-page';
 import { DashboardPage } from '@/features/dashboard/dashboard-page';
@@ -18,6 +15,9 @@ import { SettingsProfilePage } from '@/features/settings/pages/settings-profile-
 import { SoundLibraryPage } from '@/features/sounds/sound-library-page';
 import { TemplateLibraryPage } from '@/features/templates/template-library-page';
 import { initializeTheme } from '@/hooks/use-appearance';
+import { ApiProvider } from '@/providers/api-provider';
+import { AuthProvider, useAuth } from '@/providers/auth-provider';
+import { UserProvider } from '@/providers/user-provider';
 
 import '../css/index.css';
 

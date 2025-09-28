@@ -1,9 +1,9 @@
 import { AppLayout } from '@/components/app/layouts/app-layout';
 import { HeadingSmall } from '@/components/text/heading-small';
-import { useUser } from '@/context/user-provider';
 import { SetAvatarForm } from '@/features/settings/components/profile/set-avatar-form';
 import { UpdateProfileForm } from '@/features/settings/components/profile/update-profile-form';
 import { SettingsLayout } from '@/features/settings/settings-layout';
+import { useUser } from '@/providers/user-provider';
 
 export function SettingsProfilePage() {
   const { user } = useUser();

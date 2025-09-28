@@ -10,8 +10,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { InputError } from '@/components/ui/input-error';
 import { Label } from '@/components/ui/label';
-import { useUser } from '@/context/user-provider';
 import { UpdateProfileMutation, User } from '@/graphql/user';
+import { useUser } from '@/providers/user-provider';
 
 const profileSchema = z.object({
   name: z.string().optional(),

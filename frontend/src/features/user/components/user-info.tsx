@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { User } from '@/context/user-provider';
 import { getInitials } from '@/lib/strings';
+import { User } from '@/providers/user-provider';
 
 export function UserInfo({ user, showEmail = false }: { user: User; showEmail?: boolean }) {
   return (

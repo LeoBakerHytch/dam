@@ -1,7 +1,7 @@
 import { PropsWithChildren, useMemo } from 'react';
 import { Client, Provider, cacheExchange, fetchExchange } from 'urql';
 
-import { useAuth } from '@/context/auth-provider';
+import { useAuth } from '@/providers/auth-provider';
 
 function ApiProviderInner(props: PropsWithChildren) {
   const { accessToken } = useAuth();
