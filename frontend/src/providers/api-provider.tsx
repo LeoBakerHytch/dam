@@ -1,5 +1,5 @@
 import { ApolloClient, ApolloLink, InMemoryCache } from '@apollo/client';
-import { CombinedGraphQLErrors, ServerError } from '@apollo/client/errors';
+import { CombinedGraphQLErrors } from '@apollo/client/errors';
 import { SetContextLink } from '@apollo/client/link/context';
 import { ErrorLink } from '@apollo/client/link/error';
 import { ApolloProvider } from '@apollo/client/react';
@@ -82,36 +82,13 @@ export function ApiProvider(props: PropsWithChildren) {
     });
 
     const errorLink = new ErrorLink(({ error }) => {
-      // Handle server errors (like 401)
-      if (ServerError.is(error) && error.statusCode === 401) {
-        console.warn('Received 401 server error - logging out user');
-        logOut();
-        return;
-      }
-
-      // Handle GraphQL errors that might contain auth errors
       if (CombinedGraphQLErrors.is(error)) {
         for (const err of error.errors) {
           if (err.extensions?.code === 'UNAUTHENTICATED') {
-            console.warn('Received UNAUTHENTICATED GraphQL error - logging out user');
             logOut();
             return;
           }
         }
-      }
-
-      // Handle network errors
-      if (
-        error &&
-        typeof error === 'object' &&
-        'networkError' in error &&
-        error.networkError &&
-        typeof error.networkError === 'object' &&
-        'statusCode' in error.networkError &&
-        (error.networkError as { statusCode: number }).statusCode === 401
-      ) {
-        console.warn('Received 401 network error - logging out user');
-        logOut();
       }
     });
 
