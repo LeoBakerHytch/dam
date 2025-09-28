@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Console\Commands;
 
@@ -9,24 +9,10 @@ use Illuminate\Support\Facades\Storage;
 
 class GenerateThumbnails extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'thumbnails:generate {--force : Regenerate existing thumbnails}';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Generate thumbnails for existing images';
 
-    /**
-     * Execute the console command.
-     */
-    public function handle()
+    public function handle(): int
     {
         $force = $this->option('force');
 
