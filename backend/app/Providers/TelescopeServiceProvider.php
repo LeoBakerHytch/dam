@@ -2,32 +2,26 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\Gate;
-use Laravel\Telescope\IncomingEntry;
-use Laravel\Telescope\Telescope;
-use Laravel\Telescope\TelescopeApplicationServiceProvider;
+use Illuminate\Support\ServiceProvider;
 
-class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
+class TelescopeServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
      */
     public function register(): void
     {
-        // Telescope::night();
-
         $this->hideSensitiveRequestDetails();
 
-        $isLocal = $this->app->environment('local');
-
-        Telescope::filter(function (IncomingEntry $entry) use ($isLocal) {
-            return $isLocal ||
-                   $entry->isReportableException() ||
-                   $entry->isFailedRequest() ||
-                   $entry->isFailedJob() ||
-                   $entry->isScheduledTask() ||
-                   $entry->hasMonitoredTag();
-        });
+        if ($this->app->isLocal() && class_exists(\Laravel\Telescope\Telescope::class)) {
+            \Laravel\Telescope\Telescope::filter(function (\Laravel\Telescope\IncomingEntry $entry) {
+                return $entry->isReportableException() ||
+                    $entry->isFailedRequest() ||
+                    $entry->isFailedJob() ||
+                    $entry->isScheduledTask() ||
+                    $entry->hasMonitoredTag();
+            });
+        }
     }
 
     /**
@@ -35,16 +29,14 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
      */
     protected function hideSensitiveRequestDetails(): void
     {
-        if ($this->app->environment('local')) {
-            return;
+        if ($this->app->environment('local') && class_exists(\Laravel\Telescope\Telescope::class)) {
+            \Laravel\Telescope\Telescope::hideRequestParameters(['_token']);
+
+            \Laravel\Telescope\Telescope::hideRequestHeaders([
+                'cookie',
+                'x-csrf-token',
+                'x-xsrf-token',
+            ]);
         }
-
-        Telescope::hideRequestParameters(['_token']);
-
-        Telescope::hideRequestHeaders([
-            'cookie',
-            'x-csrf-token',
-            'x-xsrf-token',
-        ]);
     }
 }
