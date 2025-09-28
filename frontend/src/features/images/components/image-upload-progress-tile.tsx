@@ -52,6 +52,19 @@ export function ImageUploadProgressTile({
         <div className="absolute right-2 top-2 rounded-full bg-white/90 p-1 dark:bg-black/90">
           {getStatusIcon()}
         </div>
+
+        {status === 'ERROR' && (
+          <div className="absolute inset-0 flex items-center justify-center rounded-sm bg-black/50">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={onRetry}
+              className="h-7 bg-white text-xs text-black hover:bg-white/90"
+            >
+              Retry
+            </Button>
+          </div>
+        )}
       </div>
 
       <div className="flex flex-col gap-1">
@@ -60,12 +73,6 @@ export function ImageUploadProgressTile({
         </p>
 
         <p className="text-xs">{getStatusText()}</p>
-
-        {status === 'ERROR' && (
-          <Button size="sm" variant="outline" onClick={onRetry} className="h-6 text-xs">
-            Retry
-          </Button>
-        )}
       </div>
     </div>
   );
