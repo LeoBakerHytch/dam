@@ -9,6 +9,7 @@ mkdir -p storage/framework/sessions
 mkdir -p storage/framework/views
 mkdir -p storage/logs
 
+# Adjust ownership only in local/dev, not when on Fly volumes
 if [ "$APP_ENV" != "production" ]; then
     chown -R www-data:www-data storage bootstrap/cache
 fi
