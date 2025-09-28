@@ -1,4 +1,4 @@
-import { type FragmentOf, type ResultOf, readFragment } from 'gql.tada';
+import { type FragmentOf, type ResultOf, type VariablesOf, readFragment } from 'gql.tada';
 
 import { graphql } from './graphql';
 import { UserFragment } from './user';
@@ -11,11 +11,11 @@ export const AccessTokenFragment = graphql(`
   }
 `);
 
-export type AccessToken = ResultOf<typeof AccessTokenFragment>;
-
 export function readAccessTokenFragment(data: FragmentOf<typeof AccessTokenFragment>) {
   return readFragment(AccessTokenFragment, data);
 }
+
+export type AccessToken = ResultOf<typeof AccessTokenFragment>;
 
 export const LoginMutation = graphql(
   `
@@ -32,6 +32,9 @@ export const LoginMutation = graphql(
   `,
   [AccessTokenFragment, UserFragment],
 );
+
+export type LoginMutationVariables = VariablesOf<typeof LoginMutation>;
+export type LoginMutationResult = ResultOf<typeof LoginMutation>;
 
 // TODO: Set this up!
 export const RefreshTokenMutation = graphql(

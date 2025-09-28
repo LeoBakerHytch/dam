@@ -1,8 +1,8 @@
+import { useMutation } from '@apollo/client/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoaderCircle } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
-import { useMutation } from 'urql';
 import { z } from 'zod';
 
 import { TextLink } from '@/components/text/text-link';
@@ -11,7 +11,12 @@ import { Input } from '@/components/ui/input';
 import { InputError } from '@/components/ui/input-error';
 import { Label } from '@/components/ui/label';
 import { AuthLayout } from '@/features/auth/layouts/auth-layout';
-import { LoginMutation, readAccessTokenFragment } from '@/graphql/auth';
+import {
+  LoginMutation,
+  type LoginMutationResult,
+  type LoginMutationVariables,
+  readAccessTokenFragment,
+} from '@/graphql/auth';
 import { readUserFragment } from '@/graphql/user';
 import { useAuth } from '@/providers/auth-provider';
 import { useUser } from '@/providers/user-provider';
@@ -30,17 +35,22 @@ export function LoginPage() {
     formState: { errors },
   } = useForm<LoginForm>({ resolver: zodResolver(loginSchema) });
 
+  const [mutate, { loading }] = useMutation<LoginMutationResult, LoginMutationVariables>(
+    LoginMutation,
+  );
+
   const navigate = useNavigate();
-  const [result, executeMutation] = useMutation(LoginMutation);
   const { setUser } = useUser();
   const { setAccessToken } = useAuth();
 
   async function onSubmit(data: LoginForm) {
     try {
-      const result = await executeMutation({
-        input: {
-          email: data.email,
-          password: data.password,
+      const result = await mutate({
+        variables: {
+          input: {
+            email: data.email,
+            password: data.password,
+          },
         },
       });
 
@@ -109,16 +119,16 @@ export function LoginPage() {
             type="submit"
             className="mt-4 w-full"
             tabIndex={4}
-            disabled={result.fetching}
+            disabled={loading}
             data-test="login-button"
           >
-            {result.fetching && <LoaderCircle className="h-4 w-4 animate-spin" />}
+            {loading && <LoaderCircle className="h-4 w-4 animate-spin" />}
             Log in
           </Button>
         </div>
 
         <div className="text-muted-foreground text-center text-sm">
-          Don't have an account?{' '}
+          Don’t have an account?{' '}
           <TextLink to="/register" tabIndex={6}>
             Sign up
           </TextLink>
