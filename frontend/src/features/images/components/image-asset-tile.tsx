@@ -1,19 +1,30 @@
 import { ScanEyeIcon, TextAlignStartIcon } from 'lucide-react';
+import { useState } from 'react';
 
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { cn } from '@/lib/utils';
 import { type ImageAsset } from '@/graphql/images';
 
 export function ImageAssetTile({ asset, onClick }: { asset: ImageAsset; onClick?: () => void }) {
+  const [imageLoaded, setImageLoaded] = useState(false);
+
   return (
     <div
       className="flex w-40 cursor-pointer flex-col gap-2 transition-opacity hover:opacity-75"
       onClick={onClick}
     >
       <div className="relative">
+        {!imageLoaded && (
+          <div className="flex h-32 w-full items-center justify-center rounded-sm bg-neutral-100 dark:bg-neutral-800" />
+        )}
         <img
-          className="h-32 w-full rounded-sm object-cover"
+          className={cn(
+            'h-32 w-full rounded-sm object-cover',
+            imageLoaded ? 'opacity-100' : 'opacity-0'
+          )}
           src={asset.thumbnailUrl}
           alt={asset.altText || asset.name}
+          onLoad={() => setImageLoaded(true)}
         />
         {/* Tags in top-left */}
         {asset.tags && asset.tags.length > 0 && (
