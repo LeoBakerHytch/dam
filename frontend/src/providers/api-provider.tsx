@@ -16,10 +16,7 @@ import {
 } from 'react';
 
 import { type AccessToken, RefreshTokenMutation, readAccessTokenFragment } from '@/graphql/auth';
-
-type StoredAccessToken = AccessToken & {
-  expiresAt: number;
-};
+import { getTokenExpiry, isTokenValid } from '@/lib/token';
 
 interface AuthContextType {
   setAccessToken: (token: AccessToken) => void;
@@ -42,18 +39,19 @@ export function useAuth() {
 export function ApiProvider(props: PropsWithChildren) {
   const [loaded, setLoaded] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [accessToken, setAccessTokenState] = useState<StoredAccessToken | null>(null);
+  const [accessToken, setAccessTokenState] = useState<string | null>(null);
   const refreshTimerRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Runs once on app mount
   useEffect(() => {
     const stored = localStorage.getItem('accessToken');
-    if (stored) {
-      try {
-        setAccessTokenState(JSON.parse(stored));
-      } finally {
-        setLoaded(true);
-      }
+    if (stored && isTokenValid(stored)) {
+      setAccessTokenState(stored);
+    } else if (stored) {
+      // Token exists but is invalid/expired, clear it
+      localStorage.removeItem('accessToken');
     }
+    setLoaded(true);
   }, []);
 
   const logOut = useCallback(() => {
@@ -78,7 +76,7 @@ export function ApiProvider(props: PropsWithChildren) {
       return {
         headers: {
           ...headers,
-          authorization: accessToken ? `Bearer ${accessToken.jwt}` : '',
+          authorization: accessToken ? `Bearer ${accessToken}` : '',
         },
       };
     });
@@ -125,18 +123,15 @@ export function ApiProvider(props: PropsWithChildren) {
 
   const setAccessToken = useCallback(
     (token: AccessToken) => {
-      // Calculate actual expiration timestamp
-      const expiresAt = Date.now() / 1000 + token.expiresIn;
-      const tokenWithExpiry = { ...token, expiresAt };
-      setAccessTokenState(tokenWithExpiry);
-      localStorage.setItem('accessToken', JSON.stringify(tokenWithExpiry));
+      setAccessTokenState(token.jwt);
+      localStorage.setItem('accessToken', token.jwt);
     },
     [setAccessTokenState],
   );
 
   const refreshToken = useCallback(async (): Promise<boolean> => {
     if (isRefreshing) {
-      return false; // Already refreshing, don't attempt again
+      return false; // Already refreshing, don’t attempt again
     }
 
     setIsRefreshing(true);
@@ -164,38 +159,32 @@ export function ApiProvider(props: PropsWithChildren) {
   }, [client, isRefreshing, setAccessToken]);
 
   useEffect(() => {
-    // Clear any existing timer
     if (refreshTimerRef.current) {
       clearTimeout(refreshTimerRef.current);
       refreshTimerRef.current = null;
     }
 
     if (accessToken) {
-      const now = Date.now() / 1000;
+      const nowSeconds = Math.floor(Date.now() / 1000);
+      const expirySeconds = getTokenExpiry(accessToken);
 
-      // If token is already expired, logout immediately
-      if (now >= accessToken.expiresAt) {
-        logOut();
-        return;
+      if (expirySeconds) {
+        const refreshAtSeconds = expirySeconds - 5 * 60; // 5 minutes before expiry
+        const timeUntilRefresh = Math.max(0, (refreshAtSeconds - nowSeconds) * 1000);
+
+        refreshTimerRef.current = setTimeout(async () => {
+          const success = await refreshToken();
+          if (!success) {
+            // Refresh failed, try once more in 30 seconds
+            refreshTimerRef.current = setTimeout(async () => {
+              const retrySuccess = await refreshToken();
+              if (!retrySuccess) {
+                logOut(); // Final failure — log out user
+              }
+            }, 30 * 1000);
+          }
+        }, timeUntilRefresh);
       }
-
-      // Calculate refresh time - 5 minutes before expiry
-      const refreshAt = accessToken.expiresAt - 5 * 60; // 5 minutes buffer
-      const timeUntilRefresh = Math.max(0, (refreshAt - now) * 1000); // Convert to milliseconds
-
-      // Set timer to refresh token
-      refreshTimerRef.current = setTimeout(async () => {
-        const success = await refreshToken();
-        if (!success) {
-          // Refresh failed, try once more in 30 seconds
-          refreshTimerRef.current = setTimeout(async () => {
-            const retrySuccess = await refreshToken();
-            if (!retrySuccess) {
-              logOut(); // Final failure — log out user
-            }
-          }, 30000);
-        }
-      }, timeUntilRefresh);
     }
   }, [accessToken, logOut, refreshToken]);
 
