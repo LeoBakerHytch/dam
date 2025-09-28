@@ -66,6 +66,7 @@ class ImageAsset extends Model
 
     public function scopeForUser($query)
     {
-        return $query->where('user_id', auth('api')->id());
+        return $query->where('user_id', auth('api')->id())
+                    ->orderBy('created_at', 'desc');
     }
 }
