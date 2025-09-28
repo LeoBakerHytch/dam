@@ -1,10 +1,9 @@
 # TODO
 
-- [ ] Review whether API mutation naming convention (Namespace_Entity_Action) makes sense. In particular, it _does not_
-  match to how we have named query fields — but, OTOH, it does ensure the mutation resolvers are nicely organized.
-
-- [ ] Set up GraphQL type generation in the frontend (so we no longer have to write type definitions by hand, which can
+- [x] Set up GraphQL type generation in the frontend (so we no longer have to write type definitions by hand, which can
   drift from the actual schema).
+
+- [x] Review whether API mutation naming convention (Namespace_Entity_Action) makes sense.
 
 - [ ] Testing!
 
