@@ -26,7 +26,7 @@ import { ImageUploadTile } from './image-upload-tile';
 type UploadItem = {
   id: string;
   file: File;
-  status: 'pending' | 'uploading' | 'success' | 'error';
+  status: 'PENDING' | 'UPLOADING' | 'SUCCESS' | 'ERROR';
   error?: string;
 };
 
@@ -68,7 +68,7 @@ export function ImageGallery() {
     const newUploadItems: UploadItem[] = files.map((file) => ({
       id: crypto.randomUUID(),
       file,
-      status: 'pending' as const,
+      status: 'PENDING' as const,
     }));
 
     setUploadItems((prev) => [...prev, ...newUploadItems]);
@@ -79,7 +79,7 @@ export function ImageGallery() {
     const processNextUpload = async () => {
       if (isProcessingUploads) return;
 
-      const nextPendingUpload = uploadItems.find((item) => item.status === 'pending');
+      const nextPendingUpload = uploadItems.find((item) => item.status === 'PENDING');
       if (!nextPendingUpload) return;
 
       setIsProcessingUploads(true);
@@ -87,7 +87,7 @@ export function ImageGallery() {
       // Update status to uploading
       setUploadItems((prev) =>
         prev.map((item) =>
-          item.id === nextPendingUpload.id ? { ...item, status: 'uploading' as const } : item,
+          item.id === nextPendingUpload.id ? { ...item, status: 'UPLOADING' as const } : item,
         ),
       );
 
@@ -104,7 +104,7 @@ export function ImageGallery() {
           // Mark as success
           setUploadItems((prev) =>
             prev.map((item) =>
-              item.id === nextPendingUpload.id ? { ...item, status: 'success' as const } : item,
+              item.id === nextPendingUpload.id ? { ...item, status: 'SUCCESS' as const } : item,
             ),
           );
         } else {
@@ -112,7 +112,7 @@ export function ImageGallery() {
           setUploadItems((prev) =>
             prev.map((item) =>
               item.id === nextPendingUpload.id
-                ? { ...item, status: 'error' as const, error: 'Upload failed' }
+                ? { ...item, status: 'ERROR' as const, error: 'Upload failed' }
                 : item,
             ),
           );
@@ -124,7 +124,7 @@ export function ImageGallery() {
             item.id === nextPendingUpload.id
               ? {
                   ...item,
-                  status: 'error' as const,
+                  status: 'ERROR' as const,
                   error: err instanceof Error ? err.message : 'Network error occurred',
                 }
               : item,
@@ -141,7 +141,7 @@ export function ImageGallery() {
   const handleRetryUpload = useCallback((uploadId: string) => {
     setUploadItems((prev) =>
       prev.map((item) =>
-        item.id === uploadId ? { ...item, status: 'pending' as const, error: undefined } : item,
+        item.id === uploadId ? { ...item, status: 'PENDING' as const, error: undefined } : item,
       ),
     );
   }, []);

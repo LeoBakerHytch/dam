@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 
 interface ImageUploadProgressTileProps {
   file: File;
-  status: 'pending' | 'uploading' | 'success' | 'error';
+  status: 'PENDING' | 'UPLOADING' | 'SUCCESS' | 'ERROR';
   error?: string;
   onRetry: () => void;
 }
@@ -17,39 +17,39 @@ export function ImageUploadProgressTile({
 }: ImageUploadProgressTileProps) {
   const getStatusIcon = () => {
     switch (status) {
-      case 'pending':
+      case 'PENDING':
         return <div className="h-4 w-4 rounded-full bg-neutral-400" />;
-      case 'uploading':
+      case 'UPLOADING':
         return <Loader2 size={16} className="animate-spin text-blue-500" />;
-      case 'success':
+      case 'SUCCESS':
         return <CheckCircle size={16} className="text-green-500" />;
-      case 'error':
+      case 'ERROR':
         return <XCircle size={16} className="text-red-500" />;
     }
   };
 
   const getStatusText = () => {
     switch (status) {
-      case 'pending':
+      case 'PENDING':
         return 'Waiting...';
-      case 'uploading':
+      case 'UPLOADING':
         return 'Uploading...';
-      case 'success':
+      case 'SUCCESS':
         return 'Uploaded successfully';
-      case 'error':
+      case 'ERROR':
         return error || 'Upload failed';
     }
   };
 
   const getStatusColor = () => {
     switch (status) {
-      case 'pending':
+      case 'PENDING':
         return 'text-neutral-500 dark:text-neutral-400';
-      case 'uploading':
+      case 'UPLOADING':
         return 'text-blue-600 dark:text-blue-400';
-      case 'success':
+      case 'SUCCESS':
         return 'text-green-600 dark:text-green-400';
-      case 'error':
+      case 'ERROR':
         return 'text-red-600 dark:text-red-400';
     }
   };
@@ -74,7 +74,7 @@ export function ImageUploadProgressTile({
 
         <p className={`text-xs ${getStatusColor()}`}>{getStatusText()}</p>
 
-        {status === 'error' && (
+        {status === 'ERROR' && (
           <Button size="sm" variant="outline" onClick={onRetry} className="h-6 text-xs">
             Retry
           </Button>
