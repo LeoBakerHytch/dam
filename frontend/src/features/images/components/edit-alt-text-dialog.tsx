@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { LoaderCircle } from 'lucide-react';
 import { type KeyboardEvent, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useMutation } from 'urql';
+import { useMutation } from '@apollo/client/react';
 import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
@@ -21,6 +21,8 @@ import { Kbd } from '@/components/ui/shadcn-io/kbd';
 import {
   type ImageAsset,
   SetImageAssetDetailsMutation,
+  type SetImageAssetDetailsMutationResult,
+  type SetImageAssetDetailsMutationVariables,
   readImageAssetFragment,
 } from '@/graphql/images';
 
@@ -54,7 +56,10 @@ export function EditAltTextDialog({
     },
   });
 
-  const [result, executeMutation] = useMutation(SetImageAssetDetailsMutation);
+  const [mutate, { loading }] = useMutation<
+    SetImageAssetDetailsMutationResult,
+    SetImageAssetDetailsMutationVariables
+  >(SetImageAssetDetailsMutation);
 
   // Reset form when asset changes or dialog opens
   useEffect(() => {
@@ -70,10 +75,12 @@ export function EditAltTextDialog({
 
   const onSubmit = async (data: AltTextForm) => {
     try {
-      const result = await executeMutation({
-        input: {
-          id: asset.id,
-          altText: data.altText || null,
+      const result = await mutate({
+        variables: {
+          input: {
+            id: asset.id,
+            altText: data.altText || null,
+          },
         },
       });
 
@@ -89,7 +96,7 @@ export function EditAltTextDialog({
   };
 
   const handleKeyDown = (e: KeyboardEvent) => {
-    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter' && hasChanges && !result.fetching) {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter' && hasChanges && !loading) {
       e.preventDefault();
       handleSubmit(onSubmit)();
     }
@@ -136,12 +143,12 @@ export function EditAltTextDialog({
                 type="button"
                 variant="outline"
                 onClick={() => onOpenChange(false)}
-                disabled={result.fetching}
+                disabled={loading}
               >
                 Cancel
               </Button>
-              <Button type="submit" disabled={result.fetching || !hasChanges}>
-                {result.fetching && <LoaderCircle className="h-4 w-4 animate-spin" />}
+              <Button type="submit" disabled={loading || !hasChanges}>
+                {loading && <LoaderCircle className="h-4 w-4 animate-spin" />}
                 {asset.altText ? 'Update' : 'Add'} alt text
               </Button>
             </div>

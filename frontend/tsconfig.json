@@ -19,6 +19,11 @@
         "forceConsistentCasingInFileNames": true,
         "allowImportingTsExtensions": false,
 
+        /* Configuration needed for apollo-upload-client
+           (see https://github.com/jaydenseric/apollo-upload-client?tab=readme-ov-file#requirements) */
+        "allowJs": true,
+        "maxNodeModuleJsDepth": 10,
+
         /* Linting */
         "strict": true,
         "noImplicitAny": true,

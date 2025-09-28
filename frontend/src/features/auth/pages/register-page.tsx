@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { LoaderCircle } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
-import { useMutation } from 'urql';
+import { useMutation } from '@apollo/client/react';
 import { z } from 'zod';
 
 import { TextLink } from '@/components/text/text-link';
@@ -11,7 +11,12 @@ import { Input } from '@/components/ui/input';
 import { InputError } from '@/components/ui/input-error';
 import { Label } from '@/components/ui/label';
 import { AuthLayout } from '@/features/auth/layouts/auth-layout';
-import { RegisterMutation, readAccessTokenFragment } from '@/graphql/auth';
+import {
+  RegisterMutation,
+  type RegisterMutationResult,
+  type RegisterMutationVariables,
+  readAccessTokenFragment,
+} from '@/graphql/auth';
 import { readUserFragment } from '@/graphql/user';
 import { useAuth } from '@/providers/auth-provider';
 import { useUser } from '@/providers/user-provider';
@@ -40,18 +45,23 @@ export function RegisterPage() {
     formState: { errors },
   } = useForm<RegisterForm>({ resolver: zodResolver(registerSchema) });
 
+  const [mutate, { loading }] = useMutation<RegisterMutationResult, RegisterMutationVariables>(
+    RegisterMutation,
+  );
+
   const navigate = useNavigate();
-  const [result, executeMutation] = useMutation(RegisterMutation);
   const { setUser } = useUser();
   const { setAccessToken } = useAuth();
 
   const onSubmit = async (data: RegisterForm) => {
     try {
-      const result = await executeMutation({
-        input: {
-          name: data.name,
-          email: data.email,
-          password: data.password,
+      const result = await mutate({
+        variables: {
+          input: {
+            name: data.name,
+            email: data.email,
+            password: data.password,
+          },
         },
       });
 
@@ -132,10 +142,10 @@ export function RegisterPage() {
             type="submit"
             className="mt-2 w-full"
             tabIndex={5}
-            disabled={result.fetching}
+            disabled={loading}
             data-test="register-user-button"
           >
-            {result.fetching && <LoaderCircle className="h-4 w-4 animate-spin" />}
+            {loading && <LoaderCircle className="h-4 w-4 animate-spin" />}
             Create account
           </Button>
         </div>

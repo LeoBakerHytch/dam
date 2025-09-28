@@ -15,7 +15,6 @@ import { SettingsProfilePage } from '@/features/settings/pages/settings-profile-
 import { SoundLibraryPage } from '@/features/sounds/sound-library-page';
 import { TemplateLibraryPage } from '@/features/templates/template-library-page';
 import { initializeTheme } from '@/hooks/use-appearance';
-import { ApiProvider } from '@/providers/api-provider';
 import { ApolloApiProvider } from '@/providers/apollo-api-provider';
 import { AuthProvider, useAuth } from '@/providers/auth-provider';
 import { UserProvider } from '@/providers/user-provider';
@@ -61,13 +60,11 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <AuthProvider>
       <UserProvider>
-        <ApiProvider>
-          <ApolloApiProvider>
-            <BrowserRouter>
-              <AppRoutes />
-            </BrowserRouter>
-          </ApolloApiProvider>
-        </ApiProvider>
+        <ApolloApiProvider>
+          <BrowserRouter>
+            <AppRoutes />
+          </BrowserRouter>
+        </ApolloApiProvider>
       </UserProvider>
     </AuthProvider>
   </React.StrictMode>,

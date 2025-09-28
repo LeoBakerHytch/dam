@@ -3,7 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { LoaderCircle } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useMutation } from 'urql';
+import { useMutation } from '@apollo/client/react';
 import { z } from 'zod';
 
 import { AppLayout } from '@/components/app/layouts/app-layout';
@@ -13,7 +13,11 @@ import { Input } from '@/components/ui/input';
 import { InputError } from '@/components/ui/input-error';
 import { Label } from '@/components/ui/label';
 import { SettingsLayout } from '@/features/settings/settings-layout';
-import { ChangePasswordMutation } from '@/graphql/auth';
+import {
+  ChangePasswordMutation,
+  type ChangePasswordMutationResult,
+  type ChangePasswordMutationVariables,
+} from '@/graphql/auth';
 import { readUserFragment } from '@/graphql/user';
 import { useUser } from '@/providers/user-provider';
 
@@ -43,16 +47,21 @@ export function SettingsPasswordPage() {
     resolver: zodResolver(passwordSchema),
   });
 
-  const [result, executeMutation] = useMutation(ChangePasswordMutation);
+  const [mutate, { loading }] = useMutation<
+    ChangePasswordMutationResult,
+    ChangePasswordMutationVariables
+  >(ChangePasswordMutation);
   const { user, setUser } = useUser();
   const [recentlySuccessful, setRecentlySuccessful] = useState(false);
 
   const onSubmit = async (data: PasswordForm) => {
     try {
-      const result = await executeMutation({
-        input: {
-          currentPassword: data.currentPassword,
-          newPassword: data.newPassword,
+      const result = await mutate({
+        variables: {
+          input: {
+            currentPassword: data.currentPassword,
+            newPassword: data.newPassword,
+          },
         },
       });
 
@@ -129,8 +138,8 @@ export function SettingsPasswordPage() {
           </div>
 
           <div className="flex items-center gap-4">
-            <Button type="submit" disabled={result.fetching} data-test="update-password-button">
-              {result.fetching && <LoaderCircle className="h-4 w-4 animate-spin" />}
+            <Button type="submit" disabled={loading} data-test="update-password-button">
+              {loading && <LoaderCircle className="h-4 w-4 animate-spin" />}
               Save password
             </Button>
 

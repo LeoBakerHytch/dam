@@ -1,12 +1,14 @@
 import { CheckCircle, Loader2, XCircle } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { useMutation } from 'urql';
+import { useMutation } from '@apollo/client/react';
 
 import { Button } from '@/components/ui/button';
 import {
   type ImageAsset,
   UploadImageAssetMutation,
+  type UploadImageAssetMutationResult,
+  type UploadImageAssetMutationVariables,
   readImageAssetFragment,
 } from '@/graphql/images';
 
@@ -21,16 +23,20 @@ export function ImageAssetPreview({
 }) {
   const [uploadState, setUploadState] = useState<UploadState>('PENDING');
   const [error, setError] = useState<string | null>(null);
-  const [_result, executeMutation] = useMutation(UploadImageAssetMutation);
+  const [mutate] = useMutation<UploadImageAssetMutationResult, UploadImageAssetMutationVariables>(
+    UploadImageAssetMutation,
+  );
 
   const uploadFile = useCallback(async () => {
     setUploadState('UPLOADING');
     setError(null);
 
     try {
-      const mutationResult = await executeMutation({
-        input: {
-          image: file,
+      const mutationResult = await mutate({
+        variables: {
+          input: {
+            image: file,
+          },
         },
       });
 
@@ -50,7 +56,7 @@ export function ImageAssetPreview({
       setError(err instanceof Error ? err.message : 'Network error occurred');
       toast.error('Network error occurred');
     }
-  }, [executeMutation, file, onUploadComplete]);
+  }, [mutate, file, onUploadComplete]);
 
   useEffect(() => {
     void uploadFile();

@@ -3,14 +3,19 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { LoaderCircle } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useMutation } from 'urql';
+import { useMutation } from '@apollo/client/react';
 import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { InputError } from '@/components/ui/input-error';
 import { Label } from '@/components/ui/label';
-import { UpdateProfileMutation, readUserFragment } from '@/graphql/user';
+import {
+  UpdateProfileMutation,
+  type UpdateProfileMutationResult,
+  type UpdateProfileMutationVariables,
+  readUserFragment,
+} from '@/graphql/user';
 import { useUser } from '@/providers/user-provider';
 
 const profileSchema = z.object({
@@ -29,7 +34,10 @@ export function UpdateProfileForm() {
     resolver: zodResolver(profileSchema),
   });
 
-  const [result, executeMutation] = useMutation(UpdateProfileMutation);
+  const [mutate, { loading }] = useMutation<
+    UpdateProfileMutationResult,
+    UpdateProfileMutationVariables
+  >(UpdateProfileMutation);
   const { user, setUser } = useUser();
   const [recentlySuccessful, setRecentlySuccessful] = useState(false);
 
@@ -39,9 +47,11 @@ export function UpdateProfileForm() {
 
   async function onSubmit(data: ProfileForm) {
     try {
-      const result = await executeMutation({
-        input: {
-          name: data.name,
+      const result = await mutate({
+        variables: {
+          input: {
+            name: data.name,
+          },
         },
       });
 
@@ -75,10 +85,10 @@ export function UpdateProfileForm() {
       <div className="flex items-center gap-4">
         <Button
           type="submit"
-          disabled={result.fetching || !hasChanges}
+          disabled={loading || !hasChanges}
           data-test="update-profile-button"
         >
-          {result.fetching && <LoaderCircle className="h-4 w-4 animate-spin" />}
+          {loading && <LoaderCircle className="h-4 w-4 animate-spin" />}
           Save name
         </Button>
 

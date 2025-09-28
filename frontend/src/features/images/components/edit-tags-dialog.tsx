@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { LoaderCircle, XIcon } from 'lucide-react';
 import { type KeyboardEvent, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useMutation } from 'urql';
+import { useMutation } from '@apollo/client/react';
 import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
@@ -21,6 +21,8 @@ import { Kbd } from '@/components/ui/shadcn-io/kbd';
 import {
   type ImageAsset,
   SetImageAssetDetailsMutation,
+  type SetImageAssetDetailsMutationResult,
+  type SetImageAssetDetailsMutationVariables,
   readImageAssetFragment,
 } from '@/graphql/images';
 import { normalizeTag } from '@/lib/strings';
@@ -55,7 +57,10 @@ export function EditTagsDialog({
     resolver: zodResolver(tagsSchema),
   });
 
-  const [result, executeMutation] = useMutation(SetImageAssetDetailsMutation);
+  const [mutate, { loading }] = useMutation<
+    SetImageAssetDetailsMutationResult,
+    SetImageAssetDetailsMutationVariables
+  >(SetImageAssetDetailsMutation);
 
   // Reset form when asset changes or dialog opens
   useEffect(() => {
@@ -88,10 +93,12 @@ export function EditTagsDialog({
     }
 
     try {
-      const result = await executeMutation({
-        input: {
-          id: asset.id,
-          tags: tags.length > 0 ? tags : null,
+      const result = await mutate({
+        variables: {
+          input: {
+            id: asset.id,
+            tags: tags.length > 0 ? tags : null,
+          },
         },
       });
 
@@ -116,7 +123,7 @@ export function EditTagsDialog({
   };
 
   const handleDialogKeyDown = (e: KeyboardEvent) => {
-    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter' && hasChanges && !result.fetching) {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter' && hasChanges && !loading) {
       e.preventDefault();
       handleSubmit(onSubmit)();
     }
@@ -189,12 +196,12 @@ export function EditTagsDialog({
                 type="button"
                 variant="outline"
                 onClick={() => onOpenChange(false)}
-                disabled={result.fetching}
+                disabled={loading}
               >
                 Cancel
               </Button>
-              <Button type="submit" disabled={result.fetching || !hasChanges}>
-                {result.fetching && <LoaderCircle className="h-4 w-4 animate-spin" />}
+              <Button type="submit" disabled={loading || !hasChanges}>
+                {loading && <LoaderCircle className="h-4 w-4 animate-spin" />}
                 Save tags
               </Button>
             </div>

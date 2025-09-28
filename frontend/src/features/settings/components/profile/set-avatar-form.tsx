@@ -2,13 +2,18 @@ import { Transition } from '@headlessui/react';
 import { LoaderCircle } from 'lucide-react';
 import { type ChangeEvent, useRef, useState } from 'react';
 import { toast } from 'sonner';
-import { useMutation } from 'urql';
+import { useMutation } from '@apollo/client/react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { SetAvatarMutation, readUserFragment } from '@/graphql/user';
+import {
+  SetAvatarMutation,
+  type SetAvatarMutationResult,
+  type SetAvatarMutationVariables,
+  readUserFragment,
+} from '@/graphql/user';
 import { getInitials } from '@/lib/strings';
 import { useUser } from '@/providers/user-provider';
 
@@ -18,7 +23,9 @@ export function SetAvatarForm() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [recentlySuccessful, setRecentlySuccessful] = useState(false);
 
-  const [result, executeMutation] = useMutation(SetAvatarMutation);
+  const [mutate, { loading }] = useMutation<SetAvatarMutationResult, SetAvatarMutationVariables>(
+    SetAvatarMutation,
+  );
   const { user, setUser } = useUser();
 
   function handleAvatarChange(e: ChangeEvent<HTMLInputElement>) {
@@ -52,9 +59,11 @@ export function SetAvatarForm() {
     }
 
     try {
-      const result = await executeMutation({
-        input: {
-          avatar: selectedFile,
+      const result = await mutate({
+        variables: {
+          input: {
+            avatar: selectedFile,
+          },
         },
       });
 
@@ -109,14 +118,14 @@ export function SetAvatarForm() {
               variant="outline"
               size="sm"
               onClick={() => fileInputRef.current?.click()}
-              disabled={result.fetching}
+              disabled={loading}
             >
               {selectedFile ? 'Choose different' : 'Change avatar'}
             </Button>
             {selectedFile && (
               <>
-                <Button type="button" size="sm" onClick={handleUpload} disabled={result.fetching}>
-                  {result.fetching && <LoaderCircle className="h-4 w-4 animate-spin" />}
+                <Button type="button" size="sm" onClick={handleUpload} disabled={loading}>
+                  {loading && <LoaderCircle className="h-4 w-4 animate-spin" />}
                   Upload
                 </Button>
                 <Button
@@ -124,7 +133,7 @@ export function SetAvatarForm() {
                   variant="ghost"
                   size="sm"
                   onClick={handleCancel}
-                  disabled={result.fetching}
+                  disabled={loading}
                 >
                   Cancel
                 </Button>
