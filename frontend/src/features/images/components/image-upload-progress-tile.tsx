@@ -1,20 +1,15 @@
 import { CheckCircle, Loader2, XCircle } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-
-interface ImageUploadProgressTileProps {
-  file: File;
-  status: 'PENDING' | 'UPLOADING' | 'SUCCESS' | 'ERROR';
-  error?: string;
-  onRetry: () => void;
-}
+import { type AssetUploadItem } from '@/features/images/types/AssetUploadItem';
 
 export function ImageUploadProgressTile({
-  file,
-  status,
-  error,
+  uploadItem: { file, status, errorCode },
   onRetry,
-}: ImageUploadProgressTileProps) {
+}: {
+  uploadItem: AssetUploadItem;
+  onRetry: () => void;
+}) {
   const getStatusIcon = () => {
     switch (status) {
       case 'PENDING':
@@ -37,9 +32,22 @@ export function ImageUploadProgressTile({
       case 'SUCCESS':
         return 'Uploaded successfully';
       case 'ERROR':
-        return error || 'Upload failed';
+        switch (errorCode) {
+          case 'FILE_TOO_LARGE':
+            return 'File is too large';
+          case 'INVALID_FORMAT':
+            return 'Invalid file format';
+          case 'NETWORK_ERROR':
+            return 'Network error';
+          case 'UNKNOWN_ERROR':
+            return 'Upload failed';
+          default:
+            return 'Upload failed';
+        }
     }
   };
+
+  const canRetry = status === 'ERROR' && errorCode !== 'FILE_TOO_LARGE';
 
   return (
     <div className="flex w-40 flex-col gap-2">
@@ -49,22 +57,24 @@ export function ImageUploadProgressTile({
           src={URL.createObjectURL(file)}
           alt={file.name}
         />
+        {status === 'ERROR' && (
+          <div className="absolute inset-0 flex items-center justify-center rounded-sm bg-black/50">
+            {canRetry && (
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={onRetry}
+                className="h-7 bg-white text-xs text-black hover:bg-white/90"
+              >
+                Retry
+              </Button>
+            )}
+          </div>
+        )}
+
         <div className="absolute right-2 top-2 rounded-full bg-white/90 p-1 dark:bg-black/90">
           {getStatusIcon()}
         </div>
-
-        {status === 'ERROR' && (
-          <div className="absolute inset-0 flex items-center justify-center rounded-sm bg-black/50">
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={onRetry}
-              className="h-7 bg-white text-xs text-black hover:bg-white/90"
-            >
-              Retry
-            </Button>
-          </div>
-        )}
       </div>
 
       <div className="flex flex-col gap-1">

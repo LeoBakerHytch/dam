@@ -4,6 +4,10 @@ import { useDropzone } from 'react-dropzone';
 import { useSearchParams } from 'react-router';
 
 import {
+  type AssetUploadErrorCode,
+  type AssetUploadItem,
+} from '@/features/images/types/AssetUploadItem';
+import {
   type ImageAsset,
   ImageGalleryQuery,
   type ImageGalleryQueryResult,
@@ -23,19 +27,12 @@ import { ImageGalleryPagination } from './image-gallery-pagination';
 import { ImageUploadProgressTile } from './image-upload-progress-tile';
 import { ImageUploadTile } from './image-upload-tile';
 
-type UploadItem = {
-  id: string;
-  file: File;
-  status: 'PENDING' | 'UPLOADING' | 'SUCCESS' | 'ERROR';
-  error?: string;
-};
-
 export function ImageGallery() {
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = parseInt(searchParams.get('page') || '1', 10);
   const [selectedAsset, setSelectedAsset] = useState<ImageAsset | null>(null);
   const [isDetailSheetOpen, setIsDetailSheetOpen] = useState(false);
-  const [uploadItems, setUploadItems] = useState<UploadItem[]>([]);
+  const [uploadItems, setUploadItems] = useState<AssetUploadItem[]>([]);
   const [isProcessingUploads, setIsProcessingUploads] = useState(false);
 
   const { loading, error, data } = useQuery<ImageGalleryQueryResult, ImageGalleryQueryVariables>(
@@ -65,7 +62,7 @@ export function ImageGallery() {
   }, []);
 
   const handleFilesSelected = useCallback((files: File[]) => {
-    const newUploadItems: UploadItem[] = files.map((file) => ({
+    const newUploadItems: AssetUploadItem[] = files.map((file) => ({
       id: crypto.randomUUID(),
       file,
       status: 'PENDING' as const,
@@ -118,6 +115,18 @@ export function ImageGallery() {
           );
         }
       } catch (err) {
+        let errorCode: AssetUploadErrorCode = 'NETWORK_ERROR';
+
+        if (err instanceof Error) {
+          if (err.message.includes('413') || err.message.includes('Payload Too Large')) {
+            errorCode = 'FILE_TOO_LARGE';
+          } else if (err.message.includes('422')) {
+            errorCode = 'INVALID_FORMAT';
+          } else {
+            errorCode = 'UNKNOWN_ERROR';
+          }
+        }
+
         // Mark as error
         setUploadItems((prev) =>
           prev.map((item) =>
@@ -125,7 +134,7 @@ export function ImageGallery() {
               ? {
                   ...item,
                   status: 'ERROR' as const,
-                  error: err instanceof Error ? err.message : 'Network error occurred',
+                  errorCode,
                 }
               : item,
           ),
@@ -141,7 +150,7 @@ export function ImageGallery() {
   const handleRetryUpload = useCallback((uploadId: string) => {
     setUploadItems((prev) =>
       prev.map((item) =>
-        item.id === uploadId ? { ...item, status: 'PENDING' as const, error: undefined } : item,
+        item.id === uploadId ? { ...item, status: 'PENDING' as const, errorCode: undefined } : item,
       ),
     );
   }, []);
@@ -211,9 +220,7 @@ export function ImageGallery() {
             {uploadItems.map((uploadItem) => (
               <ImageUploadProgressTile
                 key={uploadItem.id}
-                file={uploadItem.file}
-                status={uploadItem.status}
-                error={uploadItem.error}
+                uploadItem={uploadItem}
                 onRetry={() => handleRetryUpload(uploadItem.id)}
               />
             ))}
