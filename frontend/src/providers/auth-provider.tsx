@@ -32,11 +32,13 @@ export function useAuth() {
   return context;
 }
 
+export function loadAccessToken(): StoredAccessToken | null {
+  const stored = localStorage.getItem('accessToken');
+  return stored ? JSON.parse(stored) : null;
+}
+
 export function AuthProvider(props: PropsWithChildren) {
-  const [accessToken, setAccessTokenState] = useState<StoredAccessToken | null>(() => {
-    const stored = localStorage.getItem('accessToken');
-    return stored ? JSON.parse(stored) : null;
-  });
+  const [accessToken, setAccessTokenState] = useState(loadAccessToken);
 
   function setAccessToken(token: AccessToken | null) {
     if (token) {
@@ -56,7 +58,7 @@ export function AuthProvider(props: PropsWithChildren) {
     localStorage.removeItem('user');
   }, []);
 
-  const isAuthenticated = !!accessToken;
+  const isAuthenticated = Boolean(accessToken);
 
   useEffect(() => {
     if (accessToken) {
