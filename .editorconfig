@@ -17,6 +17,9 @@ trim_trailing_whitespace = true
 [*.{yml,yaml}]
 indent_size = 2
 
+[.claude/settings.local.json]
+indent_size = 2
+
 [docker-compose.yml]
 indent_size = 2
 
