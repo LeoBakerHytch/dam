@@ -19,9 +19,6 @@ RUN echo "opcache.enable=1" >> /usr/local/etc/php/conf.d/opcache.ini && \
     echo "opcache.revalidate_freq=2" >> /usr/local/etc/php/conf.d/opcache.ini && \
     echo "opcache.fast_shutdown=1" >> /usr/local/etc/php/conf.d/opcache.ini
 
-RUN groupadd -g 1000 www && \
-    useradd -u 1000 -ms /bin/bash -g www www
-
 COPY docker /docker
 COPY docker/uploads.ini /usr/local/etc/php/conf.d/
 RUN chmod +x /docker/*.sh
