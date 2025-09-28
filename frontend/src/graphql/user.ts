@@ -17,6 +17,19 @@ export function readUserFragment(data: FragmentOf<typeof UserFragment>) {
 
 export type User = ResultOf<typeof UserFragment>;
 
+export const CurrentUserQuery = graphql(
+  `
+    query CurrentUser {
+      currentUser {
+        ...User
+      }
+    }
+  `,
+  [UserFragment],
+);
+
+export type CurrentUserQueryResult = ResultOf<typeof CurrentUserQuery>;
+
 export const SetAvatarMutation = graphql(
   `
     mutation User_SetAvatar($input: User_SetAvatar_Input!) {

@@ -17,7 +17,6 @@ import { TemplateLibraryPage } from '@/features/templates/template-library-page'
 import { initializeTheme } from '@/hooks/use-appearance';
 import { ApolloApiProvider } from '@/providers/apollo-api-provider';
 import { AuthProvider, useAuth } from '@/providers/auth-provider';
-import { UserProvider } from '@/providers/user-provider';
 
 import '../css/index.css';
 
@@ -59,13 +58,11 @@ function AppRoutes() {
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <AuthProvider>
-      <UserProvider>
-        <ApolloApiProvider>
-          <BrowserRouter>
-            <AppRoutes />
-          </BrowserRouter>
-        </ApolloApiProvider>
-      </UserProvider>
+      <ApolloApiProvider>
+        <BrowserRouter>
+          <AppRoutes />
+        </BrowserRouter>
+      </ApolloApiProvider>
     </AuthProvider>
   </React.StrictMode>,
 );

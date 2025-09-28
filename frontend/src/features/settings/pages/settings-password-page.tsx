@@ -18,8 +18,7 @@ import {
   type ChangePasswordMutationResult,
   type ChangePasswordMutationVariables,
 } from '@/graphql/auth';
-import { readUserFragment } from '@/graphql/user';
-import { useUser } from '@/providers/user-provider';
+import { useCurrentUser } from '@/hooks/use-current-user';
 
 const passwordSchema = z
   .object({
@@ -51,7 +50,7 @@ export function SettingsPasswordPage() {
     ChangePasswordMutationResult,
     ChangePasswordMutationVariables
   >(ChangePasswordMutation);
-  const { user, setUser } = useUser();
+  const { user } = useCurrentUser();
   const [recentlySuccessful, setRecentlySuccessful] = useState(false);
 
   const onSubmit = async (data: PasswordForm) => {
@@ -68,7 +67,6 @@ export function SettingsPasswordPage() {
       const changePasswordResult = result.data?.Auth_ChangePassword;
 
       if (changePasswordResult) {
-        setUser(readUserFragment(changePasswordResult.user));
         reset();
         setRecentlySuccessful(true);
         setTimeout(() => setRecentlySuccessful(false), 3000);

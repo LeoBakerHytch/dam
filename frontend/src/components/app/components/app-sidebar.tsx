@@ -14,10 +14,10 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { useUser } from '@/providers/user-provider';
+import { useCurrentUser } from '@/hooks/use-current-user';
 
 export function AppSidebar() {
-  const { user } = useUser();
+  const { user } = useCurrentUser();
 
   return (
     <Sidebar collapsible="icon" variant="inset">

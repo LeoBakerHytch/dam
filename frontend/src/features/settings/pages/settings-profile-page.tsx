@@ -3,10 +3,10 @@ import { HeadingSmall } from '@/components/text/heading-small';
 import { SetAvatarForm } from '@/features/settings/components/profile/set-avatar-form';
 import { UpdateProfileForm } from '@/features/settings/components/profile/update-profile-form';
 import { SettingsLayout } from '@/features/settings/settings-layout';
-import { useUser } from '@/providers/user-provider';
+import { useCurrentUser } from '@/hooks/use-current-user';
 
 export function SettingsProfilePage() {
-  const { user } = useUser();
+  const { user } = useCurrentUser();
 
   if (!user) {
     return null;

@@ -12,10 +12,9 @@ import {
   SetAvatarMutation,
   type SetAvatarMutationResult,
   type SetAvatarMutationVariables,
-  readUserFragment,
 } from '@/graphql/user';
 import { getInitials } from '@/lib/strings';
-import { useUser } from '@/providers/user-provider';
+import { useCurrentUser } from '@/hooks/use-current-user';
 
 export function SetAvatarForm() {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -26,7 +25,7 @@ export function SetAvatarForm() {
   const [mutate, { loading }] = useMutation<SetAvatarMutationResult, SetAvatarMutationVariables>(
     SetAvatarMutation,
   );
-  const { user, setUser } = useUser();
+  const { user } = useCurrentUser();
 
   function handleAvatarChange(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -70,8 +69,6 @@ export function SetAvatarForm() {
       const setAvatarResult = result.data?.User_SetAvatar;
 
       if (setAvatarResult) {
-        setUser(readUserFragment(setAvatarResult.user));
-
         setSelectedFile(null);
         setAvatarPreviewUrl(null);
         if (fileInputRef.current) {

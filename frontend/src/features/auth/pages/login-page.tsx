@@ -17,9 +17,7 @@ import {
   type LoginMutationVariables,
   readAccessTokenFragment,
 } from '@/graphql/auth';
-import { readUserFragment } from '@/graphql/user';
 import { useAuth } from '@/providers/auth-provider';
-import { useUser } from '@/providers/user-provider';
 
 const loginSchema = z.object({
   email: z.email('Please enter a valid email address'),
@@ -40,7 +38,6 @@ export function LoginPage() {
   );
 
   const navigate = useNavigate();
-  const { setUser } = useUser();
   const { setAccessToken } = useAuth();
 
   async function onSubmit(data: LoginForm) {
@@ -57,7 +54,6 @@ export function LoginPage() {
       const authResult = result.data?.Auth_IssueToken;
 
       if (authResult) {
-        setUser(readUserFragment(authResult.user));
         setAccessToken(readAccessTokenFragment(authResult.accessToken));
         navigate('/dashboard');
       }

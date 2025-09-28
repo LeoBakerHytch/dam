@@ -1,9 +1,9 @@
+import { useMutation } from '@apollo/client/react';
 import { Transition } from '@headlessui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoaderCircle } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useMutation } from '@apollo/client/react';
 import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
@@ -14,9 +14,8 @@ import {
   UpdateProfileMutation,
   type UpdateProfileMutationResult,
   type UpdateProfileMutationVariables,
-  readUserFragment,
 } from '@/graphql/user';
-import { useUser } from '@/providers/user-provider';
+import { useCurrentUser } from '@/hooks/use-current-user';
 
 const profileSchema = z.object({
   name: z.string().optional(),
@@ -38,7 +37,8 @@ export function UpdateProfileForm() {
     UpdateProfileMutationResult,
     UpdateProfileMutationVariables
   >(UpdateProfileMutation);
-  const { user, setUser } = useUser();
+
+  const { user } = useCurrentUser();
   const [recentlySuccessful, setRecentlySuccessful] = useState(false);
 
   const watchedName = watch('name');
@@ -58,7 +58,6 @@ export function UpdateProfileForm() {
       const updateProfileResult = result.data?.User_UpdateProfile;
 
       if (updateProfileResult) {
-        setUser(readUserFragment(updateProfileResult.user));
         setRecentlySuccessful(true);
         setTimeout(() => setRecentlySuccessful(false), 3000);
       }
@@ -83,11 +82,7 @@ export function UpdateProfileForm() {
       </div>
 
       <div className="flex items-center gap-4">
-        <Button
-          type="submit"
-          disabled={loading || !hasChanges}
-          data-test="update-profile-button"
-        >
+        <Button type="submit" disabled={loading || !hasChanges} data-test="update-profile-button">
           {loading && <LoaderCircle className="h-4 w-4 animate-spin" />}
           Save name
         </Button>

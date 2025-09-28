@@ -17,9 +17,7 @@ import {
   type RegisterMutationVariables,
   readAccessTokenFragment,
 } from '@/graphql/auth';
-import { readUserFragment } from '@/graphql/user';
 import { useAuth } from '@/providers/auth-provider';
-import { useUser } from '@/providers/user-provider';
 
 const registerSchema = z
   .object({
@@ -50,7 +48,6 @@ export function RegisterPage() {
   );
 
   const navigate = useNavigate();
-  const { setUser } = useUser();
   const { setAccessToken } = useAuth();
 
   const onSubmit = async (data: RegisterForm) => {
@@ -68,7 +65,6 @@ export function RegisterPage() {
       const registerResult = result.data?.Auth_Register;
 
       if (registerResult) {
-        setUser(readUserFragment(registerResult.user));
         setAccessToken(readAccessTokenFragment(registerResult.accessToken));
         navigate('/dashboard');
       }
