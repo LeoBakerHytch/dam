@@ -2,8 +2,15 @@
 
 - [x] Set up GraphQL type generation in the frontend (so we no longer have to write type definitions by hand, which can
   drift from the actual schema).
+    - Set up `gql.data`
 
-- [x] Review whether API mutation naming convention (Namespace_Entity_Action) makes sense.
+- [x] Review whether API mutation naming convention (`Namespace_Entity_Action`) makes sense.
+    - Settled on `Namespace_Action`
+
+- [x] Set up CSRF protection.
+    - Enabled Lighthouse’s built-in middleware.
+
+- [x] Implement automatic refreshing of access tokens.
 
 - [ ] Testing!
 
@@ -13,11 +20,6 @@
 
 - [ ] Review whether there’s a specific type of `Exception` that we should be throwing from mutation resolvers (rather
   than just the generic `Exception`), and ensure that the error messages are communicated to the user in a sensible way.
-
-- [ ] Implement automatic refreshing of access tokens. Presently, once they expire, requests start failing, but the user
-  has to manually refresh the page to login again.
-
-- [ ] Set up CSRF tokens.
 
 - [ ] Ensure that we only ever deliver client-safe error messages to the user in production.
 
