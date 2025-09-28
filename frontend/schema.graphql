@@ -1,0 +1,246 @@
+"""
+Indicates that an Input Object is a OneOf Input Object (and thus requires exactly one of its fields be provided).
+"""
+directive @oneOf on INPUT_OBJECT
+
+input Auth_ChangePassword_Input {
+  currentPassword: String!
+  newPassword: String!
+}
+
+type Auth_ChangePassword_Response {
+  user: User!
+}
+
+input Auth_IssueToken_Input {
+  email: String!
+  password: String!
+}
+
+type Auth_IssueToken_Response {
+  accessToken: String!
+  user: User!
+}
+
+type Auth_RefreshToken_Response {
+  accessToken: String!
+  user: User!
+}
+
+input Auth_Register_Input {
+  name: String!
+  email: String!
+  password: String!
+}
+
+type Auth_Register_Response {
+  accessToken: String!
+  user: User!
+}
+
+"""A datetime string in ISO 8601 format, e.g. `2018-05-23T13:43:32Z`."""
+scalar DateTime
+
+type ImageAsset {
+  id: ID!
+  name: String!
+  url: String!
+  thumbnailUrl: String!
+  fileName: String!
+  fileSize: Int!
+  fileSizeHuman: String!
+  mimeType: String!
+  width: Int!
+  height: Int!
+  description: String
+  altText: String
+  tags: [String!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  userId: ID!
+  user: User!
+}
+
+input ImageAsset_SetDetails_Input {
+  id: ID!
+  description: String
+  altText: String
+  tags: [String!]
+}
+
+type ImageAsset_SetDetails_Response {
+  imageAsset: ImageAsset!
+}
+
+input ImageAsset_Upload_Input {
+  image: Upload!
+}
+
+type ImageAsset_Upload_Response {
+  imageAsset: ImageAsset!
+}
+
+"""A paginated list of ImageAsset items."""
+type ImageAssetPaginator {
+  """Pagination information about the list of items."""
+  paginatorInfo: PaginatorInfo!
+
+  """A list of ImageAsset items."""
+  data: [ImageAsset!]!
+}
+
+type Mutation {
+  Auth_IssueToken(input: Auth_IssueToken_Input!): Auth_IssueToken_Response!
+  Auth_RefreshToken: Auth_RefreshToken_Response!
+  Auth_Register(input: Auth_Register_Input!): Auth_Register_Response!
+  Auth_ChangePassword(input: Auth_ChangePassword_Input!): Auth_ChangePassword_Response!
+  ImageAsset_Upload(input: ImageAsset_Upload_Input!): ImageAsset_Upload_Response!
+  ImageAsset_SetDetails(input: ImageAsset_SetDetails_Input!): ImageAsset_SetDetails_Response!
+  User_UpdateProfile(input: User_UpdateProfile_Input!): User_UpdateProfile_Response!
+  User_SetAvatar(input: User_SetAvatar_Input!): User_SetAvatar_Response!
+}
+
+"""Allows ordering a list of records."""
+input OrderByClause {
+  """The column that is used for ordering."""
+  column: String!
+
+  """The direction that is used for ordering."""
+  order: SortOrder!
+}
+
+"""
+Aggregate functions when ordering by a relation without specifying a column.
+"""
+enum OrderByRelationAggregateFunction {
+  """Amount of items."""
+  COUNT
+}
+
+"""
+Aggregate functions when ordering by a relation that may specify a column.
+"""
+enum OrderByRelationWithColumnAggregateFunction {
+  """Average."""
+  AVG
+
+  """Minimum."""
+  MIN
+
+  """Maximum."""
+  MAX
+
+  """Sum."""
+  SUM
+
+  """Amount of items."""
+  COUNT
+}
+
+"""Information about pagination using a fully featured paginator."""
+type PaginatorInfo {
+  """Number of items in the current page."""
+  count: Int!
+
+  """Index of the current page."""
+  currentPage: Int!
+
+  """Index of the first item in the current page."""
+  firstItem: Int
+
+  """Are there more pages after this one?"""
+  hasMorePages: Boolean!
+
+  """Index of the last item in the current page."""
+  lastItem: Int
+
+  """Index of the last available page."""
+  lastPage: Int!
+
+  """Number of items per page."""
+  perPage: Int!
+
+  """Number of total available items."""
+  total: Int!
+}
+
+type Query {
+  """The currently logged-in user."""
+  currentUser: User
+  imageAssets(
+    """Limits number of fetched items."""
+    first: Int! = 27
+
+    """The offset from which items are returned."""
+    page: Int
+  ): ImageAssetPaginator!
+}
+
+"""Directions for ordering a list of records."""
+enum SortOrder {
+  """Sort records in ascending order."""
+  ASC
+
+  """Sort records in descending order."""
+  DESC
+}
+
+"""
+Specify if you want to include or exclude trashed results from a query.
+"""
+enum Trashed {
+  """Only return trashed results."""
+  ONLY
+
+  """Return both trashed and non-trashed results."""
+  WITH
+
+  """Only return non-trashed results."""
+  WITHOUT
+}
+
+"""
+Can be used as an argument to upload files using https://github.com/jaydenseric/graphql-multipart-request-spec
+"""
+scalar Upload
+
+"""Account of a person who uses this application."""
+type User {
+  """Unique primary key."""
+  id: ID!
+
+  """Non-unique name."""
+  name: String!
+
+  """Unique email address."""
+  email: String!
+
+  """User’s avatar URL."""
+  avatarUrl: String
+
+  """When the email was verified."""
+  emailVerifiedAt: DateTime
+
+  """When the account was created."""
+  createdAt: DateTime!
+
+  """When the account was last updated."""
+  updatedAt: DateTime!
+}
+
+input User_SetAvatar_Input {
+  avatar: Upload!
+}
+
+type User_SetAvatar_Response {
+  user: User!
+}
+
+input User_UpdateProfile_Input {
+  name: String
+}
+
+type User_UpdateProfile_Response {
+  user: User!
+}
+
