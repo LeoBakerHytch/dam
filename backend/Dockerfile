@@ -25,6 +25,7 @@ RUN groupadd -g 1000 www && \
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 COPY docker /docker
+COPY docker/uploads.ini /usr/local/etc/php/conf.d/
 RUN chmod +x /docker/*.sh
 
 WORKDIR /var/www/html
