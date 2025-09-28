@@ -14,8 +14,8 @@ import { type ComponentType, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { formatDate } from '@/lib/utils';
-import { type ImageAsset } from '@/types/graphql';
+import { ImageAsset } from '@/graphql/images';
+import { formatDate } from '@/lib/dates';
 
 import { EditAltTextDialog } from './edit-alt-text-dialog';
 import { EditDescriptionDialog } from './edit-description-dialog';
@@ -50,7 +50,7 @@ export function ImageAssetDetailSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className="w-full sm:max-w-md">
         <SheetHeader>
-          <SheetTitle className="text-left break-all pr-8">{currentAsset.name}</SheetTitle>
+          <SheetTitle className="break-all pr-8 text-left">{currentAsset.name}</SheetTitle>
         </SheetHeader>
 
         <div className="flex flex-col gap-6 p-4">
@@ -149,7 +149,7 @@ function PropertyRow({
         <Icon className="h-4 w-4 text-neutral-500" />
         <span className="font-medium">{label}</span>
       </div>
-      <span className="text-right text-neutral-600 dark:text-neutral-400 break-all">{value}</span>
+      <span className="break-all text-right text-neutral-600 dark:text-neutral-400">{value}</span>
     </div>
   );
 }
@@ -163,7 +163,7 @@ function EditableTextSection({
 }: {
   title: string;
   icon: ComponentType<{ className?: string }>;
-  content?: string;
+  content: string | null;
   placeholder: string;
   onEdit: () => void;
 }) {

@@ -1,8 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoaderCircle } from 'lucide-react';
-import { useEffect } from 'react';
+import { type KeyboardEvent, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { gql, useMutation } from 'urql';
+import { useMutation } from 'urql';
 import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
@@ -18,39 +18,25 @@ import { InputError } from '@/components/ui/input-error';
 import { Label } from '@/components/ui/label';
 import { Kbd } from '@/components/ui/shadcn-io/kbd';
 import { Textarea } from '@/components/ui/textarea';
-import { IMAGE_ASSET_FRAGMENT } from '@/lib/graphql-fragments';
-import { type ImageAsset } from '@/types/graphql';
+import { ImageAsset, SetImageAssetDetailsMutation } from '@/graphql/images';
 
 const descriptionSchema = z.object({
   description: z.string().max(1000, 'Description may be 1000 characters at most.').optional(),
 });
 
-const setDetailsMutation = gql`
-  mutation ImageAsset_SetDetails($input: ImageAsset_SetDetails_Input!) {
-    ImageAsset_SetDetails(input: $input) {
-      imageAsset {
-        ...ImageAssetFragment
-      }
-    }
-  }
-  ${IMAGE_ASSET_FRAGMENT}
-`;
-
 type DescriptionForm = z.infer<typeof descriptionSchema>;
-
-interface EditDescriptionDialogProps {
-  asset: ImageAsset;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  onSuccess: (updatedAsset: Partial<ImageAsset>) => void;
-}
 
 export function EditDescriptionDialog({
   asset,
   open,
   onOpenChange,
   onSuccess,
-}: EditDescriptionDialogProps) {
+}: {
+  asset: ImageAsset;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onSuccess: (updatedAsset: ImageAsset) => void;
+}) {
   const {
     register,
     handleSubmit,
@@ -64,7 +50,7 @@ export function EditDescriptionDialog({
     },
   });
 
-  const [result, executeMutation] = useMutation(setDetailsMutation);
+  const [result, executeMutation] = useMutation(SetImageAssetDetailsMutation);
 
   // Reset form when asset changes or dialog opens
   useEffect(() => {
@@ -87,8 +73,10 @@ export function EditDescriptionDialog({
         },
       });
 
-      if (result.data?.ImageAsset_SetDetails?.imageAsset) {
-        onSuccess(result.data.ImageAsset_SetDetails.imageAsset);
+      const setDetailsResult = result.data?.ImageAsset_SetDetails;
+
+      if (setDetailsResult) {
+        onSuccess(ImageAsset(setDetailsResult.imageAsset));
         onOpenChange(false);
       }
     } catch (error) {
@@ -96,7 +84,7 @@ export function EditDescriptionDialog({
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: KeyboardEvent) => {
     if ((e.metaKey || e.ctrlKey) && e.key === 'Enter' && hasChanges && !result.fetching) {
       e.preventDefault();
       handleSubmit(onSubmit)();

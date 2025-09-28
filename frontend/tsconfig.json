@@ -32,8 +32,13 @@
                 "name": "gql.tada/ts-plugin",
                 "schema": "http://localhost:8000/graphql",
                 "tadaOutputLocation": "./src/graphql-env.d.ts",
-                /* So long as we use a single, canonical fragment for each type, this inspection produces spurious errors */
-                "shouldCheckForColocatedFragments": false
+
+                /* For simplicity’s sake at present, we’re using only a single canonical fragment for each type.
+                   Usually, these checks would ensure that we’re fetching only the data we actually use, and that
+                   we actually use any fragments co-located with a component.  As a project grows larger, this is
+                   definitely a good practice that we would want to adopt. */
+                "trackFieldUsage": false,
+                "shouldCheckForColocatedFragments": false,
             }
         ]
     },

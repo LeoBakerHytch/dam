@@ -1,8 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoaderCircle, XIcon } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { type KeyboardEvent, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { gql, useMutation } from 'urql';
+import { useMutation } from 'urql';
 import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
@@ -18,38 +18,26 @@ import { Input } from '@/components/ui/input';
 import { InputError } from '@/components/ui/input-error';
 import { Label } from '@/components/ui/label';
 import { Kbd } from '@/components/ui/shadcn-io/kbd';
-import { IMAGE_ASSET_FRAGMENT } from '@/lib/graphql-fragments';
-import { type ImageAsset } from '@/types/graphql';
+import { ImageAsset, SetImageAssetDetailsMutation } from '@/graphql/images';
+import { normalizeTag } from '@/lib/strings';
 
 const tagsSchema = z.object({
   newTag: z.string().max(40, 'Tags may be 40 characters at most.').optional(),
 });
 
-const setDetailsMutation = gql`
-  mutation ImageAsset_SetDetails($input: ImageAsset_SetDetails_Input!) {
-    ImageAsset_SetDetails(input: $input) {
-      imageAsset {
-        ...ImageAssetFragment
-      }
-    }
-  }
-  ${IMAGE_ASSET_FRAGMENT}
-`;
-
 type TagsForm = z.infer<typeof tagsSchema>;
 
-interface EditTagsDialogProps {
+export function EditTagsDialog({
+  asset,
+  open,
+  onOpenChange,
+  onSuccess,
+}: {
   asset: ImageAsset;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSuccess: (updatedAsset: Partial<ImageAsset>) => void;
-}
-
-function normalizeTag(tag: string): string {
-  return tag.trim().replace(/\s+/g, ' ').toLowerCase();
-}
-
-export function EditTagsDialog({ asset, open, onOpenChange, onSuccess }: EditTagsDialogProps) {
+  onSuccess: (updatedAsset: ImageAsset) => void;
+}) {
   const [tags, setTags] = useState<string[]>([]);
 
   const {
@@ -63,7 +51,7 @@ export function EditTagsDialog({ asset, open, onOpenChange, onSuccess }: EditTag
     resolver: zodResolver(tagsSchema),
   });
 
-  const [result, executeMutation] = useMutation(setDetailsMutation);
+  const [result, executeMutation] = useMutation(SetImageAssetDetailsMutation);
 
   // Reset form when asset changes or dialog opens
   useEffect(() => {
@@ -103,8 +91,10 @@ export function EditTagsDialog({ asset, open, onOpenChange, onSuccess }: EditTag
         },
       });
 
-      if (result.data?.ImageAsset_SetDetails?.imageAsset) {
-        onSuccess(result.data.ImageAsset_SetDetails.imageAsset);
+      const setDetailsResult = result.data?.ImageAsset_SetDetails;
+
+      if (setDetailsResult) {
+        onSuccess(ImageAsset(setDetailsResult.imageAsset));
         onOpenChange(false);
       }
     } catch (error) {
@@ -112,7 +102,7 @@ export function EditTagsDialog({ asset, open, onOpenChange, onSuccess }: EditTag
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === 'Enter') {
       e.preventDefault();
       if (watchedNewTag) {
@@ -121,7 +111,7 @@ export function EditTagsDialog({ asset, open, onOpenChange, onSuccess }: EditTag
     }
   };
 
-  const handleDialogKeyDown = (e: React.KeyboardEvent) => {
+  const handleDialogKeyDown = (e: KeyboardEvent) => {
     if ((e.metaKey || e.ctrlKey) && e.key === 'Enter' && hasChanges && !result.fetching) {
       e.preventDefault();
       handleSubmit(onSubmit)();

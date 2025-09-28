@@ -1,22 +1,10 @@
 import { CheckCircle, Loader2, XCircle } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { gql, useMutation } from 'urql';
+import { useMutation } from 'urql';
 
 import { Button } from '@/components/ui/button';
-import { IMAGE_ASSET_FRAGMENT } from '@/lib/graphql-fragments';
-import { type ImageAsset } from '@/types/graphql';
-
-const uploadImageAssetMutation = gql`
-  mutation ImageAsset_Upload($input: ImageAsset_Upload_Input!) {
-    ImageAsset_Upload(input: $input) {
-      imageAsset {
-        ...ImageAssetFragment
-      }
-    }
-  }
-  ${IMAGE_ASSET_FRAGMENT}
-`;
+import { ImageAsset, UploadImageAssetMutation } from '@/graphql/images';
 
 type UploadState = 'PENDING' | 'UPLOADING' | 'SUCCESS' | 'ERROR';
 
@@ -29,7 +17,7 @@ export function ImageAssetPreview({
 }) {
   const [uploadState, setUploadState] = useState<UploadState>('PENDING');
   const [error, setError] = useState<string | null>(null);
-  const [_result, executeMutation] = useMutation(uploadImageAssetMutation);
+  const [_result, executeMutation] = useMutation(UploadImageAssetMutation);
 
   const uploadFile = useCallback(async () => {
     setUploadState('UPLOADING');
@@ -42,10 +30,12 @@ export function ImageAssetPreview({
         },
       });
 
-      if (mutationResult.data?.ImageAsset_Upload?.imageAsset) {
+      const uploadResult = mutationResult.data?.ImageAsset_Upload;
+
+      if (uploadResult) {
         setUploadState('SUCCESS');
         toast.success('Image uploaded successfully');
-        onUploadComplete?.(mutationResult.data.ImageAsset_Upload.imageAsset);
+        onUploadComplete?.(ImageAsset(uploadResult.imageAsset));
       } else if (mutationResult.error) {
         setUploadState('ERROR');
         setError(mutationResult.error.message || 'Upload failed');

@@ -1,14 +1,9 @@
 import { ScanEyeIcon, TextAlignStartIcon } from 'lucide-react';
 
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { ImageAsset } from '@/types/graphql';
+import { ImageAsset } from '@/graphql/images';
 
-interface ImageAssetTileProps {
-  asset: ImageAsset;
-  onClick?: () => void;
-}
-
-export function ImageAssetTile({ asset, onClick }: ImageAssetTileProps) {
+export function ImageAssetTile({ asset, onClick }: { asset: ImageAsset; onClick?: () => void }) {
   return (
     <div
       className="flex w-40 cursor-pointer flex-col gap-2 transition-opacity hover:opacity-75"

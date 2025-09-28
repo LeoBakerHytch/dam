@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useUser } from '@/context/user-provider';
 import { SetAvatarMutation, User } from '@/graphql/user';
-import { getInitials } from '@/lib/utils';
+import { getInitials } from '@/lib/strings';
 
 export function SetAvatarForm() {
   const fileInputRef = useRef<HTMLInputElement>(null);

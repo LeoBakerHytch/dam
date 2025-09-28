@@ -1,47 +1,14 @@
 import { useState } from 'react';
 import { useSearchParams } from 'react-router';
-import { gql, useQuery } from 'urql';
+import { useQuery } from 'urql';
 
-import { IMAGE_ASSET_FRAGMENT } from '@/lib/graphql-fragments';
-import { type ImageAsset } from '@/types/graphql';
+import { ImageAsset, ImageGalleryQuery } from '@/graphql/images';
+import { PaginatorInfo } from '@/graphql/pagination';
 
 import { ImageAssetDetailSheet } from './image-asset-detail-sheet';
 import { ImageAssetTile } from './image-asset-tile';
 import { ImageAssetTileSkeleton } from './image-asset-tile-skeleton';
 import { ImageGalleryPagination } from './image-gallery-pagination';
-
-interface PaginatorInfo {
-  currentPage: number;
-  lastPage: number;
-  hasMorePages: boolean;
-  perPage: number;
-  total: number;
-}
-
-interface ImageAssetsQuery {
-  imageAssets: {
-    data: ImageAsset[];
-    paginatorInfo: PaginatorInfo;
-  };
-}
-
-const imageAssetsQuery = gql`
-  query ImageAssets($page: Int) {
-    imageAssets(page: $page) {
-      data {
-        ...ImageAssetFragment
-      }
-      paginatorInfo {
-        currentPage
-        lastPage
-        hasMorePages
-        perPage
-        total
-      }
-    }
-  }
-  ${IMAGE_ASSET_FRAGMENT}
-`;
 
 export function ImageGallery() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -49,8 +16,8 @@ export function ImageGallery() {
   const [selectedAsset, setSelectedAsset] = useState<ImageAsset | null>(null);
   const [isDetailSheetOpen, setIsDetailSheetOpen] = useState(false);
 
-  const [{ data, fetching, error }] = useQuery<ImageAssetsQuery>({
-    query: imageAssetsQuery,
+  const [{ data, fetching, error }] = useQuery<ImageGalleryQuery>({
+    query: ImageGalleryQuery,
     variables: { page: currentPage },
   });
 
@@ -101,7 +68,7 @@ export function ImageGallery() {
       <div className="grid h-full grid-rows-[1fr_auto] gap-6 p-5">
         <div className="min-h-0 overflow-auto">
           <div className="grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] gap-6">
-            {assets.map((asset) => (
+            {assets.map(ImageAsset).map((asset) => (
               <ImageAssetTile
                 key={asset.id}
                 asset={asset}
@@ -113,7 +80,7 @@ export function ImageGallery() {
 
         {paginatorInfo && (
           <ImageGalleryPagination
-            paginatorInfo={paginatorInfo}
+            paginatorInfo={PaginatorInfo(paginatorInfo)}
             currentPage={currentPage}
             onPageChange={handlePageChange}
           />
