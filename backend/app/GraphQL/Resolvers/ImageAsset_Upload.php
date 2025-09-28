@@ -30,12 +30,30 @@ final class ImageAsset_Upload
         /** @var UploadedFile $image */
         $image = $input['image'];
 
+        // Only get mime type if file is valid to avoid the error
+        try {
+            $mimeType = $image->getMimeType();
+        } catch (Exception $e) {
+            throw new Exception('Invalid file uploaded: Cannot detect file type');
+        }
+
         if (!$image->isValid()) {
-            throw new Exception('Invalid file uploaded');
+            $errorCode = $image->getError();
+            $errorMessage = match($errorCode) {
+                UPLOAD_ERR_INI_SIZE => 'File exceeds upload_max_filesize directive (current limit: ' . ini_get('upload_max_filesize') . ')',
+                UPLOAD_ERR_FORM_SIZE => 'File exceeds MAX_FILE_SIZE directive',
+                UPLOAD_ERR_PARTIAL => 'File was only partially uploaded',
+                UPLOAD_ERR_NO_FILE => 'No file was uploaded',
+                UPLOAD_ERR_NO_TMP_DIR => 'Missing temporary folder',
+                UPLOAD_ERR_CANT_WRITE => 'Failed to write file to disk',
+                UPLOAD_ERR_EXTENSION => 'File upload stopped by extension',
+                default => 'Unknown upload error'
+            };
+            throw new Exception("Invalid file uploaded: {$errorMessage} (code: {$errorCode})");
         }
 
         $allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-        if (!in_array($image->getMimeType(), $allowedMimes)) {
+        if (!in_array($mimeType, $allowedMimes)) {
             throw new Exception('Only JPEG, PNG, GIF, and WebP images are allowed');
         }
 
@@ -63,7 +81,9 @@ final class ImageAsset_Upload
         if (!$imageInfo) {
             // Clean up the stored file if we can’t get dimensions
             Storage::disk('public')->delete($filePath);
-            throw new Exception('Unable to process image file');
+            $lastError = error_get_last();
+            $errorMessage = $lastError ? $lastError['message'] : 'Unknown error';
+            throw new Exception("Unable to process image file: {$errorMessage}");
         }
 
         [$width, $height] = $imageInfo;
@@ -73,7 +93,7 @@ final class ImageAsset_Upload
             'file_name' => $fileName,
             'file_path' => $filePath,
             'file_size' => $image->getSize(),
-            'mime_type' => $image->getMimeType(),
+            'mime_type' => $mimeType,
             'width' => $width,
             'height' => $height,
             'user_id' => $user->id,
