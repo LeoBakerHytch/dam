@@ -1,8 +1,8 @@
+import { useMutation } from '@apollo/client/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoaderCircle, XIcon } from 'lucide-react';
 import { type KeyboardEvent, useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useMutation } from '@apollo/client/react';
 import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
@@ -73,54 +73,66 @@ export function EditTagsDialog({
   const watchedNewTag = watch('newTag');
   const hasChanges = JSON.stringify(tags) !== JSON.stringify(asset.tags || []);
 
-  const addTag = useCallback((tagText: string) => {
-    const normalized = normalizeTag(tagText);
-    if (normalized && !tags.includes(normalized)) {
-      setTags([...tags, normalized]);
-      setValue('newTag', '');
-    }
-  }, [tags, setValue]);
+  const addTag = useCallback(
+    (tagText: string) => {
+      const normalized = normalizeTag(tagText);
+      if (normalized && !tags.includes(normalized)) {
+        setTags([...tags, normalized]);
+        setValue('newTag', '');
+      }
+    },
+    [tags, setValue],
+  );
 
-  const removeTag = useCallback((tagToRemove: string) => {
-    setTags(tags.filter((tag) => tag !== tagToRemove));
-  }, [tags]);
+  const removeTag = useCallback(
+    (tagToRemove: string) => {
+      setTags(tags.filter((tag) => tag !== tagToRemove));
+    },
+    [tags],
+  );
 
-  const onSubmit = useCallback(async (data: TagsForm) => {
-    // Add the current input as a tag if it's not empty
-    if (data.newTag) {
-      addTag(data.newTag);
-      return; // Don't submit yet, let user see the tag was added
-    }
+  const onSubmit = useCallback(
+    async (data: TagsForm) => {
+      // Add the current input as a tag if it's not empty
+      if (data.newTag) {
+        addTag(data.newTag);
+        return; // Don't submit yet, let user see the tag was added
+      }
 
-    try {
-      const result = await mutate({
-        variables: {
-          input: {
-            id: asset.id,
-            tags: tags.length > 0 ? tags : null,
+      try {
+        const result = await mutate({
+          variables: {
+            input: {
+              id: asset.id,
+              tags: tags.length > 0 ? tags : null,
+            },
           },
-        },
-      });
+        });
 
-      const setDetailsResult = result.data?.ImageAsset_SetDetails;
+        const setDetailsResult = result.data?.ImageAsset_SetDetails;
 
-      if (setDetailsResult) {
-        onSuccess(readImageAssetFragment(setDetailsResult.imageAsset));
-        onOpenChange(false);
+        if (setDetailsResult) {
+          onSuccess(readImageAssetFragment(setDetailsResult.imageAsset));
+          onOpenChange(false);
+        }
+      } catch (error) {
+        console.error('Tags update failed:', error);
       }
-    } catch (error) {
-      console.error('Tags update failed:', error);
-    }
-  }, [addTag, mutate, asset.id, tags, onSuccess, onOpenChange]);
+    },
+    [addTag, mutate, asset.id, tags, onSuccess, onOpenChange],
+  );
 
-  const handleKeyDown = useCallback((e: KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      if (watchedNewTag) {
-        addTag(watchedNewTag);
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        if (watchedNewTag) {
+          addTag(watchedNewTag);
+        }
       }
-    }
-  }, [watchedNewTag, addTag]);
+    },
+    [watchedNewTag, addTag],
+  );
 
   const handleDialogKeyDown = (e: KeyboardEvent) => {
     if ((e.metaKey || e.ctrlKey) && e.key === 'Enter' && hasChanges && !loading) {

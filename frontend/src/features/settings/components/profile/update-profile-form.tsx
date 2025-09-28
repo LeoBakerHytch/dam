@@ -45,26 +45,29 @@ export function UpdateProfileForm() {
 
   const hasChanges = watchedName && watchedName.trim() !== '' && watchedName !== user?.name;
 
-  const onSubmit = useCallback(async (data: ProfileForm) => {
-    try {
-      const result = await mutate({
-        variables: {
-          input: {
-            name: data.name,
+  const onSubmit = useCallback(
+    async (data: ProfileForm) => {
+      try {
+        const result = await mutate({
+          variables: {
+            input: {
+              name: data.name,
+            },
           },
-        },
-      });
+        });
 
-      const updateProfileResult = result.data?.User_UpdateProfile;
+        const updateProfileResult = result.data?.User_UpdateProfile;
 
-      if (updateProfileResult) {
-        setRecentlySuccessful(true);
-        setTimeout(() => setRecentlySuccessful(false), 3000);
+        if (updateProfileResult) {
+          setRecentlySuccessful(true);
+          setTimeout(() => setRecentlySuccessful(false), 3000);
+        }
+      } catch (error) {
+        console.error('Profile update failed:', error);
       }
-    } catch (error) {
-      console.error('Profile update failed:', error);
-    }
-  }, [mutate]);
+    },
+    [mutate],
+  );
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">

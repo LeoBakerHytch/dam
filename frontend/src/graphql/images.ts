@@ -80,5 +80,7 @@ export const SetImageAssetDetailsMutation = graphql(
   [ImageAssetFragment],
 );
 
-export type SetImageAssetDetailsMutationVariables = VariablesOf<typeof SetImageAssetDetailsMutation>;
+export type SetImageAssetDetailsMutationVariables = VariablesOf<
+  typeof SetImageAssetDetailsMutation
+>;
 export type SetImageAssetDetailsMutationResult = ResultOf<typeof SetImageAssetDetailsMutation>;

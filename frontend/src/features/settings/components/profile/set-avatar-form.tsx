@@ -1,8 +1,8 @@
+import { useMutation } from '@apollo/client/react';
 import { Transition } from '@headlessui/react';
 import { LoaderCircle } from 'lucide-react';
 import { type ChangeEvent, useCallback, useRef, useState } from 'react';
 import { toast } from 'sonner';
-import { useMutation } from '@apollo/client/react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -13,8 +13,8 @@ import {
   type SetAvatarMutationResult,
   type SetAvatarMutationVariables,
 } from '@/graphql/user';
-import { getInitials } from '@/lib/strings';
 import { useCurrentUser } from '@/hooks/use-current-user';
+import { getInitials } from '@/lib/strings';
 
 export function SetAvatarForm() {
   const fileInputRef = useRef<HTMLInputElement>(null);

@@ -1,9 +1,9 @@
+import { useMutation } from '@apollo/client/react';
 import { Transition } from '@headlessui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoaderCircle } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useMutation } from '@apollo/client/react';
 import { z } from 'zod';
 
 import { AppLayout } from '@/components/app/layouts/app-layout';
@@ -53,28 +53,31 @@ export function SettingsPasswordPage() {
   const { user } = useCurrentUser();
   const [recentlySuccessful, setRecentlySuccessful] = useState(false);
 
-  const onSubmit = useCallback(async (data: PasswordForm) => {
-    try {
-      const result = await mutate({
-        variables: {
-          input: {
-            currentPassword: data.currentPassword,
-            newPassword: data.newPassword,
+  const onSubmit = useCallback(
+    async (data: PasswordForm) => {
+      try {
+        const result = await mutate({
+          variables: {
+            input: {
+              currentPassword: data.currentPassword,
+              newPassword: data.newPassword,
+            },
           },
-        },
-      });
+        });
 
-      const changePasswordResult = result.data?.Auth_ChangePassword;
+        const changePasswordResult = result.data?.Auth_ChangePassword;
 
-      if (changePasswordResult) {
-        reset();
-        setRecentlySuccessful(true);
-        setTimeout(() => setRecentlySuccessful(false), 3000);
+        if (changePasswordResult) {
+          reset();
+          setRecentlySuccessful(true);
+          setTimeout(() => setRecentlySuccessful(false), 3000);
+        }
+      } catch (error) {
+        console.error('Password change failed:', error);
       }
-    } catch (error) {
-      console.error('Password change failed:', error);
-    }
-  }, [mutate, reset]);
+    },
+    [mutate, reset],
+  );
 
   return (
     <AppLayout breadcrumbs={[{ title: 'Password', path: '/settings/password' }]}>
