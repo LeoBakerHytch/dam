@@ -175,7 +175,7 @@ export function ImageGallery() {
       <div className="grid h-full grid-rows-[1fr_auto] gap-6 p-5">
         <div className="min-h-0 overflow-auto">
           <div className="grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] gap-6">
-            {Array.from({ length: 12 }).map((_, index) => (
+            {Array.from({ length: 28 }).map((_, index) => (
               <ImageAssetTileSkeleton key={index} />
             ))}
           </div>
