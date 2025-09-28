@@ -27,7 +27,7 @@ primary_region = "fra"
     grace_period = "30s"
     interval = "15s"
     method = "get"
-    path = "/"
+    path = "/up"
     protocol = "http"
     timeout = "2s"
 

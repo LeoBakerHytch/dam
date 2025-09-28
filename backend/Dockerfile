@@ -35,8 +35,6 @@ RUN chown -R www:www /var/www/html && \
     chmod -R 775 storage bootstrap/cache && \
     chown -R www:www /var/log/nginx /var/lib/nginx
 
-USER www
-
 EXPOSE 8080
 
 ENTRYPOINT ["/docker/init.sh"]
