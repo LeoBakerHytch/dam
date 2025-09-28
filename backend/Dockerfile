@@ -27,13 +27,22 @@ COPY docker/uploads.ini /usr/local/etc/php/conf.d/
 RUN chmod +x /docker/*.sh
 
 WORKDIR /var/www/html
-COPY --chown=www:www . .
+
+# Copy app code with correct ownership
+COPY --chown=www-data:www-data . .
 COPY nginx.conf /etc/nginx/sites-available/default
 
-RUN chown -R www:www /var/www/html && \
-    chmod -R 755 /var/www/html && \
-    chmod -R 775 storage bootstrap/cache && \
-    chown -R www:www /var/log/nginx /var/lib/nginx
+# Ensure Laravel writable dirs exist and are owned by www-data
+RUN mkdir -p /var/www/html/bootstrap/cache && \
+    mkdir -p /var/www/html/storage/app/public && \
+    mkdir -p /var/www/html/storage/framework/cache && \
+    mkdir -p /var/www/html/storage/framework/sessions && \
+    mkdir -p /var/www/html/storage/framework/views && \
+    mkdir -p /var/www/html/storage/logs && \
+    chown -R www-data:www-data /var/www/html/storage && \
+    chown -R www-data:www-data /var/www/html/bootstrap/cache && \
+    chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache && \
+    chown -R www-data:www-data /var/log/nginx /var/lib/nginx
 
 EXPOSE 8080
 
