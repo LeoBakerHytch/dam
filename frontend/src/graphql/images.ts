@@ -8,6 +8,7 @@ export const ImageAssetFragment = graphql(`
     id
     name
     url
+    thumbnailUrl
 
     fileName
     fileSize
