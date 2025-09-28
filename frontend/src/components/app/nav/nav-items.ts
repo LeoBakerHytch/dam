@@ -8,7 +8,7 @@ import {
   Target,
 } from 'lucide-react';
 
-import type { NavItem } from '@/types/NavItem';
+import { type NavItem } from '@/types/NavItem';
 
 export const mainNavItems: NavItem[] = [
   {

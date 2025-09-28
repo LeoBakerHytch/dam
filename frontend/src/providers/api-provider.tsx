@@ -1,4 +1,4 @@
-import { PropsWithChildren, useMemo } from 'react';
+import { type PropsWithChildren, useMemo } from 'react';
 import { Client, Provider, cacheExchange, fetchExchange } from 'urql';
 
 import { useAuth } from '@/providers/auth-provider';

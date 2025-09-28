@@ -1,4 +1,4 @@
-import { FragmentOf, ResultOf, VariablesOf, readFragment } from 'gql.tada';
+import { type FragmentOf, type ResultOf, type VariablesOf, readFragment } from 'gql.tada';
 
 import { graphql } from './graphql';
 import { PaginatorInfoFragment } from './pagination';

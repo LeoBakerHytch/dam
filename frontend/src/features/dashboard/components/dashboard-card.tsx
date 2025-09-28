@@ -1,6 +1,6 @@
 import { Link } from 'react-router';
 
-import { NavItem } from '@/types/NavItem';
+import { type NavItem } from '@/types/NavItem';
 
 export function DashboardCard(props: NavItem) {
   return (

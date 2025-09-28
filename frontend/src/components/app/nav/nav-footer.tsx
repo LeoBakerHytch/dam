@@ -9,7 +9,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { NavItem } from '@/types/NavItem';
+import { type NavItem } from '@/types/NavItem';
 
 export function NavFooter({
   items,

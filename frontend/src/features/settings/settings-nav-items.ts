@@ -1,6 +1,6 @@
 import { KeyRound, Palette, User } from 'lucide-react';
 
-import { NavItem } from '@/types/NavItem';
+import { type NavItem } from '@/types/NavItem';
 
 export const settingsNavItems: NavItem[] = [
   {

@@ -1,52 +1,59 @@
 import js from '@eslint/js';
-import globals from 'globals';
 import prettier from 'eslint-config-prettier/flat';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
+import globals from 'globals';
 import typescript from 'typescript-eslint';
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
-    js.configs.recommended,
-    ...typescript.configs.recommended,
+  js.configs.recommended,
+  ...typescript.configs.recommended,
 
-    {
-        ...react.configs.flat.recommended,
-        ...react.configs.flat['jsx-runtime'], // Required for React 17+
-        languageOptions: {
-            globals: {
-                ...globals.browser,
-            },
-        },
-        rules: {
-            'react/react-in-jsx-scope': 'off',
-            'react/prop-types': 'off',
-            'react/no-unescaped-entities': 'off',
-        },
-        settings: {
-            react: {
-                version: 'detect',
-            },
-        },
+  {
+    ...react.configs.flat.recommended,
+    ...react.configs.flat['jsx-runtime'], // Required for React 17+
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+      },
     },
-
-    {
-        plugins: {
-            'react-hooks': reactHooks,
-        },
-        rules: {
-            'react-hooks/rules-of-hooks': 'error',
-            'react-hooks/exhaustive-deps': 'warn',
-            '@typescript-eslint/no-unused-vars': [
-                'error',
-                {
-                    argsIgnorePattern: '^_',
-                    varsIgnorePattern: '^_',
-                    caughtErrorsIgnorePattern: '^_',
-                },
-            ],
-        },
+    rules: {
+      'react/react-in-jsx-scope': 'off',
+      'react/prop-types': 'off',
+      'react/no-unescaped-entities': 'off',
     },
+    settings: {
+      react: {
+        version: 'detect',
+      },
+    },
+  },
 
-    prettier, // Turn off all rules that might conflict with Prettier
-]
+  {
+    plugins: {
+      'react-hooks': reactHooks,
+    },
+    rules: {
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+        },
+      ],
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
+        {
+          prefer: 'type-imports',
+          fixStyle: 'inline-type-imports',
+        },
+      ],
+    },
+  },
+
+  prettier, // Turn off all rules that might conflict with Prettier
+];
