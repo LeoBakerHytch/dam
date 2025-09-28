@@ -68,6 +68,7 @@ export function ApiProvider(props: PropsWithChildren) {
     const httpLink = new UploadHttpLink({
       uri: import.meta.env.VITE_API_URL,
       headers: {
+        // Required for multipart uploads
         'Apollo-Require-Preflight': 'true',
       },
     });
