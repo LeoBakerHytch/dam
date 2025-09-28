@@ -2,8 +2,8 @@ import { ScanEyeIcon, TextAlignStartIcon } from 'lucide-react';
 import { useState } from 'react';
 
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { cn } from '@/lib/utils';
 import { type ImageAsset } from '@/graphql/images';
+import { cn } from '@/lib/utils';
 
 export function ImageAssetTile({ asset, onClick }: { asset: ImageAsset; onClick?: () => void }) {
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -20,7 +20,7 @@ export function ImageAssetTile({ asset, onClick }: { asset: ImageAsset; onClick?
         <img
           className={cn(
             'h-32 w-full rounded-sm object-cover transition-opacity duration-300',
-            imageLoaded ? 'opacity-100' : 'opacity-0'
+            imageLoaded ? 'opacity-100' : 'opacity-0',
           )}
           src={asset.thumbnailUrl}
           alt={asset.altText || asset.name}
