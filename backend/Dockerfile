@@ -1,10 +1,3 @@
-FROM composer:2 AS vendor
-
-WORKDIR /app
-
-COPY composer.json composer.lock ./
-RUN composer install --no-interaction --no-dev --prefer-dist --optimize-autoloader
-
 FROM php:8.3-fpm
 
 RUN apt-get update && \
@@ -12,6 +5,12 @@ RUN apt-get update && \
     docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp && \
     docker-php-ext-install pdo pdo_pgsql pgsql zip gd opcache && \
     rm -rf /var/lib/apt/lists/*
+
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+WORKDIR /app
+COPY . .
+RUN composer install --no-interaction --no-dev --prefer-dist --optimize-autoloader
 
 RUN echo "opcache.enable=1" >> /usr/local/etc/php/conf.d/opcache.ini && \
     echo "opcache.memory_consumption=128" >> /usr/local/etc/php/conf.d/opcache.ini && \
@@ -23,17 +22,12 @@ RUN echo "opcache.enable=1" >> /usr/local/etc/php/conf.d/opcache.ini && \
 RUN groupadd -g 1000 www && \
     useradd -u 1000 -ms /bin/bash -g www www
 
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
-
 COPY docker /docker
 COPY docker/uploads.ini /usr/local/etc/php/conf.d/
 RUN chmod +x /docker/*.sh
 
 WORKDIR /var/www/html
-
 COPY --chown=www:www . .
-COPY --from=vendor --chown=www:www /app/vendor ./vendor
-
 COPY nginx.conf /etc/nginx/sites-available/default
 
 RUN chown -R www:www /var/www/html && \
