@@ -1,8 +1,13 @@
+import { useQuery } from '@apollo/client/react';
 import { useState } from 'react';
 import { useSearchParams } from 'react-router';
-import { useQuery } from 'urql';
 
-import { ImageAsset, ImageGalleryQuery } from '@/graphql/images';
+import {
+  ImageAsset,
+  ImageGalleryQuery,
+  ImageGalleryQueryResult,
+  ImageGalleryQueryVariables,
+} from '@/graphql/images';
 import { PaginatorInfo } from '@/graphql/pagination';
 
 import { ImageAssetDetailSheet } from './image-asset-detail-sheet';
@@ -16,10 +21,14 @@ export function ImageGallery() {
   const [selectedAsset, setSelectedAsset] = useState<ImageAsset | null>(null);
   const [isDetailSheetOpen, setIsDetailSheetOpen] = useState(false);
 
-  const [{ data, fetching, error }] = useQuery<ImageGalleryQuery>({
-    query: ImageGalleryQuery,
-    variables: { page: currentPage },
-  });
+  const { loading, error, data } = useQuery<ImageGalleryQueryResult, ImageGalleryQueryVariables>(
+    ImageGalleryQuery,
+    {
+      variables: {
+        page: currentPage,
+      },
+    },
+  );
 
   const handlePageChange = (page: number) => {
     setSearchParams(page === 1 ? {} : { page: page.toString() });
@@ -30,7 +39,7 @@ export function ImageGallery() {
     setIsDetailSheetOpen(true);
   };
 
-  if (fetching) {
+  if (loading) {
     return (
       <div className="grid h-full grid-rows-[1fr_auto] gap-6 p-5">
         <div className="min-h-0 overflow-auto">

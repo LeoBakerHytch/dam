@@ -1,4 +1,4 @@
-import { FragmentOf, ResultOf, readFragment } from 'gql.tada';
+import { FragmentOf, ResultOf, VariablesOf, readFragment } from 'gql.tada';
 
 import { graphql } from './graphql';
 import { PaginatorInfoFragment } from './pagination';
@@ -48,7 +48,8 @@ export const ImageGalleryQuery = graphql(
   [ImageAssetFragment, PaginatorInfoFragment],
 );
 
-export type ImageGalleryQuery = ResultOf<typeof ImageGalleryQuery>;
+export type ImageGalleryQueryVariables = VariablesOf<typeof ImageGalleryQuery>;
+export type ImageGalleryQueryResult = ResultOf<typeof ImageGalleryQuery>;
 
 export const UploadImageAssetMutation = graphql(
   `
