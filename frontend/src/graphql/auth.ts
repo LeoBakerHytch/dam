@@ -17,6 +17,25 @@ export function readAccessTokenFragment(data: FragmentOf<typeof AccessTokenFragm
 
 export type AccessToken = ResultOf<typeof AccessTokenFragment>;
 
+export const RegisterMutation = graphql(
+  `
+    mutation Auth_Register($input: Auth_Register_Input!) {
+      Auth_Register(input: $input) {
+        accessToken {
+          ...AccessToken
+        }
+        user {
+          ...User
+        }
+      }
+    }
+  `,
+  [AccessTokenFragment, UserFragment],
+);
+
+export type RegisterMutationVariables = VariablesOf<typeof RegisterMutation>;
+export type RegisterMutationResult = ResultOf<typeof RegisterMutation>;
+
 export const LoginMutation = graphql(
   `
     mutation Auth_IssueToken($input: Auth_IssueToken_Input!) {
@@ -50,21 +69,8 @@ export const RefreshTokenMutation = graphql(
   [AccessTokenFragment],
 );
 
-export const RegisterMutation = graphql(
-  `
-    mutation Auth_Register($input: Auth_Register_Input!) {
-      Auth_Register(input: $input) {
-        accessToken {
-          ...AccessToken
-        }
-        user {
-          ...User
-        }
-      }
-    }
-  `,
-  [AccessTokenFragment, UserFragment],
-);
+export type RefreshTokenMutationVariables = VariablesOf<typeof RefreshTokenMutation>;
+export type RefreshTokenMutationResult = ResultOf<typeof RefreshTokenMutation>;
 
 export const ChangePasswordMutation = graphql(
   `
@@ -78,3 +84,6 @@ export const ChangePasswordMutation = graphql(
   `,
   [UserFragment],
 );
+
+export type ChangePasswordMutationVariables = VariablesOf<typeof ChangePasswordMutation>;
+export type ChangePasswordMutationResult = ResultOf<typeof ChangePasswordMutation>;

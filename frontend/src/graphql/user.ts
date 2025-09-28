@@ -1,4 +1,4 @@
-import { type FragmentOf, type ResultOf, readFragment } from 'gql.tada';
+import { type FragmentOf, type ResultOf, type VariablesOf, readFragment } from 'gql.tada';
 
 import { graphql } from './graphql';
 
@@ -11,11 +11,11 @@ export const UserFragment = graphql(`
   }
 `);
 
-export type User = ResultOf<typeof UserFragment>;
-
 export function readUserFragment(data: FragmentOf<typeof UserFragment>) {
   return readFragment(UserFragment, data);
 }
+
+export type User = ResultOf<typeof UserFragment>;
 
 export const SetAvatarMutation = graphql(
   `
@@ -30,6 +30,9 @@ export const SetAvatarMutation = graphql(
   [UserFragment],
 );
 
+export type SetAvatarMutationVariables = VariablesOf<typeof SetAvatarMutation>;
+export type SetAvatarMutationResult = ResultOf<typeof SetAvatarMutation>;
+
 export const UpdateProfileMutation = graphql(
   `
     mutation User_UpdateProfile($input: User_UpdateProfile_Input!) {
@@ -42,3 +45,6 @@ export const UpdateProfileMutation = graphql(
   `,
   [UserFragment],
 );
+
+export type UpdateProfileMutationVariables = VariablesOf<typeof UpdateProfileMutation>;
+export type UpdateProfileMutationResult = ResultOf<typeof UpdateProfileMutation>;

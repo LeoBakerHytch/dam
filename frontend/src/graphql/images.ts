@@ -26,11 +26,11 @@ export const ImageAssetFragment = graphql(`
   }
 `);
 
-export type ImageAsset = ResultOf<typeof ImageAssetFragment>;
-
 export function readImageAssetFragment(data: FragmentOf<typeof ImageAssetFragment>) {
   return readFragment(ImageAssetFragment, data);
 }
+
+export type ImageAsset = ResultOf<typeof ImageAssetFragment>;
 
 export const ImageGalleryQuery = graphql(
   `
@@ -64,6 +64,9 @@ export const UploadImageAssetMutation = graphql(
   [ImageAssetFragment],
 );
 
+export type UploadImageAssetMutationVariables = VariablesOf<typeof UploadImageAssetMutation>;
+export type UploadImageAssetMutationResult = ResultOf<typeof UploadImageAssetMutation>;
+
 export const SetImageAssetDetailsMutation = graphql(
   `
     mutation ImageAsset_SetDetails($input: ImageAsset_SetDetails_Input!) {
@@ -76,3 +79,6 @@ export const SetImageAssetDetailsMutation = graphql(
   `,
   [ImageAssetFragment],
 );
+
+export type SetImageAssetDetailsMutationVariables = VariablesOf<typeof SetImageAssetDetailsMutation>;
+export type SetImageAssetDetailsMutationResult = ResultOf<typeof SetImageAssetDetailsMutation>;
