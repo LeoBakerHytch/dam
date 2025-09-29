@@ -9,8 +9,6 @@ A digital asset management platform built with Laravel, GraphQL, and React.
 
 ## Architecture overview
 
-This project follows a modern full-stack architecture with clear separation between backend and frontend:
-
 ### Backend (Laravel + GraphQL)
 - **Framework**: Laravel 12 with PHP 8.2+
 - **API layer**: GraphQL using Lighthouse package
@@ -22,10 +20,10 @@ This project follows a modern full-stack architecture with clear separation betw
 - **Framework**: React 19 with TypeScript
 - **Build tool**: Vite 7
 - **Routing**: React Router v7
-- **State management**: URQL for GraphQL client
-- **Styling**: Tailwind CSS v4 with shadcn/ui components
+- **State management**: Apollo Client v4
+- **Styling**: Tailwind CSS v4 with `shadcn/ui` components
 - **Forms**: React Hook Form with Zod validation
-- **Theme**: Dark/light mode support with next-themes
+- **Theme**: Dark/light mode support
 
 ## Project structure
 
@@ -50,13 +48,12 @@ dam/
 └── docker-compose.yml      # Development environment setup
 ```
 
-## Key Features
+## Key features
 
 ### Image asset management
 - **Upload & storage**: Direct file upload through GraphQL with local filesystem storage
 - **Metadata management**: Editable descriptions, alt text, and tags for each asset
 - **Visual gallery**: Grid-based gallery with pagination and detail sheets
-- **Search & organization**: Tag-based categorization and filtering
 - **Responsive design**: Optimized for desktop and mobile viewing
 
 ### User experience
@@ -104,18 +101,36 @@ The project uses Docker Compose for local development:
    cd dam
    ```
 
-2. **Start backend services**
+2. **Set up environment files**
+   ```bash
+   # Backend environment
+   cp backend/.env.example backend/.env
+
+   # Frontend environment
+   cp frontend/.env.example frontend/.env
+   ```
+
+3. **Start backend services**
    ```bash
    docker-compose up -d
    ```
 
-3. **Install frontend dependencies**
+4. **Generate application keys** (after services are running)
+   ```bash
+   # Generate Laravel application key
+   docker compose exec backend php artisan key:generate
+
+   # Generate JWT secret for authentication
+   docker compose exec backend php artisan jwt:secret
+   ```
+
+5. **Install frontend dependencies**
    ```bash
    cd frontend
    npm install
    ```
 
-4. **Start frontend development server**
+6. **Start frontend development server**
    ```bash
    npm run dev
    ```
@@ -131,7 +146,7 @@ The project uses Docker Compose for local development:
 ### Frontend development
 - **Component library**: `shadcn/ui` components in `src/components/ui/`
 - **Feature modules**: Organized by domain in `src/features/`
-- **Type safety**: Full TypeScript coverage with GraphQL type generation planned
+- **Type safety**: Full TypeScript coverage with GraphQL type generation (thanks to `gql.tada`)
 - **Styling**: Tailwind CSS with consistent design tokens
 
 ### Code quality
