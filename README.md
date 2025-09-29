@@ -1,6 +1,6 @@
 # Digital Asset Management (DAM) platform
 
-<img src="./screenshot.png"  alt="Screenshot of Digital Asset Management (DAM) platform" />
+<video src="./screen-recording.mp4" controls alt="Screen recording of Digital Asset Management (DAM) platform"></video>
 
 A digital asset management platform built with Laravel, GraphQL, and React.
 
