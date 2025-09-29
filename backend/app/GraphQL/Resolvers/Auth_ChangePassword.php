@@ -3,14 +3,14 @@
 namespace App\GraphQL\Resolvers;
 
 use App\Models\User;
-use Exception;
+use GraphQL\Error\Error;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Hash;
 
 final class Auth_ChangePassword
 {
     /**
-     * @throws Exception
+     * @throws Error
      */
     public function __invoke($_, array $args): array
     {
@@ -18,16 +18,16 @@ final class Auth_ChangePassword
 
         $authenticatedUser = auth('api')->user();
         if (!$authenticatedUser) {
-            throw new Exception('User not authenticated');
+            throw new Error('User not authenticated');
         }
 
         $user = User::find($authenticatedUser->getAuthIdentifier());
         if (!$user) {
-            throw new Exception('User not found');
+            throw new Error('User not found');
         }
 
         if (!Hash::check($input['currentPassword'], $user->password)) {
-            throw new Exception('Current password is incorrect');
+            throw new Error('Current password is incorrect');
         }
 
         $user->forceFill([
