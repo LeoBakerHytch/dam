@@ -2,19 +2,19 @@
 
 namespace App\GraphQL\Resolvers;
 
-use Exception;
+use GraphQL\Error\Error;
 
 final class Auth_IssueToken
 {
     /**
-     * @throws Exception
+     * @throws Error
      */
     public function __invoke($_, array $args): array
     {
         $credentials = $args['input'];
 
         if (! $accessToken = auth('api')->attempt($credentials)) {
-            throw new Exception('Invalid credentials');
+            throw new Error('Invalid credentials');
         }
 
         return [
