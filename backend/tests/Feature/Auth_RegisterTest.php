@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\User;
 use Tests\Support\GraphQLTestCase;
 
 class Auth_RegisterTest extends GraphQLTestCase
@@ -45,5 +46,29 @@ class Auth_RegisterTest extends GraphQLTestCase
             'name' => $userData['name'],
             'email' => $userData['email'],
         ]);
+    }
+
+    public function test_registration_with_duplicate_email_fails(): void
+    {
+        User::factory()->create(['email' => 'existing@example.com']);
+
+        $userData = [
+            'name' => 'Max Mustermann',
+            'email' => 'existing@example.com',
+            'password' => 'password123',
+        ];
+
+        $response = $this->graphQL('
+            mutation Auth_Register($input: Auth_Register_Input!) {
+                Auth_Register(input: $input) {
+                    user {
+                        id
+                    }
+                }
+            }
+        ', ['input' => $userData]);
+
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertDatabaseCount('users', 1);
     }
 }
