@@ -141,8 +141,6 @@ The project uses Docker Compose for local development:
 
 ## Current status & roadmap
 
-The platform is in active development with core functionality implemented:
-
 ✅ **Completed features**:
 - Image upload and storage
 - Gallery with pagination
@@ -150,15 +148,16 @@ The platform is in active development with core functionality implemented:
 - User authentication and profiles
 - Responsive UI with dark/light themes
 - Keyboard shortcuts and accessibility features
+- GraphQL type generation for frontend
+- Thumbnail generation for images
+- CSRF protection
 
 🚧 **In progress**:
-- GraphQL type generation for frontend
 - Enhanced testing coverage
 
 📋 **Planned features** (see TODO.md):
 - Cloud storage integration (S3)
 - Automatic token refresh
-- CSRF protection
 - Advanced search and filtering
 - Bulk operations
 - API documentation
