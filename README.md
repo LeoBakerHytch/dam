@@ -153,7 +153,7 @@ The project uses Docker Compose for local development:
 - CSRF protection
 
 🚧 **In progress**:
-- Enhanced testing coverage
+- Testing coverage
 
 📋 **Planned features** (see TODO.md):
 - Cloud storage integration (S3)
