@@ -14,14 +14,16 @@
 
 - [x] Generate thumbnails for uploaded images, so the gallery view stays fast.
 
+- [x] Review whether there’s a specific type of `Exception` that we should be throwing from mutation resolvers (rather
+  than just the generic `Exception`), and ensure that the error messages are communicated to the user in a sensible way.
+    - Indeed there is: `GraphQL\Error\Error`
+
 - [ ] Testing!
 
 - [ ] Hybrid upload strategy, for large files. Presently, we rely on the GraphQL `Upload` scalar; for assets though,
   especially in production where we would use cloud storage, it makes sense to separate upload and asset creation.
   Pre-signed S3 URLs could be used for this.
 
-- [ ] Review whether there’s a specific type of `Exception` that we should be throwing from mutation resolvers (rather
-  than just the generic `Exception`), and ensure that the error messages are communicated to the user in a sensible way.
 
 - [ ] Ensure that we only ever deliver client-safe error messages to the user in production.
 
