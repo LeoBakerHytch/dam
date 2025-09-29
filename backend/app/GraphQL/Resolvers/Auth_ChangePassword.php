@@ -15,16 +15,7 @@ final class Auth_ChangePassword
     public function __invoke($_, array $args): array
     {
         $input = $args['input'];
-
-        $authenticatedUser = auth('api')->user();
-        if (!$authenticatedUser) {
-            throw new Error('User not authenticated');
-        }
-
-        $user = User::find($authenticatedUser->getAuthIdentifier());
-        if (!$user) {
-            throw new Error('User not found');
-        }
+        $user = auth('api')->user();
 
         if (!Hash::check($input['currentPassword'], $user->password)) {
             throw new Error('Current password is incorrect');
