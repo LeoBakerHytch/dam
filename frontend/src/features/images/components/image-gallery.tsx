@@ -36,12 +36,14 @@ export function ImageGallery() {
   const [uploadItems, setUploadItems] = useState<AssetUploadItem[]>([]);
   const [isProcessingUploads, setIsProcessingUploads] = useState(false);
 
-  const { loading, error, data } = useQuery<ImageGalleryQueryResult, ImageGalleryQueryVariables>(
+  const { loading, error, data, refetch } = useQuery<ImageGalleryQueryResult, ImageGalleryQueryVariables>(
     ImageGalleryQuery,
     {
       variables: {
         page: currentPage,
       },
+      fetchPolicy: 'cache-and-network',
+      nextFetchPolicy: 'cache-first',
     },
   );
 
@@ -146,7 +148,26 @@ export function ImageGallery() {
     };
 
     void processNextUpload();
-  }, [uploadItems, isProcessingUploads, uploadMutation]);
+  }, [uploadItems, isProcessingUploads, uploadMutation, currentPage]);
+
+  // Clean up successful uploads after a delay and refresh cache
+  useEffect(() => {
+    const successfulUploads = uploadItems.filter(item => item.status === 'SUCCESS');
+
+    if (successfulUploads.length === 0) {
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      // Remove successful upload items
+      setUploadItems(prev => prev.filter(item => item.status !== 'SUCCESS'));
+
+      // Refresh the gallery data to show newly uploaded images
+      void refetch();
+    }, 3000); // Show success state for 3 seconds
+
+    return () => clearTimeout(timer);
+  }, [uploadItems, refetch]);
 
   const handleRetryUpload = useCallback((uploadId: string) => {
     setUploadItems((prev) =>
