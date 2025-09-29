@@ -20,7 +20,9 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^12.3",
-        "laravel/telescope": "^5.12"
+        "laravel/telescope": "^5.12",
+        "mockery/mockery": "*",
+        "fakerphp/faker": "^1.24"
     },
     "autoload": {
         "psr-4": {
