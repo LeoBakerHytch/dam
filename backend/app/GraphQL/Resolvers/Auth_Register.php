@@ -3,14 +3,10 @@
 namespace App\GraphQL\Resolvers;
 
 use App\Models\User;
-use Exception;
 use Illuminate\Support\Facades\Hash;
 
 final class Auth_Register
 {
-    /**
-     * @throws Exception
-     */
     public function __invoke($_, array $args): array
     {
         $input = $args['input'];
@@ -21,9 +17,7 @@ final class Auth_Register
             'password' => Hash::make($input['password']),
         ]);
 
-        if (! $accessToken = auth('api')->attempt($input)) {
-            throw new Exception('Invalid credentials');
-        }
+        $accessToken = auth('api')->login($user);
 
         return [
             'accessToken' => $accessToken,
