@@ -4,13 +4,14 @@ namespace App\GraphQL\Resolvers;
 
 use App\Models\ImageAsset;
 use Exception;
+use GraphQL\Error\Error;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
 final class ImageAsset_Upload
 {
     /**
-     * @throws Exception
+     * @throws Error
      */
     public function __invoke($_, array $args): array
     {
@@ -33,7 +34,7 @@ final class ImageAsset_Upload
         try {
             $mimeType = $image->getMimeType();
         } catch (Exception $e) {
-            throw new Exception('Invalid file uploaded: Cannot detect file type');
+            throw new Error('Invalid file uploaded: Cannot detect file type');
         }
 
         if (!$image->isValid()) {
@@ -48,17 +49,17 @@ final class ImageAsset_Upload
                 UPLOAD_ERR_EXTENSION => 'File upload stopped by extension',
                 default => 'Unknown upload error'
             };
-            throw new Exception("Invalid file uploaded: {$errorMessage} (code: {$errorCode})");
+            throw new Error("Invalid file uploaded: {$errorMessage} (code: {$errorCode})");
         }
 
         $allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
         if (!in_array($mimeType, $allowedMimes)) {
-            throw new Exception('Only JPEG, PNG, GIF, and WebP images are allowed');
+            throw new Error('Only JPEG, PNG, GIF, and WebP images are allowed');
         }
 
         $maxSize = 10 * 1024 * 1024; // 10MB
         if ($image->getSize() > $maxSize) {
-            throw new Exception('File size must not exceed 10MB');
+            throw new Error('File size must not exceed 10MB');
         }
 
         // Generate unique filename
@@ -70,7 +71,7 @@ final class ImageAsset_Upload
         $filePath = $image->storeAs('images', $fileName, 'public');
 
         if (!$filePath) {
-            throw new Exception('Failed to store file');
+            throw new Error('Failed to store file');
         }
 
         // Generate thumbnail
@@ -79,7 +80,7 @@ final class ImageAsset_Upload
         if (!$thumbnailPath) {
             // Clean up original file if thumbnail generation fails
             Storage::disk('public')->delete($filePath);
-            throw new Exception('Failed to generate thumbnail');
+            throw new Error('Failed to generate thumbnail');
         }
 
         // Get image dimensions
@@ -92,7 +93,7 @@ final class ImageAsset_Upload
             Storage::disk('public')->delete($thumbnailPath);
             $lastError = error_get_last();
             $errorMessage = $lastError ? $lastError['message'] : 'Unknown error';
-            throw new Exception("Unable to process image file: {$errorMessage}");
+            throw new Error("Unable to process image file: {$errorMessage}");
         }
 
         [$width, $height] = $imageInfo;
