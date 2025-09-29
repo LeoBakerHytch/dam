@@ -14,24 +14,17 @@ final class ImageAsset_SetDetails
     {
         $input = $args['input'];
 
+        // @can directive handles authorization & existence nicely, no need to check here
         $imageAsset = ImageAsset::findOrFail($input['id']);
 
-        if (array_key_exists('description', $input)) {
-            $imageAsset->description = $input['description'];
-        }
-
-        if (array_key_exists('altText', $input)) {
-            $imageAsset->alt_text = $input['altText'];
-        }
-
-        if (array_key_exists('tags', $input)) {
-            $imageAsset->tags = $input['tags'];
-        }
-
-        $imageAsset->save();
+        $imageAsset->update(array_filter([
+            'description' => $input['description'] ?? null,
+            'alt_text' => $input['altText'] ?? null,
+            'tags' => $input['tags'] ?? null,
+        ], fn($value) => $value !== null));
 
         return [
-            'imageAsset' => $imageAsset->fresh(),
+            'imageAsset' => $imageAsset,
         ];
     }
 }

@@ -3,7 +3,6 @@
 namespace App\GraphQL\Resolvers;
 
 use App\Models\ImageAsset;
-use App\Models\User;
 use Exception;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
