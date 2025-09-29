@@ -42,7 +42,8 @@
         ],
         "post-update-cmd": [
             "@php artisan lighthouse:ide-helper"
-        ]
+        ],
+        "test": "phpunit"
     },
     "extra": {
         "laravel": {
