@@ -17,6 +17,8 @@ services:
       APP_ENV: local
       APP_DEBUG: "true"
       APP_URL: http://localhost:8000
+      CORS_ALLOWED_ORIGINS: "http://localhost:3000"
+      DB_CONNECTION: pgsql
       DATABASE_URL: postgres://app:secret@db:5432/app?sslmode=disable
       FILESYSTEM_DISK: local
       SESSION_DRIVER: array
@@ -33,6 +35,21 @@ services:
       - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
+    networks:
+      - appnet
+
+  db_test:
+    image: postgres:16
+    container_name: db_test
+    restart: always
+    environment:
+      POSTGRES_DB: testing
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "5433:5432"  # Different host port
+    tmpfs:
+      - /var/lib/postgresql/data  # In-memory, gets wiped
     networks:
       - appnet
 
