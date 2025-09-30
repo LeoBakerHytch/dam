@@ -124,7 +124,7 @@ jobs:
         with:
           step: start
           token: ${{ secrets.GITHUB_TOKEN }}
-          env: production
+          env: Production API
 
       - name: Set up Fly CLI
         uses: superfly/flyctl-actions/setup-flyctl@master
