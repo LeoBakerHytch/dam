@@ -36,16 +36,16 @@ export function ImageGallery() {
   const [uploadItems, setUploadItems] = useState<AssetUploadItem[]>([]);
   const [isProcessingUploads, setIsProcessingUploads] = useState(false);
 
-  const { loading, error, data, refetch } = useQuery<ImageGalleryQueryResult, ImageGalleryQueryVariables>(
-    ImageGalleryQuery,
-    {
-      variables: {
-        page: currentPage,
-      },
-      fetchPolicy: 'cache-and-network',
-      nextFetchPolicy: 'cache-first',
+  const { loading, error, data, refetch } = useQuery<
+    ImageGalleryQueryResult,
+    ImageGalleryQueryVariables
+  >(ImageGalleryQuery, {
+    variables: {
+      page: currentPage,
     },
-  );
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
+  });
 
   const [uploadMutation] = useMutation<
     UploadImageAssetMutationResult,
@@ -152,7 +152,7 @@ export function ImageGallery() {
 
   // Clean up successful uploads after a delay and refresh cache
   useEffect(() => {
-    const successfulUploads = uploadItems.filter(item => item.status === 'SUCCESS');
+    const successfulUploads = uploadItems.filter((item) => item.status === 'SUCCESS');
 
     if (successfulUploads.length === 0) {
       return;
@@ -160,7 +160,7 @@ export function ImageGallery() {
 
     const timer = setTimeout(() => {
       // Remove successful upload items
-      setUploadItems(prev => prev.filter(item => item.status !== 'SUCCESS'));
+      setUploadItems((prev) => prev.filter((item) => item.status !== 'SUCCESS'));
 
       // Refresh the gallery data to show newly uploaded images
       void refetch();

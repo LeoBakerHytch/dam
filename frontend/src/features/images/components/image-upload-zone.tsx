@@ -5,9 +5,12 @@ import { useDropzone } from 'react-dropzone';
 import { cn } from '@/lib/utils';
 
 export function ImageUploadZone({ onFilesSelected }: { onFilesSelected: (files: File[]) => void }) {
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    onFilesSelected(acceptedFiles);
-  }, [onFilesSelected]);
+  const onDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      onFilesSelected(acceptedFiles);
+    },
+    [onFilesSelected],
+  );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: { 'image/*': [] },
