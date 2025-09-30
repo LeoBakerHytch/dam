@@ -42,13 +42,6 @@ class User extends Authenticatable implements JWTSubject
     ];
 
     /**
-     * @var list<string>
-     */
-    protected $appends = [
-        'avatar_url',
-    ];
-
-    /**
      * @return array<string, string>
      */
     protected function casts(): array
