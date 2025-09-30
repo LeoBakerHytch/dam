@@ -156,6 +156,12 @@ For developer tooling, debugging tips, and troubleshooting, see **[DEVELOPMENT.m
 - **Formatting**: Prettier with import sorting and Tailwind class sorting
 - **Type checking**: TypeScript strict mode enabled
 
+### CI/CD
+- **Backend CI**: GitHub Actions runs PHPUnit tests on every backend change
+- **Frontend CI**: Vercel builds and deploys on frontend changes
+- **Deployment**: Automatic deployment to Fly.io (backend) and Vercel (frontend) on push to `main`
+- **Local testing**: `act` for testing GitHub Actions workflows locally
+
 ## Current status & roadmap
 
 ✅ **Completed features**:
