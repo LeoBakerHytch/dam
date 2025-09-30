@@ -1,0 +1,91 @@
+name: Backend
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'backend/**'
+      - 'backend.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'backend/**'
+      - 'backend.yml'
+
+jobs:
+  tests:
+    name: Run tests
+    runs-on: ubuntu-latest
+    container:
+      image: php:8.3-cli
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: test
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: secret
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install PHP extensions
+        run: |
+          apt-get update
+          apt-get install -y libpq-dev zip unzip git libpng-dev libjpeg-dev libfreetype6-dev
+          docker-php-ext-configure gd --with-freetype --with-jpeg
+          docker-php-ext-install pdo pgsql pdo_pgsql gd
+
+      - name: Install Composer
+        run: |
+          curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+      - name: Install dependencies
+        working-directory: backend
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Create minimal .env file
+        working-directory: backend
+        run: |
+          echo "APP_ENV=testing" > .env
+          echo "APP_KEY=" >> .env
+          echo "JWT_SECRET=" >> .env
+
+      - name: Generate application key
+        working-directory: backend
+        run: php artisan key:generate --force
+
+      - name: Generate JWT secret
+        working-directory: backend
+        run: php artisan jwt:secret --force
+
+      - name: Run migrations
+        working-directory: backend
+        run: php artisan migrate --force
+        env:
+          APP_ENV: testing
+          DB_CONNECTION: pgsql_test
+          DB_HOST: postgres
+          DB_PORT: 5432
+          DB_DATABASE: test
+          DB_USERNAME: test
+          DB_PASSWORD: secret
+
+      - name: Run tests
+        working-directory: backend
+        run: vendor/bin/phpunit
+        env:
+          APP_ENV: testing
+          DB_CONNECTION: pgsql_test
+          DB_HOST: postgres
+          DB_PORT: 5432
+          DB_DATABASE: test
+          DB_USERNAME: test
+          DB_PASSWORD: secret
