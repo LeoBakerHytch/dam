@@ -61,10 +61,6 @@ test:
         echo "Frontend tests not yet set up"
     fi
 
-# Start dev server (frontend only)
-dev:
-    cd {{justfile_directory()}}/frontend && npm run dev
-
 # Open shell in backend container
 shell:
     docker compose exec backend bash
