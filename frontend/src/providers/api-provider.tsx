@@ -40,6 +40,7 @@ export function ApiProvider(props: PropsWithChildren) {
   const [loaded, setLoaded] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [accessToken, setAccessTokenState] = useState<string | null>(null);
+  const accessTokenRef = useRef<string | null>(null);
   const refreshTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Runs once on app mount
@@ -47,6 +48,7 @@ export function ApiProvider(props: PropsWithChildren) {
     const stored = localStorage.getItem('accessToken');
     if (stored && isTokenValid(stored)) {
       setAccessTokenState(stored);
+      accessTokenRef.current = stored;
     } else if (stored) {
       // Token exists but is invalid/expired, clear it
       localStorage.removeItem('accessToken');
@@ -56,6 +58,7 @@ export function ApiProvider(props: PropsWithChildren) {
 
   const logOut = useCallback(() => {
     setAccessTokenState(null);
+    accessTokenRef.current = null;
     localStorage.removeItem('accessToken');
 
     if (refreshTimerRef.current) {
@@ -77,7 +80,7 @@ export function ApiProvider(props: PropsWithChildren) {
       return {
         headers: {
           ...headers,
-          authorization: accessToken ? `Bearer ${accessToken}` : '',
+          authorization: accessTokenRef.current ? `Bearer ${accessTokenRef.current}` : '',
         },
       };
     });
@@ -97,11 +100,12 @@ export function ApiProvider(props: PropsWithChildren) {
       link: ApolloLink.from([errorLink, authLink, httpLink]),
       cache: new InMemoryCache(),
     });
-  }, [accessToken, logOut]);
+  }, [logOut]);
 
   const setAccessToken = useCallback(
     (accessToken: string) => {
       setAccessTokenState(accessToken);
+      accessTokenRef.current = accessToken;
       localStorage.setItem('accessToken', accessToken);
     },
     [setAccessTokenState],
