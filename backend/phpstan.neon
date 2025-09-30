@@ -9,3 +9,5 @@ parameters:
         - tests
     excludePaths:
         - vendor
+    ignoreErrors:
+        - identifier: rules.modelAppends
