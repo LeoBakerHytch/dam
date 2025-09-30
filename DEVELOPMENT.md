@@ -46,15 +46,43 @@ automatically selected.
 
 ## Common development tasks
 
+### Project commands with `just`
+
+The project uses [`just`](https://github.com/casey/just) for common development tasks. Commands are context-aware and
+run different tools depending on your current directory.
+
+**Available commands**:
+- `just format` - Format code (Pint for backend, Prettier for frontend)
+- `just types` - Check types (PHPStan for backend, TypeScript for frontend)
+- `just test` - Run tests (PHPUnit for backend, frontend tests not yet set up)
+- `just lint` - Lint code (frontend only, ESLint)
+- `just shell` - Open shell in backend container
+
+**Context-aware behavior**:
+- In `/backend` directory: runs backend commands only
+- In `/frontend` directory: runs frontend commands only
+- In project root: runs both backend and frontend commands (where applicable)
+
+**Examples**:
+```bash
+# Format only backend code
+cd backend && just format
+
+# Check types for both backend and frontend
+cd .. && just types
+
+# Lint frontend code
+cd frontend && just lint
+```
+
 ### Running the development environment
 
 ```bash
-# Start backend services (database + API)
-docker-compose up
+# Start backend services (database + API) in one terminal
+docker compose up
 
-# Start frontend dev server (in a separate terminal)
-cd frontend
-npm run dev
+# Start frontend dev server in a separate terminal
+cd frontend && npm run dev
 ```
 
 ### Accessing services
