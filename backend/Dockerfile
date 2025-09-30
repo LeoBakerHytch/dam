@@ -21,7 +21,8 @@ WORKDIR /var/www/html
 COPY --chown=www-data:www-data . .
 
 # Install dependencies after copying code to final location
-RUN composer install --no-interaction --no-dev --prefer-dist --optimize-autoloader
+RUN composer install --no-interaction --no-dev --prefer-dist --optimize-autoloader && \
+    chown -R www-data:www-data vendor/
 
 COPY docker /docker
 COPY docker/uploads.ini /usr/local/etc/php/conf.d/
