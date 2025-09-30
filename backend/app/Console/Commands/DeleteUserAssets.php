@@ -27,6 +27,7 @@ class DeleteUserAssets extends Command
 
         $deletedCount = 0;
 
+        /** @var \App\Models\ImageAsset $asset */
         foreach ($user->imageAssets as $asset) {
             $filePath = $asset->file_path;
             $thumbnailPath = $asset->thumbnail_path;
