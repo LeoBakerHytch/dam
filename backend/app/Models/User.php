@@ -12,6 +12,14 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
+/**
+ * @property int $id
+ * @property string $name
+ * @property string $email
+ * @property string $password
+ * @property string|null $avatar_path
+ * @property-read string|null $avatar_url
+ */
 class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable;
