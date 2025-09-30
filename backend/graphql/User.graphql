@@ -10,7 +10,7 @@ type User {
     email: String!
 
     "User’s avatar URL."
-    avatarUrl: String @rename(attribute: "avatar_url")
+    avatarUrl: String @accessor
 
     "When the email was verified."
     emailVerifiedAt: DateTime @rename(attribute: "email_verified_at")

@@ -1,12 +1,12 @@
 type ImageAsset {
     id: ID!
     name: String!
-    url: String!
-    thumbnailUrl: String! @rename(attribute: "thumbnail_url")
+    url: String! @accessor
+    thumbnailUrl: String! @accessor
 
     fileName: String! @rename(attribute: "file_name")
     fileSize: Int! @rename(attribute: "file_size")
-    fileSizeHuman: String! @rename(attribute: "file_size_human")
+    fileSizeHuman: String! @accessor
 
     mimeType: String! @rename(attribute: "mime_type")
     width: Int!
