@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Models;
 
@@ -68,7 +70,7 @@ class ImageAsset extends Model
                     $bytes /= 1024;
                 }
 
-                return round($bytes, 2, PHP_ROUND_HALF_DOWN) . ' ' . $units[$i];
+                return round($bytes, 2, PHP_ROUND_HALF_DOWN).' '.$units[$i];
             }
         );
     }
@@ -76,6 +78,6 @@ class ImageAsset extends Model
     public function scopeForUser($query)
     {
         return $query->where('user_id', auth('api')->id())
-                    ->orderBy('created_at', 'desc');
+            ->orderBy('created_at', 'desc');
     }
 }

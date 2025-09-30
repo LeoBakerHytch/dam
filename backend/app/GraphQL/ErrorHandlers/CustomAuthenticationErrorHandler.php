@@ -1,11 +1,13 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\GraphQL\ErrorHandlers;
 
 use GraphQL\Error\Error;
 use Illuminate\Auth\AuthenticationException as LaravelAuthenticationException;
-use Nuwave\Lighthouse\Execution\ErrorHandler;
 use Nuwave\Lighthouse\Exceptions\AuthenticationException;
+use Nuwave\Lighthouse\Execution\ErrorHandler;
 
 class CustomAuthenticationErrorHandler implements ErrorHandler
 {

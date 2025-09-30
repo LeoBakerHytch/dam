@@ -1,4 +1,6 @@
-<?php declare (strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\GraphQL\Resolvers;
 
@@ -21,7 +23,7 @@ final class ImageAsset_SetDetails
             'description' => $input['description'] ?? null,
             'alt_text' => $input['altText'] ?? null,
             'tags' => $input['tags'] ?? null,
-        ], fn($value) => $value !== null));
+        ], fn ($value) => $value !== null));
 
         return [
             'imageAsset' => $imageAsset,

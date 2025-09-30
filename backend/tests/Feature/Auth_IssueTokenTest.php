@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Tests\Feature;
 
@@ -28,7 +30,7 @@ class Auth_IssueTokenTest extends GraphQLTestCase
             'input' => [
                 'email' => $user->email,
                 'password' => $password,
-            ]
+            ],
         ]);
 
         $accessToken = $response->json('data.Auth_IssueToken.accessToken');
@@ -126,6 +128,6 @@ class Auth_IssueTokenTest extends GraphQLTestCase
             }
         ', [], $accessToken);
 
-        $authenticatedResponse->assertJsonPath('data.currentUser.email', $user->email);;
+        $authenticatedResponse->assertJsonPath('data.currentUser.email', $user->email);
     }
 }

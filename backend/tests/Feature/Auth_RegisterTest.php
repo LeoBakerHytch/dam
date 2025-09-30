@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Tests\Feature;
 
@@ -34,9 +36,9 @@ class Auth_RegisterTest extends GraphQLTestCase
                     'user' => [
                         'name' => $userData['name'],
                         'email' => $userData['email'],
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ]);
 
         $accessToken = $response->json('data.Auth_Register.accessToken');

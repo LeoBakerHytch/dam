@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\GraphQL\Resolvers;
 
@@ -22,12 +24,12 @@ final class User_SetAvatar
         /** @var UploadedFile $avatar */
         $avatar = $input['avatar'];
 
-        if (!$avatar->isValid()) {
+        if (! $avatar->isValid()) {
             throw new Error('Invalid file uploaded');
         }
 
         $allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-        if (!in_array($avatar->getMimeType(), $allowedMimes)) {
+        if (! in_array($avatar->getMimeType(), $allowedMimes)) {
             throw new Error('Only JPEG, PNG, GIF, and WebP images are allowed');
         }
 

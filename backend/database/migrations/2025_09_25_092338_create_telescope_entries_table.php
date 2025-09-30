@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        if ( ! app()->environment('local')) {
+        if (! app()->environment('local')) {
             return;
         }
 
@@ -50,7 +50,7 @@ return new class extends Migration
 
     public function down(): void
     {
-        if ( ! app()->environment('local')) {
+        if (! app()->environment('local')) {
             return;
         }
 

@@ -1,6 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
-use Illuminate\Support\Str;
+declare(strict_types=1);
 
 return [
     /*

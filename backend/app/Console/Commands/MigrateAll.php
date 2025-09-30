@@ -7,6 +7,7 @@ use Illuminate\Console\Command;
 class MigrateAll extends Command
 {
     protected $signature = 'migrate:all';
+
     protected $description = 'Run migrations on both dev and test databases';
 
     public function handle(): int
@@ -21,6 +22,7 @@ class MigrateAll extends Command
         }
 
         $this->info('Migrations complete for all databases');
+
         return 0;
     }
 }

@@ -1,14 +1,17 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Console\Commands;
 
+use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
-use App\Models\User;
 
 class DeleteUserAssets extends Command
 {
     protected $signature = 'user:delete-assets {email}';
+
     protected $description = 'Delete all stored assets for a given user (by email)';
 
     public function handle(): int
@@ -16,8 +19,9 @@ class DeleteUserAssets extends Command
         $email = $this->argument('email');
         $user = User::where('email', $email)->first();
 
-        if (!$user) {
+        if (! $user) {
             $this->error("No user found with email {$email}");
+
             return 1;
         }
 
@@ -39,7 +43,7 @@ class DeleteUserAssets extends Command
             if ($thumbnailPath && Storage::disk('public')->exists($thumbnailPath)) {
                 Storage::disk('public')->delete($thumbnailPath);
                 $this->info("Deleted thumbnail: $thumbnailPath");
-            } else if ($thumbnailPath) {
+            } elseif ($thumbnailPath) {
                 $this->warn("Missing thumbnail: $thumbnailPath");
             }
 
@@ -49,6 +53,7 @@ class DeleteUserAssets extends Command
         }
 
         $this->info("Deleted $deletedCount image assets for $email.");
+
         return 0;
     }
 }

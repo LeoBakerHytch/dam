@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\GraphQL\Resolvers;
 
@@ -28,10 +30,10 @@ final class ImageAsset_Upload
             throw new Error('Invalid file uploaded: Cannot detect file type');
         }
 
-        if (!$image->isValid()) {
+        if (! $image->isValid()) {
             $errorCode = $image->getError();
-            $errorMessage = match($errorCode) {
-                UPLOAD_ERR_INI_SIZE => 'File exceeds upload_max_filesize directive (current limit: ' . ini_get('upload_max_filesize') . ')',
+            $errorMessage = match ($errorCode) {
+                UPLOAD_ERR_INI_SIZE => 'File exceeds upload_max_filesize directive (current limit: '.ini_get('upload_max_filesize').')',
                 UPLOAD_ERR_FORM_SIZE => 'File exceeds MAX_FILE_SIZE directive',
                 UPLOAD_ERR_PARTIAL => 'File was only partially uploaded',
                 UPLOAD_ERR_NO_FILE => 'No file was uploaded',
@@ -44,7 +46,7 @@ final class ImageAsset_Upload
         }
 
         $allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-        if (!in_array($mimeType, $allowedMimes)) {
+        if (! in_array($mimeType, $allowedMimes)) {
             throw new Error('Only JPEG, PNG, GIF, and WebP images are allowed');
         }
 
@@ -56,19 +58,19 @@ final class ImageAsset_Upload
         // Generate unique filename
         $originalName = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
         $extension = $image->getClientOriginalExtension();
-        $fileName = $originalName . '_' . time() . '.' . $extension;
+        $fileName = $originalName.'_'.time().'.'.$extension;
 
         // Store the file
         $filePath = $image->storeAs('images', $fileName, 'public');
 
-        if (!$filePath) {
+        if (! $filePath) {
             throw new Error('Failed to store file');
         }
 
         // Generate thumbnail
         $thumbnailPath = $this->generateThumbnail($image, $fileName);
 
-        if (!$thumbnailPath) {
+        if (! $thumbnailPath) {
             // Clean up original file if thumbnail generation fails
             Storage::disk('public')->delete($filePath);
             throw new Error('Failed to generate thumbnail');
@@ -78,7 +80,7 @@ final class ImageAsset_Upload
         $fullPath = Storage::disk('public')->path($filePath);
         $imageInfo = getimagesize($fullPath);
 
-        if (!$imageInfo) {
+        if (! $imageInfo) {
             // Clean up the stored files if we can't get dimensions
             Storage::disk('public')->delete($filePath);
             Storage::disk('public')->delete($thumbnailPath);
@@ -116,13 +118,13 @@ final class ImageAsset_Upload
 
             // Create thumbnail filename
             $pathInfo = pathinfo($fileName);
-            $thumbnailFileName = $pathInfo['filename'] . '_thumb.' . $pathInfo['extension'];
+            $thumbnailFileName = $pathInfo['filename'].'_thumb.'.$pathInfo['extension'];
 
             // Get original image resource
             $originalPath = $image->getPathname();
             $mimeType = $image->getMimeType();
 
-            $sourceImage = match($mimeType) {
+            $sourceImage = match ($mimeType) {
                 'image/jpeg' => imagecreatefromjpeg($originalPath),
                 'image/png' => imagecreatefrompng($originalPath),
                 'image/gif' => imagecreatefromgif($originalPath),
@@ -130,7 +132,7 @@ final class ImageAsset_Upload
                 default => false
             };
 
-            if (!$sourceImage) {
+            if (! $sourceImage) {
                 return null;
             }
 
@@ -168,15 +170,15 @@ final class ImageAsset_Upload
 
             // Create thumbnails directory if it doesn't exist
             $thumbnailsDir = Storage::disk('public')->path('thumbnails');
-            if (!is_dir($thumbnailsDir)) {
+            if (! is_dir($thumbnailsDir)) {
                 mkdir($thumbnailsDir, 0755, true);
             }
 
             // Save thumbnail
-            $thumbnailPath = 'thumbnails/' . $thumbnailFileName;
+            $thumbnailPath = 'thumbnails/'.$thumbnailFileName;
             $thumbnailFullPath = Storage::disk('public')->path($thumbnailPath);
 
-            $success = match($mimeType) {
+            $success = match ($mimeType) {
                 'image/jpeg' => imagejpeg($thumbnailImage, $thumbnailFullPath, 85),
                 'image/png' => imagepng($thumbnailImage, $thumbnailFullPath, 6),
                 'image/gif' => imagegif($thumbnailImage, $thumbnailFullPath),

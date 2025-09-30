@@ -22,7 +22,8 @@
         "phpunit/phpunit": "^12.3",
         "laravel/telescope": "^5.12",
         "mockery/mockery": "*",
-        "fakerphp/faker": "^1.24"
+        "fakerphp/faker": "^1.24",
+        "laravel/pint": "^1.25"
     },
     "autoload": {
         "psr-4": {
@@ -43,7 +44,8 @@
         "post-update-cmd": [
             "@php artisan lighthouse:ide-helper"
         ],
-        "test": "phpunit"
+        "test": "phpunit",
+        "format": "./vendor/bin/pint"
     },
     "extra": {
         "laravel": {

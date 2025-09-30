@@ -1,8 +1,9 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\GraphQL\Resolvers;
 
-use App\Models\User;
 use GraphQL\Error\Error;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Hash;
@@ -17,7 +18,7 @@ final class Auth_ChangePassword
         $input = $args['input'];
         $user = auth('api')->user();
 
-        if (!Hash::check($input['currentPassword'], $user->password)) {
+        if (! Hash::check($input['currentPassword'], $user->password)) {
             throw new Error('Current password is incorrect');
         }
 

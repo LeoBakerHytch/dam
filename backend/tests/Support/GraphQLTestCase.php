@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Tests\Support;
 
@@ -13,11 +15,10 @@ abstract class GraphQLTestCase extends TestCase
 
     protected function authenticatedGraphQL(
         string $query,
-        array  $variables = [],
+        array $variables = [],
         string $token = '',
-        array  $extraHeaders = []
-    ): TestResponse
-    {
+        array $extraHeaders = []
+    ): TestResponse {
         $headers = array_merge([
             'Authorization' => "Bearer {$token}",
         ], $extraHeaders);
@@ -39,6 +40,6 @@ abstract class GraphQLTestCase extends TestCase
         $errorMessages = array_column($errors, 'message');
 
         $this->assertContains($expectedMessage, $errorMessages,
-            "Expected error message '{$expectedMessage}' not found in: " . implode(', ', $errorMessages));
+            "Expected error message '{$expectedMessage}' not found in: ".implode(', ', $errorMessages));
     }
 }

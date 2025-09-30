@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Models;
 
@@ -41,7 +43,7 @@ class User extends Authenticatable implements JWTSubject
      * @var list<string>
      */
     protected $appends = [
-        'avatar_url'
+        'avatar_url',
     ];
 
     /**

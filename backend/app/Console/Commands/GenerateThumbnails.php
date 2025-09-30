@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Console\Commands;
 
@@ -10,6 +12,7 @@ use Illuminate\Support\Facades\Storage;
 class GenerateThumbnails extends Command
 {
     protected $signature = 'thumbnails:generate {--force : Regenerate existing thumbnails}';
+
     protected $description = 'Generate thumbnails for existing images';
 
     public function handle(): int
@@ -17,7 +20,7 @@ class GenerateThumbnails extends Command
         $force = $this->option('force');
 
         $query = ImageAsset::query();
-        if (!$force) {
+        if (! $force) {
             $query->whereNull('thumbnail_path');
         }
 
@@ -25,6 +28,7 @@ class GenerateThumbnails extends Command
 
         if ($images->isEmpty()) {
             $this->info('No images need thumbnail generation.');
+
             return 0;
         }
 
@@ -68,7 +72,7 @@ class GenerateThumbnails extends Command
             $thumbnailSize = 450;
 
             // Check if original file exists
-            if (!Storage::disk('public')->exists($imageAsset->file_path)) {
+            if (! Storage::disk('public')->exists($imageAsset->file_path)) {
                 throw new Exception('Original file not found');
             }
 
@@ -76,10 +80,10 @@ class GenerateThumbnails extends Command
 
             // Create thumbnail filename
             $pathInfo = pathinfo($imageAsset->file_name);
-            $thumbnailFileName = $pathInfo['filename'] . '_thumb.' . $pathInfo['extension'];
+            $thumbnailFileName = $pathInfo['filename'].'_thumb.'.$pathInfo['extension'];
 
             // Get original image resource
-            $sourceImage = match($imageAsset->mime_type) {
+            $sourceImage = match ($imageAsset->mime_type) {
                 'image/jpeg' => imagecreatefromjpeg($originalPath),
                 'image/png' => imagecreatefrompng($originalPath),
                 'image/gif' => imagecreatefromgif($originalPath),
@@ -87,7 +91,7 @@ class GenerateThumbnails extends Command
                 default => false
             };
 
-            if (!$sourceImage) {
+            if (! $sourceImage) {
                 throw new Exception('Unable to create image resource');
             }
 
@@ -121,15 +125,15 @@ class GenerateThumbnails extends Command
 
             // Create thumbnails directory
             $thumbnailsDir = Storage::disk('public')->path('thumbnails');
-            if (!is_dir($thumbnailsDir)) {
+            if (! is_dir($thumbnailsDir)) {
                 mkdir($thumbnailsDir, 0755, true);
             }
 
             // Save thumbnail
-            $thumbnailPath = 'thumbnails/' . $thumbnailFileName;
+            $thumbnailPath = 'thumbnails/'.$thumbnailFileName;
             $thumbnailFullPath = Storage::disk('public')->path($thumbnailPath);
 
-            $success = match($imageAsset->mime_type) {
+            $success = match ($imageAsset->mime_type) {
                 'image/jpeg' => imagejpeg($thumbnailImage, $thumbnailFullPath, 85),
                 'image/png' => imagepng($thumbnailImage, $thumbnailFullPath, 6),
                 'image/gif' => imagegif($thumbnailImage, $thumbnailFullPath),

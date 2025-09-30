@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Casts;
 
@@ -15,14 +17,17 @@ final class Tags implements CastsAttributes
 {
     public function get($model, string $key, $value, array $attributes): array
     {
-        if ($value === null) return [];
+        if ($value === null) {
+            return [];
+        }
         $decoded = json_decode($value, true);
+
         return is_array($decoded) ? $decoded : [];
     }
 
     public function set($model, string $key, $value, array $attributes): array
     {
-        if (!is_array($value)) {
+        if (! is_array($value)) {
             return [$key => null];
         }
 
@@ -31,6 +36,7 @@ final class Tags implements CastsAttributes
                 $trimmed = trim((string) $t);
                 $spacesCollapsed = preg_replace('/\s+/', ' ', $trimmed);
                 $lowerCased = mb_strtolower($spacesCollapsed);
+
                 return $lowerCased;
             },
             $value
