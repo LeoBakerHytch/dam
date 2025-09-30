@@ -10,6 +10,24 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
 
+/**
+ * @property int $id
+ * @property string $name
+ * @property string $file_name
+ * @property string $file_path
+ * @property string|null $thumbnail_path
+ * @property int $file_size
+ * @property string $mime_type
+ * @property int|null $width
+ * @property int|null $height
+ * @property array<int, string> $tags
+ * @property string|null $description
+ * @property string|null $alt_text
+ * @property int $user_id
+ * @property-read string $url
+ * @property-read string $thumbnail_url
+ * @property-read string $file_size_human
+ */
 class ImageAsset extends Model
 {
     protected $fillable = [
