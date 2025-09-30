@@ -23,7 +23,9 @@
         "laravel/telescope": "^5.12",
         "mockery/mockery": "*",
         "fakerphp/faker": "^1.24",
-        "laravel/pint": "^1.25"
+        "laravel/pint": "^1.25",
+        "phpstan/phpstan": "^2.1",
+        "larastan/larastan": "^3.7"
     },
     "autoload": {
         "psr-4": {
@@ -45,7 +47,8 @@
             "@php artisan lighthouse:ide-helper"
         ],
         "test": "phpunit",
-        "format": "./vendor/bin/pint"
+        "format": "./vendor/bin/pint",
+        "types": "./vendor/bin/phpstan analyse"
     },
     "extra": {
         "laravel": {

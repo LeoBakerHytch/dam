@@ -46,17 +46,19 @@ lint:
         exit 1
     fi
 
-# Check types (context-aware, frontend only)
+# Check types (context-aware)
 types:
     #!/usr/bin/env bash
     set -e
     cwd="{{invocation_directory()}}"
     root="{{justfile_directory()}}"
-    if [[ "$cwd" == *"/frontend"* ]] || [[ "$cwd" == "$root" ]]; then
+    if [[ "$cwd" == *"/backend"* ]]; then
+        docker compose exec backend composer types
+    elif [[ "$cwd" == *"/frontend"* ]]; then
         cd "$root/frontend" && npm run types
     else
-        echo "Type checking only available for frontend"
-        exit 1
+        docker compose exec backend composer types
+        cd "$root/frontend" && npm run types
     fi
 
 # Start dev server (frontend only)
