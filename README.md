@@ -78,9 +78,9 @@ dam/
 
 ### Frontend dependencies
 - **React & TypeScript**: Core frontend framework with type safety
-- **urql**: Lightweight GraphQL client with caching
+- **Apollo Client**: GraphQL client with normalized caching and devtools
 - **Tailwind CSS**: Utility-first CSS framework
-- **Radix UI**: Accessible component primitives (via shadcn/ui)
+- **Radix UI**: Accessible component primitives (via `shadcn/ui`)
 - **React Hook Form**: Performant forms with validation
 - **Lucide React**: Modern icon library
 
