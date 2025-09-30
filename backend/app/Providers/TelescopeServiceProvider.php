@@ -6,16 +6,15 @@ use Illuminate\Support\ServiceProvider;
 
 class TelescopeServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
         $this->hideSensitiveRequestDetails();
 
         if ($this->app->isLocal() && class_exists(\Laravel\Telescope\Telescope::class)) {
             \Laravel\Telescope\Telescope::filter(function (\Laravel\Telescope\IncomingEntry $entry) {
-                return $entry->isReportableException() ||
+                return
+                    $this->app->isLocal() ||
+                    $entry->isReportableException() ||
                     $entry->isFailedRequest() ||
                     $entry->isFailedJob() ||
                     $entry->isScheduledTask() ||
@@ -24,9 +23,6 @@ class TelescopeServiceProvider extends ServiceProvider
         }
     }
 
-    /**
-     * Prevent sensitive request details from being logged by Telescope.
-     */
     protected function hideSensitiveRequestDetails(): void
     {
         if ($this->app->environment('local') && class_exists(\Laravel\Telescope\Telescope::class)) {
