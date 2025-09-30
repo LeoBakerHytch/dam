@@ -8,10 +8,6 @@ RUN apt-get update && \
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-WORKDIR /app
-COPY . .
-RUN composer install --no-interaction --no-dev --prefer-dist --optimize-autoloader
-
 RUN echo "opcache.enable=1" >> /usr/local/etc/php/conf.d/opcache.ini && \
     echo "opcache.memory_consumption=128" >> /usr/local/etc/php/conf.d/opcache.ini && \
     echo "opcache.interned_strings_buffer=8" >> /usr/local/etc/php/conf.d/opcache.ini && \
@@ -19,14 +15,17 @@ RUN echo "opcache.enable=1" >> /usr/local/etc/php/conf.d/opcache.ini && \
     echo "opcache.revalidate_freq=2" >> /usr/local/etc/php/conf.d/opcache.ini && \
     echo "opcache.fast_shutdown=1" >> /usr/local/etc/php/conf.d/opcache.ini
 
-COPY docker /docker
-COPY docker/uploads.ini /usr/local/etc/php/conf.d/
-RUN chmod +x /docker/*.sh
-
 WORKDIR /var/www/html
 
 # Copy app code with correct ownership
 COPY --chown=www-data:www-data . .
+
+# Install dependencies after copying code to final location
+RUN composer install --no-interaction --no-dev --prefer-dist --optimize-autoloader
+
+COPY docker /docker
+COPY docker/uploads.ini /usr/local/etc/php/conf.d/
+RUN chmod +x /docker/*.sh
 COPY nginx.conf /etc/nginx/sites-available/default
 
 # Ensure Laravel writable dirs exist and are owned by www-data
