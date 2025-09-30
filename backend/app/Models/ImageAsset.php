@@ -52,6 +52,12 @@ class ImageAsset extends Model
         'height' => 'integer',
     ];
 
+    protected $appends = [
+        'url',
+        'thumbnail_url',
+        'file_size_human',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
