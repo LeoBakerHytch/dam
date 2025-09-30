@@ -16,8 +16,8 @@ jobs:
   tests:
     name: Run tests
     runs-on: ubuntu-latest
-    container:
-      image: php:8.3-cli
+    # Use container for act (local testing), setup-php for GitHub Actions (faster)
+    container: ${{ vars.USE_CONTAINER && 'php:8.3-cli' || '' }}
 
     services:
       postgres:
@@ -36,7 +36,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # For act (local testing): Install PHP extensions in container
       - name: Install PHP extensions
+        if: ${{ vars.USE_CONTAINER }}
         run: |
           apt-get update
           apt-get install -y libpq-dev zip unzip git libpng-dev libjpeg-dev libfreetype6-dev
@@ -44,8 +46,18 @@ jobs:
           docker-php-ext-install pdo pgsql pdo_pgsql gd
 
       - name: Install Composer
+        if: ${{ vars.USE_CONTAINER }}
         run: |
           curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+      # For GitHub Actions: Use fast setup-php action
+      - name: Set up PHP
+        if: ${{ !vars.USE_CONTAINER }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: pdo, pgsql, gd
+          coverage: none
 
       - name: Install dependencies
         working-directory: backend
