@@ -99,6 +99,9 @@ export function ApiProvider(props: PropsWithChildren) {
     return new ApolloClient({
       link: ApolloLink.from([errorLink, authLink, httpLink]),
       cache: new InMemoryCache(),
+      devtools: {
+        enabled: import.meta.env.DEV,
+      },
     });
   }, [logOut]);
 
