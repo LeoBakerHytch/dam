@@ -12,13 +12,14 @@ class TelescopeServiceProvider extends ServiceProvider
 
         if ($this->app->isLocal() && class_exists(\Laravel\Telescope\Telescope::class)) {
             \Laravel\Telescope\Telescope::filter(function (\Laravel\Telescope\IncomingEntry $entry) {
-                return
-                    $this->app->isLocal() ||
-                    $entry->isReportableException() ||
-                    $entry->isFailedRequest() ||
-                    $entry->isFailedJob() ||
-                    $entry->isScheduledTask() ||
-                    $entry->hasMonitoredTag();
+                // Drop CORS preflight requests
+                if ($entry->type === 'request'
+                    && strtoupper($entry->content['method'] ?? '') === 'OPTIONS') {
+                    return false;
+                }
+
+                // Otherwise, record everything (this runs local-only anyway)
+                return true;
             });
         }
     }
