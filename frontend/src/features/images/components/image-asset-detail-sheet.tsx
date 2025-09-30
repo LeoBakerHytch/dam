@@ -13,7 +13,13 @@ import {
 import { type ComponentType, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet';
 import { type ImageAsset } from '@/graphql/images';
 import { formatDate } from '@/lib/dates';
 
@@ -51,6 +57,9 @@ export function ImageAssetDetailSheet({
       <SheetContent className="w-full sm:max-w-md">
         <SheetHeader>
           <SheetTitle className="break-all pr-8 text-left">{currentAsset.name}</SheetTitle>
+          <SheetDescription className="sr-only">
+            Details and metadata for the selected image asset
+          </SheetDescription>
         </SheetHeader>
 
         <div className="flex flex-col gap-6 p-4">
