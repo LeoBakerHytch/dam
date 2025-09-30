@@ -19,7 +19,9 @@ final class Auth_Register
             'password' => Hash::make($input['password']),
         ]);
 
-        $accessToken = auth('api')->login($user);
+        /** @var \Tymon\JWTAuth\JWTGuard $guard */
+        $guard = auth('api');
+        $accessToken = $guard->login($user);
 
         return [
             'accessToken' => $accessToken,

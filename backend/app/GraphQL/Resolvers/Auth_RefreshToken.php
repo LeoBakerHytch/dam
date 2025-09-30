@@ -15,14 +15,16 @@ final class Auth_RefreshToken
     public function __invoke($_, array $args): array
     {
         try {
-            $accessToken = auth('api')->refresh();
+            /** @var \Tymon\JWTAuth\JWTGuard $guard */
+            $guard = auth('api');
+            $accessToken = $guard->refresh();
         } catch (TokenInvalidException $e) {
             throw new Error('Invalid refresh token');
         }
 
         return [
             'accessToken' => $accessToken,
-            'user' => auth('api')->user(),
+            'user' => $guard->user(),
         ];
     }
 }
