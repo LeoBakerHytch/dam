@@ -110,6 +110,9 @@ jobs:
     needs: tests
     # Only deploy on push to main, not on PRs
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
+      deployments: write
 
     steps:
       - name: Checkout code
