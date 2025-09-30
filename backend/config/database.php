@@ -39,13 +39,16 @@ return [
             'sslmode' => 'prefer',
         ],
 
+        // Test database connection
+        // Uses env vars to allow CI environments (GitHub Actions) to override connection details
+        // while maintaining sensible defaults for local development with docker-compose
         'pgsql_test' => [
             'driver' => 'pgsql',
-            'host' => 'db_test',
-            'port' => '5432',
-            'database' => 'test',
-            'username' => 'test',
-            'password' => 'secret',
+            'host' => env('DB_HOST', 'db_test'),
+            'port' => env('DB_PORT', '5432'),
+            'database' => env('DB_DATABASE', 'test'),
+            'username' => env('DB_USERNAME', 'test'),
+            'password' => env('DB_PASSWORD', 'secret'),
             'charset' => 'utf8',
             'prefix' => '',
             'prefix_indexes' => true,
