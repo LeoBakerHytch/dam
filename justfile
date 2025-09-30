@@ -65,10 +65,6 @@ types:
 dev:
     cd {{justfile_directory()}}/frontend && npm run dev
 
-# Build for production (frontend only)
-build:
-    cd {{justfile_directory()}}/frontend && npm run build
-
 # Open shell in backend container
 shell:
     docker compose exec backend bash
