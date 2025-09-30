@@ -137,6 +137,26 @@ docker-compose exec db psql -U app -d app
 docker-compose exec db_test psql -U test -d test
 ```
 
+### Testing GitHub Actions locally
+
+The project uses [`act`](https://github.com/nektos/act) to test GitHub Actions workflows locally before pushing.
+
+**Running workflows**:
+```bash
+# Test the backend CI workflow
+act -j tests
+
+# Test the full backend workflow (tests + deploy)
+act -W .github/workflows/backend.yml
+```
+
+**Configuration**: The `.actrc` file configures act to:
+- Use linux/amd64 architecture for Apple Silicon compatibility
+- Use a container-based PHP setup (via `USE_CONTAINER` variable)
+- Use appropriate runner images
+
+**Note**: Make sure to stop local docker-compose services before running act to avoid port conflicts.
+
 ## Environment configuration
 
 The backend uses environment variables defined in `docker-compose.yml` for local development. Secrets (like API keys,
