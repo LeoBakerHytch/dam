@@ -84,6 +84,35 @@ dam/
 - **React Hook Form**: Performant forms with validation
 - **Lucide React**: Modern icon library
 
+## Developer experience
+
+### Development environment
+- **Docker Compose**: Containerized backend and database for consistent local development across all platforms
+
+### Hot reload
+- **Vite**: Instant HMR (hot module reload) for frontend changes
+- **Laravel**: Auto-reload on backend code changes
+
+### Type safety
+- **TypeScript**: Full type coverage with strict mode enabled
+- **PHPStan**: Static analysis for backend code (level 5)
+
+### Dev tools
+- **Laravel Telescope**: Request/response logging, database query monitoring, exception tracking, and GraphQL inspection for backend debugging
+- **Apollo Client DevTools**: GraphQL query explorer, cache inspection, and performance monitoring for frontend debugging
+
+### Code quality
+- **Pint**: Opinionated PHP formatting (Laravel style)
+- **ESLint**: JavaScript/TypeScript linting
+- **Prettier**: Consistent code formatting
+
+### Testing
+- **PHPUnit**: Backend unit and integration tests
+- **GitHub Actions**: Automated CI pipeline
+
+### Workflow
+- **`just`**: Context-aware commands for common tasks (format, types, test, lint)
+
 ## Development environment
 
 The project uses Docker Compose for local development:
