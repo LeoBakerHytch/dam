@@ -2,6 +2,13 @@
   "permissions": {
     "allow": [
       "Bash(grep:*)",
+      "Bash(just format)",
+      "Bash(just test)",
+      "Bash(just types)",
+      "Bash(composer format)",
+      "Bash(composer test)",
+      "Bash(composer types)",
+      "Bash(npm run format)",
       "Bash(npm run lint)",
       "Bash(npm run types)",
       "Bash(npm run types:*)",
