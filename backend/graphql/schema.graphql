@@ -1,7 +1,9 @@
 type Query
 type Mutation
 
+#import directives.graphql
+#import scalars.graphql
+
 #import Auth.graphql
 #import ImageAsset.graphql
 #import User.graphql
-#import scalars.graphql

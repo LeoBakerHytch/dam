@@ -1,0 +1,5 @@
+"""
+Indicates this field is backed by an Attribute accessor on the model.
+No @rename needed because the accessor name matches the field name.
+"""
+directive @accessor on FIELD_DEFINITION
