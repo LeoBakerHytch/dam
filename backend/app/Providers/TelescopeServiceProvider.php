@@ -18,6 +18,21 @@ class TelescopeServiceProvider extends ServiceProvider
                     return false;
                 }
 
+                // Drop GraphQL introspection queries
+                if ($entry->type === 'request'
+                    && ($entry->content['uri'] ?? '') === '/graphql') {
+
+                    $payload = $entry->content['payload'] ?? null;
+
+                    if (is_string($payload)) {
+                        $payload = json_decode($payload, true);
+                    }
+
+                    if (is_array($payload) && ($payload['operationName'] ?? null) === 'IntrospectionQuery') {
+                        return false;
+                    }
+                }
+
                 // Otherwise, record everything (this runs local-only anyway)
                 return true;
             });
