@@ -135,6 +135,8 @@ The project uses Docker Compose for local development:
    npm run dev
    ```
 
+For developer tooling, debugging tips, and troubleshooting, see **[DEVELOPMENT.md](DEVELOPMENT.md)**.
+
 ## Development workflow
 
 ### Backend development
