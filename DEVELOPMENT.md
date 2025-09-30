@@ -56,6 +56,7 @@ run different tools depending on your current directory.
 - `just types` - Check types (PHPStan for backend, TypeScript for frontend)
 - `just test` - Run tests (PHPUnit for backend, frontend tests not yet set up)
 - `just lint` - Lint code (frontend only, ESLint)
+- `just ui <component>` - Add shadcn/ui component and format (e.g., `just ui button`)
 - `just shell` - Open shell in backend container
 
 **Context-aware behavior**:
@@ -92,6 +93,26 @@ cd frontend && npm run dev
 - Laravel Telescope: http://localhost:8000/telescope
 - PostgreSQL: localhost:5432
 - Test database: localhost:5433
+
+### Adding UI components
+
+The frontend uses [shadcn/ui](https://ui.shadcn.com/) for UI components. To add a new component:
+
+```bash
+just ui <component-name>
+```
+
+This will:
+1. Install the component and its dependencies
+2. Add the component to `src/components/ui/`
+3. Automatically format the new files
+
+**Examples**:
+```bash
+just ui button
+just ui dialog
+just ui dropdown-menu
+```
 
 ### Clearing caches
 

@@ -61,6 +61,14 @@ test:
         echo "Frontend tests not yet set up"
     fi
 
+# Add shadcn/ui component (frontend only)
+ui component:
+    #!/usr/bin/env bash
+    set -e
+    cd {{justfile_directory()}}/frontend
+    npx shadcn@latest add {{component}}
+    npm run format
+
 # Open shell in backend container
 shell:
     docker compose exec backend bash
