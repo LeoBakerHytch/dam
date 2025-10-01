@@ -220,10 +220,10 @@ For detailed testing documentation, see **[TESTING.md](TESTING.md)**.
 - CSRF protection
 - Automated testing (backend unit tests + E2E tests)
 - CI/CD pipeline with deployment automation
+- Automatic token refresh
 
 📋 **Planned features** (see TODO.md):
 - Cloud storage integration (S3)
-- Automatic token refresh
 - Advanced search and filtering
 - Bulk operations
 - API documentation
