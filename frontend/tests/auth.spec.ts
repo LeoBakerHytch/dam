@@ -21,10 +21,10 @@ test.describe('Authentication', () => {
   });
 
   test('can register a new user and navigate to dashboard', async ({ page }) => {
-    const timestamp = Date.now();
-    const email = `test-${timestamp}@example.com`;
+    const uuid = crypto.randomUUID();
+    const email = `test-${uuid}@example.com`;
     const password = 'TestPassword123!';
-    const name = `Test User ${timestamp}`;
+    const name = `Test User ${uuid}`;
 
     await page.goto('/register');
 
@@ -47,10 +47,10 @@ test.describe('Authentication', () => {
 
   test('can login with existing credentials', async ({ page }) => {
     // First, register a user
-    const timestamp = Date.now();
-    const email = `test-${timestamp}@example.com`;
+    const uuid = crypto.randomUUID();
+    const email = `test-${uuid}@example.com`;
     const password = 'TestPassword123!';
-    const name = `Test User ${timestamp}`;
+    const name = `Test User ${uuid}`;
 
     await page.goto('/register');
     await page.getByTestId('register-name-input').fill(name);
