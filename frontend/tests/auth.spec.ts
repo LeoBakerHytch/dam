@@ -2,18 +2,6 @@ import { expect, test } from '@playwright/test';
 
 test.setTimeout(10_000);
 
-// Log console errors to help with debugging
-test.beforeEach(async ({ page }) => {
-  page.on('console', (msg) => {
-    if (msg.type() === 'error') {
-      console.log('Browser console error:', msg.text());
-    }
-  });
-  page.on('pageerror', (error) => {
-    console.log('Page error:', error.message);
-  });
-});
-
 test.describe('Authentication', () => {
   test('unauthenticated user is redirected to login', async ({ page }) => {
     await page.goto('/');
