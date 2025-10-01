@@ -76,3 +76,58 @@ jobs:
       - name: Stop services
         if: always()
         run: $COMPOSE_CMD down -v
+
+  e2e-tests:
+    name: Run E2E tests
+    runs-on: ubuntu-latest
+    needs: build-backend
+    env:
+      COMPOSE_CMD: docker compose -p ${{ github.job }} -f docker-compose.ci.yml -f docker-compose.e2e.yml
+      BACKEND_IMAGE: ${{ needs.build-backend.outputs.image_tag }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download backend image artifact
+        uses: actions/download-artifact@v4
+        if: ${{ !env.ACT }}
+        with:
+          name: backend-image
+
+      - name: Load Docker image
+        if: ${{ !env.ACT }}
+        run: docker load -i backend.tar
+
+      - name: Start backend services
+        run: $COMPOSE_CMD up -d
+
+      - name: Wait for backend to be ready
+        run: bash .github/scripts/wait-for-backend.sh
+
+      - name: Wait for database to be ready
+        run: bash .github/scripts/wait-for-db.sh
+
+      - name: Run migrations
+        run: $COMPOSE_CMD exec -T backend php artisan migrate --force
+
+      - name: Run E2E tests in container
+        run: $COMPOSE_CMD run --rm frontend
+
+      - name: Keep container alive for debugging
+        if: failure()
+        run: |
+          echo "Starting a shell container for debugging (60 seconds)..."
+          echo "Get a shell with: BACKEND_IMAGE=${{ needs.build-backend.outputs.image_tag }} docker compose -p e2e-tests -f docker-compose.ci.yml -f docker-compose.e2e.yml run --rm frontend bash"
+          sleep 60
+
+      - name: Upload test report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: frontend/playwright-report/
+          retention-days: 30
+
+      - name: Stop services
+        if: always()
+        run: $COMPOSE_CMD down -v
