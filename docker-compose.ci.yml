@@ -1,0 +1,45 @@
+# Used exclusively in CI workflows: docker compose -f docker-compose.ci.yml
+# Compare side-by-side with docker-compose.yml to see differences.
+#
+# Key differences from local dev (docker-compose.yml):
+# 1. Uses BACKEND_IMAGE env var - references pre-built image (no build step)
+# 2. Uses tmpfs instead of volumes - in-memory storage for speed, no persistence needed
+# 3. No container names - allows parallel job isolation via -p flag
+# 4. No port bindings - avoids conflicts when jobs run in parallel (`act`)
+# 5. No restart policies - meaningless in ephemeral CI environments
+
+services:
+  backend:
+    image: ${BACKEND_IMAGE}
+    tmpfs:
+      - /var/www/html/storage
+    depends_on:
+      - db
+    networks:
+      - appnet
+    environment:
+      APP_ENV: local
+      APP_DEBUG: true
+      APP_KEY: base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+      JWT_SECRET: test-jwt-secret-for-ci-only-do-not-use-in-production
+      APP_URL: http://localhost:8000
+      CORS_ALLOWED_ORIGINS: http://localhost:3000
+      DATABASE_URL: pgsql://test:secret@db:5432/test
+      TEST_DATABASE_URL: pgsql://test:secret@db:5432/test
+      FILESYSTEM_DISK: local
+      SESSION_DRIVER: array
+
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: test
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: secret
+    tmpfs:
+      - /var/lib/postgresql/data
+    networks:
+      - appnet
+
+networks:
+  appnet:
+    driver: bridge
