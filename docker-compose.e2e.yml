@@ -1,0 +1,32 @@
+# E2E test overlay for docker-compose.ci.yml
+# Usage: docker compose -f docker-compose.ci.yml -f docker-compose.e2e.yml
+#
+# Adds frontend service that builds and tests the app in a containerized environment
+# Uses Playwright image with browsers pre-installed for fast, reproducible tests
+
+services:
+  frontend:
+    image: mcr.microsoft.com/playwright:v1.55.1-jammy
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules  # Use container's node_modules, not host's
+    depends_on:
+      - backend
+    networks:
+      - appnet
+    environment:
+      CI: "true"
+      VITE_API_URL: http://backend:8080/graphql
+    command: >
+      sh -c "
+        npm ci &&
+        npm run build &&
+        npm run preview -- --port 3000 &
+        until curl -f http://localhost:3000 2>/dev/null; do
+          echo 'Waiting for frontend preview server...'
+          sleep 1
+        done &&
+        echo 'Frontend preview server is ready' &&
+        npx playwright test
+      "
