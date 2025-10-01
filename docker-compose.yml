@@ -1,5 +1,6 @@
 services:
   backend:
+    image: ${BACKEND_IMAGE:-backend:dev}
     build:
       context: ./backend
       dockerfile: Dockerfile.dev
