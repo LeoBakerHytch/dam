@@ -39,7 +39,7 @@ docker compose exec backend composer test -- --verbose
 Backend tests are organized in `backend/tests/`:
 - `Feature/` - Integration tests for GraphQL API endpoints
 
-Tests use a dedicated PostgreSQL test database (`db_test` container) with in-memory tmpfs storage for speed.
+Tests use a dedicated PostgreSQL test database (`db_test` container) with in-memory `tmpfs` storage for speed.
 
 ## End-to-end tests (Playwright)
 
@@ -64,7 +64,7 @@ cd frontend && npx playwright test --ui
 cd frontend && npx playwright test tests/auth.spec.ts
 ```
 
-**Convenience command**: `just e2e` from the project root starts backend services and runs E2E tests in one command.
+**Convenience command**: `just e2e` starts backend services and runs E2E tests in one command.
 
 ### Test structure
 
@@ -103,6 +103,7 @@ The project uses GitHub Actions for continuous integration and deployment.
 **Triggers**:
 - Pushes to `main` branch
 - Pull requests to any branch
+- Skip CI by including `[skip ci]` in commit message body (useful for documentation-only changes)
 
 **Jobs**:
 1. **Build backend** - Build Docker image and save as artifact
@@ -230,7 +231,7 @@ Current test coverage:
 
 ## Performance
 
-**Backend tests**: ~5-10 seconds (PostgreSQL with tmpfs)
+**Backend tests**: ~5-10 seconds (PostgreSQL with `tmpfs`)
 
 **E2E tests**: ~30-45 seconds (includes build + preview server startup)
 
