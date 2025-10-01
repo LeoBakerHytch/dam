@@ -6,6 +6,7 @@ on:
 
 jobs:
   build-backend:
+    name: Build backend image
     runs-on: ubuntu-latest
     outputs:
       image_tag: backend:${{ github.sha }}
