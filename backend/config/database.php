@@ -26,7 +26,7 @@ return [
     'connections' => [
         'pgsql' => [
             'driver' => 'pgsql',
-            'url' => env('DATABASE_URL'), // Overrides everything below in production
+            'url' => env('DATABASE_URL'), // Overrides everything below
             'host' => 'db',
             'port' => '5432',
             'database' => 'app',
@@ -40,10 +40,9 @@ return [
         ],
 
         // Test database connection
-        // Uses env vars to allow CI environments (GitHub Actions) to override connection details
-        // while maintaining sensible defaults for local development with docker-compose
         'pgsql_test' => [
             'driver' => 'pgsql',
+            'url' => env('TEST_DATABASE_URL'), // Overrides everything below
             'host' => env('DB_HOST', 'db_test'),
             'port' => env('DB_PORT', '5432'),
             'database' => env('DB_DATABASE', 'test'),
