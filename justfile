@@ -72,3 +72,30 @@ ui component:
 # Open shell in backend container
 shell:
     docker compose exec backend bash
+
+# Run E2E tests (ensures backend is running)
+e2e:
+    #!/usr/bin/env bash
+    set -e
+    root="{{justfile_directory()}}"
+
+    # Check if backend is running
+    if ! docker compose ps backend | grep -q "Up"; then
+        echo "Starting backend services..."
+        docker compose up -d
+        echo "Waiting for backend to be ready..."
+        for i in {1..30}; do
+            if curl -sf http://localhost:8000/api/healthz > /dev/null 2>&1; then
+                echo "Backend is ready"
+                break
+            fi
+            if [ $i -eq 30 ]; then
+                echo "Backend failed to start"
+                exit 1
+            fi
+            sleep 2
+        done
+    fi
+
+    # Run Playwright tests
+    cd "$root/frontend" && npx playwright test
