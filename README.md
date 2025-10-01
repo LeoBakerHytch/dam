@@ -108,7 +108,9 @@ dam/
 
 ### Testing
 - **PHPUnit**: Backend unit and integration tests
-- **GitHub Actions**: Automated CI pipeline
+- **Playwright**: End-to-end testing with production builds
+- **GitHub Actions**: Automated CI/CD pipeline
+- **act**: Local testing of GitHub Actions workflows
 
 ### Workflow
 - **`just`**: Context-aware commands for common tasks (format, types, test, lint)
@@ -186,10 +188,23 @@ For developer tooling, debugging tips, and troubleshooting, see **[DEVELOPMENT.m
 - **Type checking**: TypeScript strict mode enabled
 
 ### CI/CD
-- **Backend CI**: GitHub Actions runs PHPUnit tests on every backend change
-- **Frontend CI**: Vercel builds and deploys on frontend changes
-- **Deployment**: Automatic deployment to Fly.io (backend) and Vercel (frontend) on push to `main`
-- **Local testing**: `act` for testing GitHub Actions workflows locally
+
+The project uses a unified GitHub Actions pipeline for testing and deployment:
+
+![CI/CD pipeline diagram showing build, test, and deploy stages](.meta/ci-pipeline.png)
+
+**Pipeline stages**:
+1. **Build** - Build backend Docker image and save as artifact
+2. **Test** - Run backend PHPUnit tests and E2E Playwright tests in parallel
+3. **Deploy** - Deploy to Fly.io (backend) and Vercel (frontend) only after all tests pass
+
+**Deployment strategy**:
+- Tests run on every push and PR
+- Deployments only happen on pushes to `main` after tests pass
+- Backend deploys use the exact Docker image that passed tests (no rebuild)
+- Frontend deploys via Vercel after E2E validation
+
+For detailed testing documentation, see **[TESTING.md](TESTING.md)**.
 
 ## Current status & roadmap
 
@@ -203,9 +218,8 @@ For developer tooling, debugging tips, and troubleshooting, see **[DEVELOPMENT.m
 - GraphQL type generation for frontend
 - Thumbnail generation for images
 - CSRF protection
-
-🚧 **In progress**:
-- Testing coverage
+- Automated testing (backend unit tests + E2E tests)
+- CI/CD pipeline with deployment automation
 
 📋 **Planned features** (see TODO.md):
 - Cloud storage integration (S3)
