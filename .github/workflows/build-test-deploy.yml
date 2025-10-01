@@ -11,7 +11,8 @@ jobs:
     outputs:
       image_tag: ${{ steps.meta.outputs.tag }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Docker meta
         id: meta
@@ -26,20 +27,26 @@ jobs:
         if: ${{ !env.ACT }}
         run: docker save ${{ steps.meta.outputs.tag }} -o backend.tar
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload backend image artifact
+        uses: actions/upload-artifact@v4
         if: ${{ !env.ACT }}
         with:
           name: backend-image
           path: backend.tar
 
   backend-tests:
-    name: Run Backend Tests
+    name: Run backend tests
     runs-on: ubuntu-latest
     needs: build-backend
+    env:
+      COMPOSE_CMD: docker compose -p ${{ github.job }} -f docker-compose.ci.yml
+      BACKEND_IMAGE: ${{ needs.build-backend.outputs.image_tag }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - uses: actions/download-artifact@v4
+      - name: Download backend image artifact
+        uses: actions/download-artifact@v4
         if: ${{ !env.ACT }}
         with:
           name: backend-image
@@ -48,51 +55,24 @@ jobs:
         if: ${{ !env.ACT }}
         run: docker load -i backend.tar
 
-      - name: Create minimal .env file
-        working-directory: backend
-        run: |
-          echo "APP_ENV=testing" > .env
-          echo "APP_KEY=" >> .env
-          echo "JWT_SECRET=" >> .env
-          echo "DB_CONNECTION=pgsql_test" >> .env
-          echo "DB_HOST=db_test" >> .env
-          echo "DB_PORT=5432" >> .env
-          echo "DB_DATABASE=test" >> .env
-          echo "DB_USERNAME=test" >> .env
-          echo "DB_PASSWORD=secret" >> .env
-
       - name: Start services
-        run: docker compose up -d
-        env:
-          BACKEND_IMAGE: ${{ needs.build-backend.outputs.image_tag }}
+        run: $COMPOSE_CMD up -d
 
       - name: Wait for backend to be ready
-        run: |
-          for i in {1..30}; do
-            if docker compose exec -T backend php artisan --version 2>/dev/null; then
-              echo "Backend is ready"
-              exit 0
-            fi
-            echo "Waiting for backend... ($i/30)"
-            sleep 2
-          done
-          echo "Backend failed to start"
-          exit 1
+        run: bash .github/scripts/wait-for-backend.sh
 
-      - name: Generate application key
-        working-directory: backend
-        run: docker compose exec -T backend php artisan key:generate --force
+      - name: Wait for database to be ready
+        run: bash .github/scripts/wait-for-db.sh
 
-      - name: Generate JWT secret
-        working-directory: backend
-        run: docker compose exec -T backend php artisan jwt:secret --force
+      - name: Install test dependencies
+        run: $COMPOSE_CMD exec -T backend composer install
 
       - name: Run migrations
-        run: docker compose exec -T backend php artisan migrate --force
+        run: $COMPOSE_CMD exec -T backend php artisan migrate --force
 
       - name: Run tests
-        run: docker compose exec -T backend composer test
+        run: $COMPOSE_CMD exec -T backend ./vendor/bin/phpunit
 
       - name: Stop services
         if: always()
-        run: docker compose down
+        run: $COMPOSE_CMD down -v
