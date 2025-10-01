@@ -47,5 +47,5 @@
             }
         ]
     },
-    "include": ["src/**/*.tsx", "src/**/*.ts", "src/**/*.d.ts"],
+    "include": ["src/**/*.tsx", "src/**/*.ts", "src/**/*.d.ts", "playwright.config.ts"],
 }
