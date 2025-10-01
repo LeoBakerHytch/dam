@@ -8,23 +8,17 @@ jobs:
   build-backend:
     runs-on: ubuntu-latest
     outputs:
-      image_tag: ${{ steps.meta.outputs.tag }}
+      image_tag: backend:${{ github.sha }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Docker meta
-        id: meta
-        run: |
-          OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
-          echo "tag=ghcr.io/${OWNER}/backend:${{ github.sha }}" >> $GITHUB_OUTPUT
-
       - name: Build image
-        run: docker build -t ${{ steps.meta.outputs.tag }} backend/
+        run: docker build -t backend:${{ github.sha }} backend/
 
       - name: Save image for tests
         if: ${{ !env.ACT }}
-        run: docker save ${{ steps.meta.outputs.tag }} -o backend.tar
+        run: docker save backend:${{ github.sha }} -o backend.tar
 
       - name: Upload backend image artifact
         uses: actions/upload-artifact@v4
@@ -159,21 +153,11 @@ jobs:
       - name: Load Docker image
         run: docker load -i backend.tar
 
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Push image to GHCR
-        run: docker push ${{ needs.build-backend.outputs.image_tag }}
-
       - name: Setup Fly CLI
         uses: superfly/flyctl-actions/setup-flyctl@master
 
-      - name: Deploy to Fly.io using GHCR image
-        run: flyctl deploy --image ${{ needs.build-backend.outputs.image_tag }}
+      - name: Deploy to Fly.io using local image
+        run: flyctl deploy --local-only --image ${{ needs.build-backend.outputs.image_tag }}
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
         working-directory: ./backend
