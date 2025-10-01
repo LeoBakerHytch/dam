@@ -28,6 +28,7 @@ export function NavUser({ user }: { user: User }) {
             <SidebarMenuButton
               size="lg"
               className="text-sidebar-accent-foreground data-[state=open]:bg-sidebar-accent group"
+              data-testid="user-menu-trigger"
             >
               <UserInfo user={user} />
               <ChevronsUpDown className="ml-auto size-4" />

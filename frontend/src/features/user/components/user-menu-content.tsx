@@ -32,7 +32,7 @@ export function UserMenuContent({ user }: { user: User }) {
       </DropdownMenuGroup>
       <DropdownMenuSeparator />
       <DropdownMenuItem asChild>
-        <button className="block w-full" onClick={logOut} data-test="logout-button">
+        <button className="block w-full" onClick={logOut} data-testid="logout-button">
           <LogOut className="mr-2" />
           Log out
         </button>

@@ -82,6 +82,7 @@ export function LoginPage() {
               tabIndex={1}
               autoComplete="email"
               placeholder="email@example.com"
+              data-testid="login-email-input"
               {...register('email')}
             />
             <InputError message={errors.email?.message} />
@@ -100,6 +101,7 @@ export function LoginPage() {
               tabIndex={2}
               autoComplete="current-password"
               placeholder="Password"
+              data-testid="login-password-input"
               {...register('password')}
             />
             <InputError message={errors.password?.message} />
@@ -110,7 +112,7 @@ export function LoginPage() {
             className="mt-4 w-full"
             tabIndex={4}
             disabled={loading}
-            data-test="login-button"
+            data-testid="login-button"
           >
             {loading && <LoaderCircle className="h-4 w-4 animate-spin" />}
             Log in

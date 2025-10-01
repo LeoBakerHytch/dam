@@ -93,6 +93,7 @@ export function RegisterPage() {
               tabIndex={1}
               autoComplete="name"
               placeholder="Full name"
+              data-testid="register-name-input"
               {...register('name')}
             />
             <InputError message={errors.name?.message} className="mt-2" />
@@ -106,6 +107,7 @@ export function RegisterPage() {
               tabIndex={2}
               autoComplete="email"
               placeholder="email@example.com"
+              data-testid="register-email-input"
               {...register('email')}
             />
             <InputError message={errors.email?.message} />
@@ -119,6 +121,7 @@ export function RegisterPage() {
               tabIndex={3}
               autoComplete="new-password"
               placeholder="Password"
+              data-testid="register-password-input"
               {...register('password')}
             />
             <InputError message={errors.password?.message} />
@@ -132,6 +135,7 @@ export function RegisterPage() {
               tabIndex={4}
               autoComplete="new-password"
               placeholder="Confirm password"
+              data-testid="register-password-confirmation-input"
               {...register('password_confirmation')}
             />
             <InputError message={errors.password_confirmation?.message} />
@@ -142,7 +146,7 @@ export function RegisterPage() {
             className="mt-2 w-full"
             tabIndex={5}
             disabled={loading}
-            data-test="register-user-button"
+            data-testid="register-user-button"
           >
             {loading && <LoaderCircle className="h-4 w-4 animate-spin" />}
             Create account
